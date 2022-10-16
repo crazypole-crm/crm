@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  database:
+    container_name: my_sql
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: db_project
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: symfony
+    ports:
+      - '4306:3306'
+    volumes:
+      - './mysql:/var/lib/mysql'
+  nginx:
+    container_name: nginx
+    image: nginx:1.19.0-alpine
+    restart: on-failure
+    volumes:
+      - './backend/public/:/usr/src/backend'
+      - './docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro'
+    ports:
+      - '8080:80'
+    depends_on:
+      - php_backend
+  php_backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - './backend/src:/usr/src/backend/src'
+      - './backend/migrations:/usr/src/backend/migrations'
+      - './backend/config:/usr/src/backend/config'
+    ports:
+      - '9000:9000'
+    restart: on-failure
+    env_file:
+      - backend/.env
+    user: 1000:1000
+    depends_on:
+      - database
+    environment:
+      XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: docker/react/Dockerfile
+    volumes:
+      - './frontend/src:/usr/src/frontend/src'
+      - './frontend/public:/usr/src/frontend/public'
+    ports:
+      - '80:3000'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    command: redis-server --requirepass secret
+    ports:
+      - "6379:6379"
+    volumes:
+      - './redis-data:/var/lib/redis'
+      - './docker/redis/redis.conf:/usr/local/etc/redis/redis.conf'
+    environment:
+      - REDIS_REPLICATION_MODE=master
