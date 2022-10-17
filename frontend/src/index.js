@@ -1,28 +1,29 @@
 import {Suspense} from 'react';
 import ReactDOM from 'react-dom';
-import { Button, DatePicker, Space, version } from "antd";
+import {context} from '@reatom/react';
+import {combine, createStore,} from "@reatom/core";
 import "antd/dist/antd.css";
 import "./index.css";
+import i18n from "./i18n";
+import {BrowserRouter as Router} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
+import {AppWrapper} from "./app/AppWrapper";
+import { isLoadingAppAtom } from './app/isAppLoading';
 
-
-
-const App = () => {
-    return (
-      <div className="App">
-        <h1>antd version: {version}</h1>
-        <Space>
-          <DatePicker />
-          <Button type="primary">Primary Button</Button>
-        </Space>
-      </div>
-    );
-  };
+const store = createStore(
+  combine({
+    isLoadingAppAtom,
+  })
+);
 
 ReactDOM.render(
-    <Suspense fallback="loading">
-        <App />
-    </Suspense>,
+  <Suspense fallback="loading">
+    <context.Provider value={store}>
+        <Router>
+            <AppWrapper />
+        </Router>
+    </context.Provider>
+  </Suspense>,
     document.getElementById('root')
 );
 
