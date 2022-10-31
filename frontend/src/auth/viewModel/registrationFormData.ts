@@ -1,26 +1,41 @@
-import { combine, declareAction, map } from "@reatom/core";
+import { Atom, combine, declareAction, map } from "@reatom/core";
+import { ButtonState } from "../../common/button/ButtonState";
 import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter";
+import { setAuthPageMode } from "./authPageMode";
 import { validateRequiredField } from "./FieldErrorTypes";
 
-const [emailAtom, setEmail] = declareAtomWithSetter('auth.registation.email', '')
+const [emailAtom, setEmail] = declareAtomWithSetter('auth.registation.email', '', on => [
+    on(setAuthPageMode, () => '')
+])
 
 const [emailErrorAtom, setEmailError] = declareAtomWithSetter<string | null>('auth.registration.emailError', null, on => [
-    on(setEmail, () => null)
+    on(setEmail, () => null),
+    on(setAuthPageMode, () => null),
 ])
 
-const [passwordAtom, setPassword] = declareAtomWithSetter('auth.registation.password', '')
+const [passwordAtom, setPassword] = declareAtomWithSetter('auth.registation.password', '', on => [
+    on(setAuthPageMode, () => '')
+])
 
 const [passwordErrorAtom, setPasswordError] = declareAtomWithSetter<string | null>('auth.registration.passwordError', null, on => [
-    on(setPassword, () => null)
+    on(setPassword, () => null),
+    on(setAuthPageMode, () => null),
 ])
 
-const [confirmPasswordAtom, setConfirmPassword] = declareAtomWithSetter('auth.registation.confirmPassword', '')
+const [confirmPasswordAtom, setConfirmPassword] = declareAtomWithSetter('auth.registation.confirmPassword', '', on => [
+    on(setAuthPageMode, () => '')
+])
 
 const [confirmPasswordErrorAtom, setConfirmPasswordError] = declareAtomWithSetter<string | null>('auth.registration.confirmPasswordError', null, on => [
-    on(setConfirmPassword, () => null)
+    on(setConfirmPassword, () => null),
+    on(setAuthPageMode, () => null),
 ])
 
-const [rememberMeAtom, setRememberMe] = declareAtomWithSetter('auth.registation.rememberMe', false);
+const [rememberMeAtom, setRememberMe] = declareAtomWithSetter('auth.registation.rememberMe', false, on => [
+    on(setAuthPageMode, () => false)
+]);
+
+const [isSubmitButtonLoadingAtom, setIsSubmitButtonLoading] = declareAtomWithSetter('auth.registration.isSubmitButtonLoading', false)
 
 const isDisabledSubmitButtonAtom = map(combine({
     emailError: emailErrorAtom,
@@ -28,6 +43,16 @@ const isDisabledSubmitButtonAtom = map(combine({
     confirmPasswordError: confirmPasswordErrorAtom,
 }), ({emailError, passwordError, confirmPasswordError}) => !!passwordError || !!emailError || !!confirmPasswordError)
 
+const submitButtonStateAtom: Atom<ButtonState> = map(combine({
+    isDisabledSubmitButton: isDisabledSubmitButtonAtom,
+    isSubmitButtonLoading: isSubmitButtonLoadingAtom,
+}), ({isDisabledSubmitButton, isSubmitButtonLoading}) => {
+    return isDisabledSubmitButton
+        ? 'disabled'
+        : isSubmitButtonLoading
+            ? 'loading'
+            : 'normal'
+})
 
 function validateConfirmPassword(currentPassword: string, confirmPassword: string): string | null {
     return currentPassword === confirmPassword ? 'Пароли должны отличаться' : null
@@ -61,6 +86,7 @@ const submit = declareAction('auth.registation.submit',
             password,
             confirmPassword,
         })
+        store.dispatch(setIsSubmitButtonLoading(true))
     }
 )
 
@@ -72,7 +98,7 @@ const registrationFormDataAtom = combine({
     passwordError: passwordErrorAtom,
     confirmPasswordError: confirmPasswordErrorAtom,
     rememberMe: rememberMeAtom,
-    isDisabledSubmitButton: isDisabledSubmitButtonAtom,
+    submitButtonState: submitButtonStateAtom,
 })
 
 const registrationFormDataActions = {

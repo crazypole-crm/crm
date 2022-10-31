@@ -1,12 +1,14 @@
 import { Button, Checkbox, Input, InputRef } from 'antd'
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { ChangeEvent, useRef } from 'react';
+import { ButtonState } from '../../common/button/ButtonState';
 import styles from './AuthForm.module.css'
 
 type FormFieldData ={
     id: string,
     value: string,
     placeholder: string,
+    disabled: boolean,
     prefixIcon?: JSX.Element,
     error: string,
     type: 'text' | 'password',
@@ -16,13 +18,14 @@ type FormFieldData ={
 
 type SubmitButtonData = {
     text: string,
-    disabled: boolean,
+    state: ButtonState,
     onClick: () => void,
 }
 
 type RememberMeData = {
     checked: boolean,
     onChange: (value: boolean) => void,
+    disabled: boolean
 }
 
 type AuthFormProps = {
@@ -40,6 +43,7 @@ function FormField({
     prefixIcon,
     type,
     value,
+    disabled,
 }: FormFieldData) {
     const inputRef = useRef<InputRef>(null);
 
@@ -54,11 +58,12 @@ function FormField({
                 placeholder={placeholder}
                 type={type}
                 prefix={prefixIcon}
-                defaultValue={value}
+                value={value}
                 onChange={_onChange}
                 onPressEnter={onPressEnter}
                 ref={inputRef}
                 status={!!error ? 'error' : undefined}
+                disabled={disabled}
             />
             {error && <div className={styles.errorMessage}>{error}</div>}
         </div>
@@ -83,12 +88,14 @@ function AuthForm({
             <Checkbox
                 checked={rememberMeData.checked}
                 onChange={onRememberMeChanged}
+                disabled={rememberMeData.disabled}
                 className={styles.rememberMe}
             >Запомнить меня</Checkbox>
             <Button
                 type='primary'
                 size='large'
-                disabled={submitButtonData.disabled}
+                disabled={submitButtonData.state === 'disabled'}
+                loading={submitButtonData.state === 'loading'}
                 onClick={submitButtonData.onClick}
                 className={styles.submitButton}
             >{submitButtonData.text}</Button>

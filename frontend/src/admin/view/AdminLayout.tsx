@@ -9,10 +9,10 @@ import { Sidebar } from "./sidebar/Sidebar"
 
 function AdminLayout() {
     return (
-        <Layout hasSider>
-            <Sidebar />
-            <Layout>
-                <AdminHeader />
+        <Layout>
+            <AdminHeader />
+            <Layout hasSider>
+                <Sidebar />
                 <Content className={styles.content}>
                     <Switch>
                         <Redirect exact from={Router.Admin.url()} to={Router.Dashboard.url()}/>
@@ -24,6 +24,9 @@ function AdminLayout() {
                         </Route>
                         <Route exact path={[Router.User.url()]} >
                             <div>User Layout</div>
+                        </Route>
+                        <Route exact path={[Router.UsersList.url()]} >
+                            <div>Users Layout</div>
                         </Route>
                         <Route exact path={[Router.Settings.url()]} >
                             <div>Settings Layout</div>

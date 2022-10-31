@@ -3,6 +3,7 @@ import {History} from "history";
 const AUTH = '/auth'
 const ADMIN = '/admin'
 const USER = '/user'
+const USERS_LIST = '/users-list'
 const SCHEDULE = '/schedule'
 const MARK = '/mark'
 const SETTINGS = '/settings'
@@ -41,6 +42,12 @@ function generateUserUrl() {
 function openUser(push: boolean = false) {
     replaceUrl(generateUserUrl(), push)
 }
+function generateUsersListUrl() {
+    return `${ADMIN}${USERS_LIST}`
+}
+function openUsersList(push: boolean = false) {
+    replaceUrl(generateUsersListUrl(), push)
+}
 function generateMarkUrl() {
     return `${ADMIN}${MARK}`
 }
@@ -78,6 +85,10 @@ const Router = {
     User: {
         open: openUser,
         url: generateUserUrl,
+    },
+    UsersList: {
+        open: openUsersList,
+        url: generateUsersListUrl,
     },
     Schedule: {
         open: openSchedule,
