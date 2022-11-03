@@ -1,9 +1,7 @@
 .sider {
     overflow: auto;
-    height: 100vh;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    position: sticky;
     background: #fff;
-    width: 80px;
+    left: 0;
+    bottom: 0;
 }

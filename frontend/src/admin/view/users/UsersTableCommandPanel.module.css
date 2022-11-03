@@ -1,0 +1,10 @@
+.commandPanel {
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+}
+
+.buttonsContainer {
+    display: flex;
+    gap: 10px;
+}

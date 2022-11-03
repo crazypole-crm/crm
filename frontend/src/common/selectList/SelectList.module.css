@@ -1,0 +1,16 @@
+.list {
+    display: flex;
+    flex-direction: column;
+}
+
+.listItem {
+    display: flex;
+}
+
+.checkbox {
+    margin-right: 10px;
+}
+
+.text {
+    cursor: pointer;
+}

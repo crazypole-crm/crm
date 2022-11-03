@@ -36,11 +36,11 @@ function generateAdminUrl() {
 function openAdmin(push: boolean = false) {
     replaceUrl(generateAdminUrl(), push)
 }
-function generateUserUrl() {
-    return `${ADMIN}${USER}`
+function generateUserUrl(userId: string) {
+    return `${ADMIN}${USER}/${userId}`
 }
-function openUser(push: boolean = false) {
-    replaceUrl(generateUserUrl(), push)
+function openUser(userId: string, push: boolean = false) {
+    replaceUrl(generateUserUrl(userId), push)
 }
 function generateUsersListUrl() {
     return `${ADMIN}${USERS_LIST}`

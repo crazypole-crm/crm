@@ -5,6 +5,7 @@ import { Router } from "../../core/router/router"
 import styles from './AdminLayout.module.css'
 import { AdminHeader } from "./header/AdminHeader"
 import { Sidebar } from "./sidebar/Sidebar"
+import { UsersLayout } from "./users/UsersLayout"
 
 
 function AdminLayout() {
@@ -22,17 +23,14 @@ function AdminLayout() {
                         <Route exact path={[Router.Schedule.url()]} >
                             <div>Schedule Layout</div>
                         </Route>
-                        <Route exact path={[Router.User.url()]} >
+                        <Route exact path={[Router.User.url(':userId')]} >
                             <div>User Layout</div>
                         </Route>
                         <Route exact path={[Router.UsersList.url()]} >
-                            <div>Users Layout</div>
+                            <UsersLayout/>
                         </Route>
                         <Route exact path={[Router.Settings.url()]} >
                             <div>Settings Layout</div>
-                        </Route>
-                        <Route exact path={[Router.Mark.url()]} >
-                            <div>Mark Layout</div>
                         </Route>
                         <Route exact path={[Router.Dashboard.url()]} >
                             <div>Dashboard Layout</div>

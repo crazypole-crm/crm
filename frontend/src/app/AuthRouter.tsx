@@ -3,7 +3,7 @@ import {Router} from "../core/router/router";
 
 
 function AuthRouter() {
-    const isAuth = false
+    const isAuth = true
 
     if (!isAuth) {
         return <Redirect to={Router.Auth.url()} />

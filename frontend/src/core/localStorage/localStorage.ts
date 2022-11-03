@@ -1,27 +1,13 @@
 import {get, set, remove} from "local-storage";
 
-type StorageKey = 'calendarDefaultView'
-    | 'redirect_from'
-    | 'workspaceId'
-    | 'language'
-    | 'calendar_step'
-    | 'calendar_rtl'
-    | 'calendar_timeslots'
-    | 'start_on_monday'
+type StorageKey = 'visible-collumns'
 
 type StorageKeys = {
     [item: string]: StorageKey,
 }
 
 const STORAGE_KEYS: StorageKeys = {
-    CALENDAR_DEFAULT_VIEW: 'calendarDefaultView',
-    REDIRECT_FROM: 'redirect_from',
-    WORKSPACE_ID: 'workspaceId',
-    LANGUAGE: 'language',
-    CALENDAR_STEP: 'calendar_step',
-    CALENDAR_RTL: 'calendar_rtl',
-    CALENDAR_TIMESLOTS: 'calendar_timeslots',
-    START_ON_MONDAY: 'start_on_monday',
+    VISIBLE_COLLUMNS: 'visible-collumns',
 }
 
 function setValue<T>(key: StorageKey, value: T) {
