@@ -12,10 +12,6 @@ function declareAsyncAction<PAYLOAD, SUCCESS = void, ERROR = void>(
     const done = declareAction<SUCCESS>(`${name}[done]`)
     const fail = declareAction([`${name}[fail]`])
 
-    /**
-     * @param {PAYLOAD} payload
-     * @param {Store} store
-     */
     function reaction(payload: PAYLOAD, store: Store) {
         handler(payload, store)
             .then(data => {

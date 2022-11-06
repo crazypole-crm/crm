@@ -1,10 +1,9 @@
-import { Atom, combine, declareAction, declareAtom, map } from "@reatom/core";
-import { AuthenticationApi } from "../../api/authenticationApi";
-import { ButtonState } from "../../common/button/ButtonState";
-import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter";
-import { loginAction } from "../../currentUser/actions/login";
-import { setAuthPageMode } from "./authPageMode";
-import { validateRequiredField } from "./FieldErrorTypes";
+import {Atom, combine, declareAction, declareAtom, map} from "@reatom/core";
+import {ButtonState} from "../../common/button/ButtonState";
+import {declareAtomWithSetter} from "../../core/reatom/declareAtomWithSetter";
+import {loginAction} from "../../currentUser/actions/login";
+import {setAuthPageMode} from "./authPageMode";
+import {validateRequiredField} from "./FieldErrorTypes";
 
 
 const [userNameAtom, setUserName] = declareAtomWithSetter('auth.login.userName', '', on => [

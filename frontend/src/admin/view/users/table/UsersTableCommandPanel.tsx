@@ -84,7 +84,7 @@ function UsersTableCommandPanel({
 
     const buttons: UsersActionsButtonType[] = useMemo(() => {
         return optionalArray([
-            'add',
+            !selectedRowKeys.length && 'add',
             selectedRowKeys.length === 1 && 'edit',
             !!selectedRowKeys.length && 'delete'    
         ])

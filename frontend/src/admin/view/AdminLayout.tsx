@@ -14,11 +14,7 @@ function AdminLayout() {
     const currentUser = useAtom(currentUserAtom)
 
     if (!currentUser.isAuthUser) {
-        return (
-            <Switch>
-                <Redirect to={Router.Auth.url()} />
-            </Switch>
-        )
+        return <Redirect to={Router.Auth.url()} />
     }
 
     return (

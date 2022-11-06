@@ -23,7 +23,7 @@ const loginAction = declareAsyncAction<LoginActionPayload>(
                 if (err.status && err.status === HttpStatus.UNAUTHORIZED) {
                     Toasts.error('Введен неверный логин или пароль')
                 }
-                return Promise.reject()
+                return Promise.reject(err)
             })
     }
 )
