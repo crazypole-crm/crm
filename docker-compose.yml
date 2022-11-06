@@ -34,6 +34,7 @@ services:
       - './backend/src:/usr/src/backend/src'
       - './backend/migrations:/usr/src/backend/migrations'
       - './backend/config:/usr/src/backend/config'
+      - './backend/var/log:/usr/src/backend/var/log'
     ports:
       - '9000:9000'
     restart: on-failure
