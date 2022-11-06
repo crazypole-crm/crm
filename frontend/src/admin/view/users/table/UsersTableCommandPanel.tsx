@@ -1,15 +1,16 @@
 
-import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons'
 import { Button, Popover } from 'antd'
 import { useMemo, useState } from 'react'
-import { SelectList, SelectListItemData } from '../../../common/selectList/SelectList'
-import { optionalArray } from '../../../core/array/array'
-import { Router } from '../../../core/router/router'
-import { COLLUMN_TO_TITLE_MAP, COLLUMS_IDS, DISABLED_COLLUMNS, VisibleCollumsData } from './CollumnsData'
+import { SelectList, SelectListItemData } from '../../../../common/selectList/SelectList'
+import { optionalArray } from '../../../../core/array/array'
+import { Router } from '../../../../core/router/router'
+import { COLLUMN_TO_TITLE_MAP, COLLUMS_IDS, DISABLED_COLLUMNS } from './userTableDataConsts'
 import { CollumnIdType } from './UsersTable'
 import styles from './UsersTableCommandPanel.module.css'
+import { VisibleCollumsData } from './CollumnsData'
 
-type UsersActionsButtonType = 'delete' | 'edit'
+type UsersActionsButtonType = 'delete' | 'edit' | 'add'
 
 type CollumnsFilterProps = {
     visibleCollumns: VisibleCollumsData,
@@ -77,13 +78,15 @@ function UsersTableCommandPanel({
         console.log(`delete user with ids`, selectedRowKeys)
     }
 
+    const handleOnAddClick = () => {
+        console.log('add new user')
+    }
+
     const buttons: UsersActionsButtonType[] = useMemo(() => {
-        if (!selectedRowKeys.length) {
-            return []
-        }
         return optionalArray([
+            'add',
             selectedRowKeys.length === 1 && 'edit',
-            'delete'    
+            !!selectedRowKeys.length && 'delete'    
         ])
     }, [selectedRowKeys])
 
@@ -115,6 +118,18 @@ function UsersTableCommandPanel({
                                 icon={<DeleteOutlined />}
                             >
                                 Удалить
+                            </Button>
+                        case 'add':
+                            return <Button
+                                key={buttonType}
+                                type='primary'
+                                ghost
+                                size='large'
+                                onClick={handleOnAddClick}
+                                className={styles.submitButton}
+                                icon={<PlusOutlined />}
+                            >
+                                Добавить
                             </Button>
                         default:
                             throw new Error()

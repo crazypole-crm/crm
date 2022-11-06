@@ -1,5 +1,6 @@
-import { Router } from "../../../../core/router/router"
-import { joinName, TableUserNameType } from "../CollumnsData"
+import { Router } from "../../../../../core/router/router"
+import { TableUserNameType } from "../CollumnsData"
+import { joinName } from "../userTableDataConvert"
 import styles from './UserNameCell.module.css'
 
 type UserNameCellProps = {

@@ -16,7 +16,6 @@ function App() {
                 <Route path={[Router.Admin.url()]}>
                     <AdminLayout />
                 </Route>
-                <Redirect to={Router.Admin.url()} />
             </Switch>
         </>
     )

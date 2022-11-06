@@ -1,14 +1,14 @@
 import {declareAction, Store, PayloadActionCreator} from "@reatom/core";
 
-type AsyncActionCreator<PAYLOAD, DONE> = PayloadActionCreator<PAYLOAD, string> & {
+type AsyncActionCreator<PAYLOAD, DONE, ERROR> = PayloadActionCreator<PAYLOAD, string> & {
     done: PayloadActionCreator<DONE>,
-    fail: PayloadActionCreator<any>,
+    fail: PayloadActionCreator<ERROR>,
 }
 
-function declareAsyncAction<PAYLOAD, SUCCESS>(
+function declareAsyncAction<PAYLOAD, SUCCESS = void, ERROR = void>(
     name: string,
     handler: (payload: PAYLOAD, store: Store) => Promise<any>
-): AsyncActionCreator<PAYLOAD, SUCCESS> {
+): AsyncActionCreator<PAYLOAD, SUCCESS, ERROR> {
     const done = declareAction<SUCCESS>(`${name}[done]`)
     const fail = declareAction([`${name}[fail]`])
 

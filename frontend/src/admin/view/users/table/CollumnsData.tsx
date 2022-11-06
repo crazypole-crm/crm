@@ -1,7 +1,10 @@
 import { ColumnsType } from "antd/lib/table";
-import { LocalStorage, STORAGE_KEYS } from "../../../core/localStorage/localStorage";
+import { LocalStorage, STORAGE_KEYS } from "../../../../core/localStorage/localStorage";
 import { UserNameCell } from "./cells/UserNameCell";
+import { dateCompare, nameCompare, stringValuesCompare } from "./userTableDataSort";
 import { DataType } from "./UsersTable";
+import { COLLUMN_TO_TITLE_MAP, COLLUMS_IDS } from "./userTableDataConsts";
+import { dateToString } from "./userTableDataConvert";
 
 type CollumnIdType = 'name' | 'birthDay' | 'email' | 'phone' | 'lastVisit'
 
@@ -12,48 +15,24 @@ type TableUserNameType = {
     middleName: string;
 }
 
-function normalizeDate(date: string) {
-    return date.length === 1
-        ? `0${date}`
-        : date
-}
-
-function dateToString(date: Date) {
-    return `${normalizeDate(date.getDate().toString())}.${normalizeDate(date.getMonth().toString())}.${date.getFullYear()}`
-}
-
-const COLLUMN_TO_TITLE_MAP: Map<CollumnIdType, string> = new Map([
-    ['name', 'Имя'],
-    ['birthDay', 'День рождения'],
-    ['email', 'Email'],
-    ['phone', 'Номер телефона'],
-    ['lastVisit', 'Последний визит'],
-])
-
-const DISABLED_COLLUMNS: CollumnIdType[] = ['name']
-
-function joinName(name: TableUserNameType) {
-    return `${name.firstName} ${name.lastName} ${name.middleName}`
-}
-
 const COLLUMNS: ColumnsType<DataType> = [
     {
         title: COLLUMN_TO_TITLE_MAP.get('name'),
         dataIndex: 'name',
         render: name => <UserNameCell name={name}/>,
-        sorter: (a, b) => joinName(a.name).localeCompare(joinName(b.name)),
+        sorter: (a, b) => nameCompare(a.name, b.name),
         width: 400
     },
     {
         title: COLLUMN_TO_TITLE_MAP.get('birthDay'),
         dataIndex: 'birthDay',
         render: dateToString,
-        sorter: (a, b) =>  a.birthDay.getTime() - b.birthDay.getTime()
+        sorter: (a, b) => dateCompare(a.birthDay, b.birthDay)
     },
     {
         title: COLLUMN_TO_TITLE_MAP.get('email'),
         dataIndex: 'email',
-        sorter: (a, b) => a.email.localeCompare(b.email),
+        sorter: (a, b) => stringValuesCompare(a.email, b.email),
     },
     {
         title: COLLUMN_TO_TITLE_MAP.get('phone'),
@@ -63,11 +42,9 @@ const COLLUMNS: ColumnsType<DataType> = [
         title: COLLUMN_TO_TITLE_MAP.get('lastVisit'),
         dataIndex: 'lastVisit',
         render: dateToString,
-        sorter: (a, b) =>  a.birthDay.getTime() - b.birthDay.getTime()
+        sorter: (a, b) => dateCompare(a.lastVisit, b.lastVisit)
     },
 ];
-
-const COLLUMS_IDS: CollumnIdType[] = ['name', 'birthDay', 'email', 'phone', 'lastVisit']
 
 type VisibleCollumsData = {
     [item: string]: boolean
@@ -101,11 +78,7 @@ export type {
 
 export {
     COLLUMNS,
-    COLLUMS_IDS,
-    COLLUMN_TO_TITLE_MAP,
-    DISABLED_COLLUMNS,
 
-    joinName,
     setVisibleCollumnsToLocalStorage,
     getVisibleCollumnsFromLocalStorage,
 }

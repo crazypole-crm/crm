@@ -1,8 +1,8 @@
-import { CollumnIdType, UsersTable } from "./UsersTable"
+import { CollumnIdType, UsersTable } from "./table/UsersTable"
 import styles from './UsersLayout.module.css'
 import { useState } from "react";
-import { UsersTableCommandPanel } from "./UsersTableCommandPanel";
-import { getVisibleCollumnsFromLocalStorage, setVisibleCollumnsToLocalStorage, VisibleCollumsData } from "./CollumnsData";
+import { UsersTableCommandPanel } from "./table/UsersTableCommandPanel";
+import { getVisibleCollumnsFromLocalStorage, setVisibleCollumnsToLocalStorage, VisibleCollumsData } from "./table/CollumnsData";
 
 function UsersLayout() {
     const [visibleCollumns, setVisibleCollumns] = useState<VisibleCollumsData>(getVisibleCollumnsFromLocalStorage())

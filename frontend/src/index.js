@@ -9,10 +9,12 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import {AppWrapper} from "./app/AppWrapper";
 import { isLoadingAppAtom } from './app/isAppLoading';
+import { currentUserAtom } from './currentUser/currentUser';
 
 const store = createStore(
   combine({
     isLoadingAppAtom,
+    currentUserAtom,
   })
 );
 

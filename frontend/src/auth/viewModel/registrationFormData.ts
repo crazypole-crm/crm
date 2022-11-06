@@ -1,6 +1,7 @@
-import { Atom, combine, declareAction, map } from "@reatom/core";
+import { Atom, combine, declareAction, declareAtom, map } from "@reatom/core";
 import { ButtonState } from "../../common/button/ButtonState";
 import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter";
+import { registrationAction } from "../../currentUser/actions/registration";
 import { setAuthPageMode } from "./authPageMode";
 import { validateRequiredField } from "./FieldErrorTypes";
 
@@ -35,7 +36,11 @@ const [rememberMeAtom, setRememberMe] = declareAtomWithSetter('auth.registation.
     on(setAuthPageMode, () => false)
 ]);
 
-const [isSubmitButtonLoadingAtom, setIsSubmitButtonLoading] = declareAtomWithSetter('auth.registration.isSubmitButtonLoading', false)
+const isSubmitButtonLoadingAtom = declareAtom('auth.registration.isSubmitButtonLoading', false, on => [
+    on(registrationAction, () => true),
+    on(registrationAction.done, () => false),
+    on(registrationAction.fail, () => false),
+])
 
 const isDisabledSubmitButtonAtom = map(combine({
     emailError: emailErrorAtom,
@@ -55,7 +60,7 @@ const submitButtonStateAtom: Atom<ButtonState> = map(combine({
 })
 
 function validateConfirmPassword(currentPassword: string, confirmPassword: string): string | null {
-    return currentPassword === confirmPassword ? 'Пароли должны отличаться' : null
+    return currentPassword !== confirmPassword ? 'Пароли должны совпадать' : null
 }
 
 const submit = declareAction('auth.registation.submit',
@@ -80,13 +85,10 @@ const submit = declareAction('auth.registation.submit',
             return
         }
 
-        console.log('registation with data', {
+        store.dispatch(registrationAction({
             email,
-            rememberMe,
             password,
-            confirmPassword,
-        })
-        store.dispatch(setIsSubmitButtonLoading(true))
+        }))
     }
 )
 

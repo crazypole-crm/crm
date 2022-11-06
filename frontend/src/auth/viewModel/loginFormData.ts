@@ -1,6 +1,8 @@
-import { Atom, combine, declareAction, map } from "@reatom/core";
+import { Atom, combine, declareAction, declareAtom, map } from "@reatom/core";
+import { AuthenticationApi } from "../../api/authenticationApi";
 import { ButtonState } from "../../common/button/ButtonState";
 import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter";
+import { loginAction } from "../../currentUser/actions/login";
 import { setAuthPageMode } from "./authPageMode";
 import { validateRequiredField } from "./FieldErrorTypes";
 
@@ -27,7 +29,11 @@ const [rememberMeAtom, setRememberMe] = declareAtomWithSetter('auth.login.rememb
     on(setAuthPageMode, () => false)
 ])
 
-const [isSubmitButtonLoadingAtom, setIsSubmitButtonLoading] = declareAtomWithSetter('auth.login.isSubmitButtonLoading', false)
+const isSubmitButtonLoadingAtom = declareAtom('auth.login.isSubmitButtonLoading', false, on => [
+    on(loginAction, () => true),
+    on(loginAction.done, () => false),
+    on(loginAction.fail, () => false),
+])
 
 const isDisabledSubmitButtonAtom = map(combine({
     userNameError: userNameErrorAtom,
@@ -38,8 +44,6 @@ const submitButtonStateAtom: Atom<ButtonState> = map(combine({
     isDisabledSubmitButton: isDisabledSubmitButtonAtom,
     isSubmitButtonLoading: isSubmitButtonLoadingAtom,
 }), ({isDisabledSubmitButton, isSubmitButtonLoading}) => {
-    console.log('isDisabledSubmitButton', isDisabledSubmitButton)
-    console.log('isSubmitButtonLoading', isSubmitButtonLoading)
     return isDisabledSubmitButton
         ? 'disabled'
         : isSubmitButtonLoading
@@ -64,13 +68,11 @@ const submit = declareAction('auth.login.submit',
         if (newPasswordError || newUserNameError) {
             return
         }
-
-        console.log('login with data', {
-            userName,
-            password,
-            remeberMe,
-        })
-        store.dispatch(setIsSubmitButtonLoading(true))
+        
+        store.dispatch(loginAction({
+            login: userName,
+            password: password,
+        }))
     }
 )
 
