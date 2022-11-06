@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\User\Domain\Model\User" table="user">
+        <unique-constraints>
+            <unique-constraint columns="name,user_email" name="search_idx"/>
+        </unique-constraints>
+
+        <id name="userId" type="string" column="user_id"/>
+        <field name="email" column="email" type="string" unique="true"/>
+        <field name="password" column="password" type="string"/>
+        <field name="firstName" column="first_name" type="string" nullable="true"/>
+        <field name="lastName" column="last_name" type="string" nullable="true"/>
+        <field name="phone" column="phone" type="string" unique="true" nullable="true"/>
+        <field name="avatarUrl" column="avatar_url" type="string" nullable="true"/>
+
+    </entity>
+</doctrine-mapping>
