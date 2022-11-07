@@ -18,11 +18,11 @@ function AdminLayout() {
     }
 
     return (
-        <Layout>
+        <div className={styles.layout}>
             <AdminHeader />
-            <Layout hasSider>
+            <div className={styles.contentRow}>
                 <Sidebar />
-                <Content className={styles.content}>
+                <div className={styles.content}>
                     <Switch>
                         <Redirect exact from={Router.Admin.url()} to={Router.Dashboard.url()}/>
                         <Route exact path={[Router.Mark.url()]} >
@@ -44,9 +44,9 @@ function AdminLayout() {
                             <div>Dashboard Layout</div>
                         </Route>
                     </Switch>
-                </Content>
-            </Layout>
-        </Layout>
+                </div>
+            </div>
+        </div>
     )
 }
 

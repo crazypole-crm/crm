@@ -5,8 +5,6 @@ import { currentUserAtom } from '../../currentUser/currentUser'
 import styles from './AuthLayout.module.css'
 import { AuthTabs } from './AuthTabs'
 
-
-
 function AuthLayout() {
     const currentUser = useAtom(currentUserAtom)
     

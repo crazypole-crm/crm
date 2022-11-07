@@ -10,7 +10,7 @@ import { CollumnIdType } from './UsersTable'
 import styles from './UsersTableCommandPanel.module.css'
 import { VisibleCollumsData } from './CollumnsData'
 
-type UsersActionsButtonType = 'delete' | 'edit' | 'add'
+type UsersActionsButtonType = 'delete' | 'edit'
 
 type CollumnsFilterProps = {
     visibleCollumns: VisibleCollumsData,
@@ -71,20 +71,15 @@ function UsersTableCommandPanel({
 }: UsersActionsButtonProps) {
 
     const handleOnEditClick = () => {
-        Router.User.open(selectedRowKeys[0].toString())
+        console.log(`edit user with id ${selectedRowKeys[0]}`)
     }
 
     const handleOnDeleteClick = () => {
         console.log(`delete user with ids`, selectedRowKeys)
     }
 
-    const handleOnAddClick = () => {
-        console.log('add new user')
-    }
-
     const buttons: UsersActionsButtonType[] = useMemo(() => {
         return optionalArray([
-            !selectedRowKeys.length && 'add',
             selectedRowKeys.length === 1 && 'edit',
             !!selectedRowKeys.length && 'delete'    
         ])
@@ -118,18 +113,6 @@ function UsersTableCommandPanel({
                                 icon={<DeleteOutlined />}
                             >
                                 Удалить
-                            </Button>
-                        case 'add':
-                            return <Button
-                                key={buttonType}
-                                type='primary'
-                                ghost
-                                size='large'
-                                onClick={handleOnAddClick}
-                                className={styles.submitButton}
-                                icon={<PlusOutlined />}
-                            >
-                                Добавить
                             </Button>
                         default:
                             throw new Error()

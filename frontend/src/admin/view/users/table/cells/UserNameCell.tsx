@@ -1,6 +1,5 @@
-import { Router } from "../../../../../core/router/router"
-import { TableUserNameType } from "../CollumnsData"
-import { joinName } from "../userTableDataConvert"
+import {TableUserNameType} from "../CollumnsData"
+import {joinName} from "../userTableDataConvert"
 import styles from './UserNameCell.module.css'
 
 type UserNameCellProps = {
@@ -12,7 +11,7 @@ function UserNameCell({
 }: UserNameCellProps) {
     return (
         <span
-            onClick={() => Router.User.open(name.id)}
+            onClick={() => {}}
             className={styles.title}
         >
             {joinName(name)}
