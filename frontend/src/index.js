@@ -10,6 +10,7 @@ import reportWebVitals from './reportWebVitals';
 import {AppWrapper} from "./app/AppWrapper";
 import { isLoadingAppAtom } from './app/isAppLoading';
 import { currentUserAtom } from './currentUser/currentUser';
+import {initExternalLayer} from "./common/layers/externalLayers";
 
 const store = createStore(
   combine({
@@ -28,6 +29,8 @@ ReactDOM.render(
   </Suspense>,
     document.getElementById('root')
 );
+
+initExternalLayer('popup')
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

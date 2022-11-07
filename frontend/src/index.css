@@ -18,3 +18,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.popup-layer {
+  z-index: 10000;
+}
+
+.external-layer {
+  position: relative;
+  left: 0;
+  top: 0;
+}
