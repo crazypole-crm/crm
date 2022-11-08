@@ -10,6 +10,7 @@ import {editUserPopupActions, editUserPopupAtom} from "../viewModel/editUserPopu
 import {useAtomWithSelector} from "../../core/reatom/useAtomWithSelector";
 import {PopupPortal} from "../../common/portal/PopupPortal";
 import {EditUserPopup} from "./users/editUserPopup/EditUserPopup";
+import {ScheduleLayoutWrapper} from "./schedule/ScheduleLayoutWrapper";
 
 function PopupsLayout() {
     const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
@@ -43,7 +44,7 @@ function AdminLayout() {
                             <div>Mark Layout</div>
                         </Route>
                         <Route exact path={[Router.Schedule.url()]} >
-                            <div>Schedule Layout</div>
+                            <ScheduleLayoutWrapper />
                         </Route>
                         <Route exact path={[Router.User.url(':userId')]} >
                             <div>User Layout</div>

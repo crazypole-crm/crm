@@ -12,12 +12,16 @@ import { isLoadingAppAtom } from './app/isAppLoading';
 import { currentUserAtom } from './currentUser/currentUser';
 import {initExternalLayer} from "./common/layers/externalLayers";
 import {usersAtom} from "./admin/viewModel/users/users";
+import {directionsAtom} from "./admin/viewModel/direction/directions";
+import {hallsAtom} from "./admin/viewModel/hall/halls";
 
 const store = createStore(
   combine({
     isLoadingAppAtom,
     currentUserAtom,
     usersAtom,
+    directionsAtom,
+    hallsAtom
   })
 );
 
