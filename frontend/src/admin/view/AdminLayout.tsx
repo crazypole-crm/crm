@@ -1,4 +1,4 @@
-import { useAtom } from "@reatom/react"
+import {useAction, useAtom} from "@reatom/react"
 import { Layout } from "antd"
 import { Content } from "antd/lib/layout/layout"
 import { Redirect, Route, Switch } from "react-router-dom"
@@ -8,6 +8,22 @@ import styles from './AdminLayout.module.css'
 import { AdminHeader } from "./header/AdminHeader"
 import { Sidebar } from "./sidebar/Sidebar"
 import { UsersLayout } from "./users/UsersLayout"
+import {editUserPopupActions, editUserPopupAtom} from "../viewModel/editUserPopup/editUserPopup";
+import {useAtomWithSelector} from "../../core/reatom/useAtomWithSelector";
+import {PopupPortal} from "../../common/portal/PopupPortal";
+import {EditUserPopup} from "./users/editUserPopup/EditUserPopup";
+
+function PopupsLayout() {
+    const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
+
+    const handleCloseEditUserPopup = useAction(editUserPopupActions.close)
+
+    return (
+        <>
+            <PopupPortal binding={<EditUserPopup/>} show={editUserPopupOpened} close={() => handleCloseEditUserPopup()} />
+        </>
+    )
+}
 
 
 function AdminLayout() {
@@ -46,6 +62,7 @@ function AdminLayout() {
                     </Switch>
                 </div>
             </div>
+            <PopupsLayout />
         </div>
     )
 }

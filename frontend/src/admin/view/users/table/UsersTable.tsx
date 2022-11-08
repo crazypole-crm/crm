@@ -6,15 +6,17 @@ import { generateUuid } from "../../../../core/uuid/generateUuid";
 import { verify } from "../../../../core/verify";
 import { HEADER_HEIGHT, MARGINS, USERS_ACTION_BUTTONS_HEIGHT, USERS_TABLE_FOOTER_HEIGHT, USERS_TABLE_HEADER_HEIGHT } from "../../LayoutBlocksSize";
 import { CollumnIdType, COLLUMNS, TableUserNameType, VisibleCollumsData } from "./CollumnsData";
+import {UserData, UserRole} from "../../../viewModel/users/UserData";
 
 
 interface DataType {
     key: string;
     name: TableUserNameType;
-    birthDay: Date;
+    birthDay?: Date;
     email: string;
-    phone: string;
-    lastVisit: Date;
+    phone?: string;
+    lastVisit?: Date;
+    role: UserRole,
   }
   
 interface TableParams {
@@ -23,22 +25,21 @@ interface TableParams {
     sortOrder?: string;
 }
 
-const data: DataType[] = [];
-for (let i = 0; i < 100; i++) {
-  const id = generateUuid() 
-  data.push({
-    key: id,
-    name: {
-        id, 
-        firstName: 'Edward',
-        lastName: 'King',
-        middleName: `${i}`,
-    },
-    birthDay: new Date(Math.round(Math.random() * 10000000000000)),
-    email: 'edwardKing@mail.ru',
-    phone: '89021025370',
-    lastVisit: new Date(Math.round(Math.random() * 10000000000000)),
-  });
+function remapUsersDataToTableData(usersData: UserData[]): DataType[] {
+    return usersData.map(user => ({
+        key: user.id,
+        name: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            middleName: user.middleName,
+        },
+        birthDay: user.birthDay,
+        email: user.email,
+        lastVisit: user.lastVisit,
+        phone: user.phone,
+        role: user.role,
+    }))
 }
 
 function calcTableSize(windowHeight: number) {
@@ -46,12 +47,14 @@ function calcTableSize(windowHeight: number) {
 }
 
 type UsersTableProps = {
+    usersData: UserData[] | null,
     selectedRowKeys: React.Key[],
     setSelectedRowKeys: (value: React.Key[]) => void,
     visibleCollumns: VisibleCollumsData,
 }
 
 function UsersTable({
+    usersData,
     selectedRowKeys,
     setSelectedRowKeys,
     visibleCollumns,
@@ -64,6 +67,7 @@ function UsersTable({
           pageSize: 10,
           position: ['bottomCenter'],
         },
+        sortField: 'name'
       });
 
     const handleTableChange = (
@@ -109,10 +113,12 @@ function UsersTable({
         return visibleCollumns[collumnId]
     })
 
+    const data = useMemo(() => usersData && remapUsersDataToTableData(usersData), [usersData])
+
     return (
         <Table
             columns={visibleCollumnsData}
-            dataSource={data}
+            dataSource={data || []}
             rowSelection={rowSelection}
             pagination={tableParams.pagination}
             scroll={{
@@ -120,6 +126,7 @@ function UsersTable({
             }}
             onRow={onRowClick}
             onChange={handleTableChange}
+            loading={!usersData}
         />
     )
 }

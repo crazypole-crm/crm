@@ -9,6 +9,9 @@ import { COLLUMN_TO_TITLE_MAP, COLLUMS_IDS, DISABLED_COLLUMNS } from './userTabl
 import { CollumnIdType } from './UsersTable'
 import styles from './UsersTableCommandPanel.module.css'
 import { VisibleCollumsData } from './CollumnsData'
+import {useAction, useAtom} from "@reatom/react";
+import {editUserPopupActions} from "../../../viewModel/editUserPopup/editUserPopup";
+import {usersAtom} from "../../../viewModel/users/users";
 
 type UsersActionsButtonType = 'delete' | 'edit'
 
@@ -69,9 +72,12 @@ function UsersTableCommandPanel({
     setVisibleCollumns,
     visibleCollumns,
 }: UsersActionsButtonProps) {
+    const users = useAtom(usersAtom)
+    const handleOpenEditUserPopup = useAction(editUserPopupActions.open)
 
     const handleOnEditClick = () => {
         console.log(`edit user with id ${selectedRowKeys[0]}`)
+        handleOpenEditUserPopup(users[selectedRowKeys[0]])
     }
 
     const handleOnDeleteClick = () => {

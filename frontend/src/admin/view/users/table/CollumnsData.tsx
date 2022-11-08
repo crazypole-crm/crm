@@ -1,18 +1,19 @@
 import { ColumnsType } from "antd/lib/table";
 import { LocalStorage, STORAGE_KEYS } from "../../../../core/localStorage/localStorage";
 import { UserNameCell } from "./cells/UserNameCell";
-import { dateCompare, nameCompare, stringValuesCompare } from "./userTableDataSort";
+import { dateCompare, nameCompare, roleCompare, stringValuesCompare } from "./userTableDataSort";
 import { DataType } from "./UsersTable";
 import { COLLUMN_TO_TITLE_MAP, COLLUMS_IDS } from "./userTableDataConsts";
 import { dateToString } from "./userTableDataConvert";
+import {UserRoleCell} from "./cells/UserRoleCell";
 
-type CollumnIdType = 'name' | 'birthDay' | 'email' | 'phone' | 'lastVisit'
+type CollumnIdType = 'name' | 'role' | 'birthDay' | 'email' | 'phone' | 'lastVisit'
 
 type TableUserNameType = {
     id: string,
-    firstName: string;
-    lastName: string;
-    middleName: string;
+    firstName?: string;
+    lastName?: string;
+    middleName?: string;
 }
 
 const COLLUMNS: ColumnsType<DataType> = [
@@ -21,7 +22,14 @@ const COLLUMNS: ColumnsType<DataType> = [
         dataIndex: 'name',
         render: name => <UserNameCell name={name}/>,
         sorter: (a, b) => nameCompare(a.name, b.name),
-        width: 400
+        width: 400,
+        defaultSortOrder: 'ascend'
+    },
+    {
+        title: COLLUMN_TO_TITLE_MAP.get('role'),
+        dataIndex: 'role',
+        render: role => <UserRoleCell role={role}/>,
+        sorter: (a, b) => roleCompare(a.role, b.role),
     },
     {
         title: COLLUMN_TO_TITLE_MAP.get('birthDay'),
@@ -37,6 +45,7 @@ const COLLUMNS: ColumnsType<DataType> = [
     {
         title: COLLUMN_TO_TITLE_MAP.get('phone'),
         dataIndex: 'phone',
+        render: phone => phone || '-',
     },
     {
         title: COLLUMN_TO_TITLE_MAP.get('lastVisit'),

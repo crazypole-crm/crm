@@ -11,11 +11,13 @@ import {AppWrapper} from "./app/AppWrapper";
 import { isLoadingAppAtom } from './app/isAppLoading';
 import { currentUserAtom } from './currentUser/currentUser';
 import {initExternalLayer} from "./common/layers/externalLayers";
+import {usersAtom} from "./admin/viewModel/users/users";
 
 const store = createStore(
   combine({
     isLoadingAppAtom,
     currentUserAtom,
+    usersAtom,
   })
 );
 
