@@ -73,7 +73,7 @@ function PopupPortal({
         if (show && popupRef.current && !appearComplete) {
             openPopup()
         }
-    }, [show, popupRef])
+    }, [show, popupRef, appearComplete, openPopup])
 
     if (!show) {
         if (hiddenComplete) {

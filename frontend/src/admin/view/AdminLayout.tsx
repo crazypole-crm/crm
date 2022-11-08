@@ -1,13 +1,11 @@
 import {useAction, useAtom} from "@reatom/react"
-import { Layout } from "antd"
-import { Content } from "antd/lib/layout/layout"
-import { Redirect, Route, Switch } from "react-router-dom"
-import { Router } from "../../core/router/router"
-import { currentUserAtom } from "../../currentUser/currentUser"
+import {Redirect, Route, Switch} from "react-router-dom"
+import {Router} from "../../core/router/router"
+import {currentUserAtom} from "../../currentUser/currentUser"
 import styles from './AdminLayout.module.css'
-import { AdminHeader } from "./header/AdminHeader"
-import { Sidebar } from "./sidebar/Sidebar"
-import { UsersLayout } from "./users/UsersLayout"
+import {AdminHeader} from "./header/AdminHeader"
+import {Sidebar} from "./sidebar/Sidebar"
+import {UsersLayout} from "./users/UsersLayout"
 import {editUserPopupActions, editUserPopupAtom} from "../viewModel/editUserPopup/editUserPopup";
 import {useAtomWithSelector} from "../../core/reatom/useAtomWithSelector";
 import {PopupPortal} from "../../common/portal/PopupPortal";

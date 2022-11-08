@@ -3,7 +3,7 @@ import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
 import {processStandardError} from "../../../core/error/processStandardError";
 import {UserData} from "./UserData";
 import {usersActions, usersAtom} from "./users";
-import {Action, Store} from "@reatom/core";
+import {Store} from "@reatom/core";
 import {dispatchAsyncAction} from "../../../core/reatom/dispatchAsyncAction";
 import {Api_UsersData, UsersApi} from "../../../api/usersApi";
 

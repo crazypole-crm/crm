@@ -1,11 +1,16 @@
-import { Table, TablePaginationConfig } from "antd"
-import { ColumnType, SorterResult, TableRowSelection } from "antd/lib/table/interface";
-import { useMemo, useRef, useState } from "react";
-import { useResizeObserver } from "../../../../core/hooks/useResizeObserver";
-import { generateUuid } from "../../../../core/uuid/generateUuid";
-import { verify } from "../../../../core/verify";
-import { HEADER_HEIGHT, MARGINS, USERS_ACTION_BUTTONS_HEIGHT, USERS_TABLE_FOOTER_HEIGHT, USERS_TABLE_HEADER_HEIGHT } from "../../LayoutBlocksSize";
-import { CollumnIdType, COLLUMNS, TableUserNameType, VisibleCollumsData } from "./CollumnsData";
+import {Table, TablePaginationConfig} from "antd"
+import {ColumnType, SorterResult, TableRowSelection} from "antd/lib/table/interface";
+import {useMemo, useRef, useState} from "react";
+import {useResizeObserver} from "../../../../core/hooks/useResizeObserver";
+import {verify} from "../../../../core/verify";
+import {
+    HEADER_HEIGHT,
+    MARGINS,
+    USERS_ACTION_BUTTONS_HEIGHT,
+    USERS_TABLE_FOOTER_HEIGHT,
+    USERS_TABLE_HEADER_HEIGHT
+} from "../../LayoutBlocksSize";
+import {CollumnIdType, COLLUMNS, TableUserNameType, VisibleCollumsData} from "./CollumnsData";
 import {UserData, UserRole} from "../../../viewModel/users/UserData";
 
 

@@ -1,10 +1,8 @@
-import {CalendarOutlined, MenuFoldOutlined, UserOutlined} from "@ant-design/icons";
+import {CalendarOutlined, MenuFoldOutlined, TeamOutlined} from "@ant-design/icons";
 import {Menu, MenuProps} from "antd";
-import Sider from "antd/lib/layout/Sider"
-import { useState } from "react";
+import {useState} from "react";
 import {useLocation} from "react-router-dom";
 import {Router} from "../../../core/router/router";
-import {HEADER_HEIGHT, SIDEBAR_WIDTH} from "../LayoutBlocksSize";
 import styles from './Sidebar.module.css'
 import {getStylesWithMods} from "../../../core/styles/getStylesWithMods";
 
@@ -29,7 +27,7 @@ function getItem(
 
 const items: MenuItem[] = [
     getItem('Календарь', 'calendar', <CalendarOutlined/>),
-    getItem('Пользователи', 'users-list', <UserOutlined/>),
+    getItem('Пользователи', 'users-list', <TeamOutlined/>),
 ];
 
 function getDefaultSelectedSection(path: string): string {
