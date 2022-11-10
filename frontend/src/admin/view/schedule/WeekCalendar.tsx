@@ -41,7 +41,7 @@ function WeekCalendar({
             <WeekCalendarHeader
                 weekStartDate={weekStartDate}
                 weekLength={weekLength}
-                selectedDate={selectedDate}
+                selectedDate={new Date()}
             />
             <div className={styles.gridWrapper}>
                 {

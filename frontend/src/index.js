@@ -14,6 +14,8 @@ import {initExternalLayer} from "./common/layers/externalLayers";
 import {usersAtom} from "./admin/viewModel/users/users";
 import {directionsAtom} from "./admin/viewModel/direction/directions";
 import {hallsAtom} from "./admin/viewModel/hall/halls";
+import 'moment/locale/ru';
+import moment from "moment";
 
 const store = createStore(
   combine({
@@ -24,6 +26,12 @@ const store = createStore(
     hallsAtom
   })
 );
+
+moment.locale('ru-RU', {
+    week: {
+        dow: 1 /// Date offset
+    }
+});
 
 ReactDOM.render(
   <Suspense fallback="loading">

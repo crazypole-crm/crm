@@ -1,5 +1,6 @@
 import { declareMapAtom } from "../../../core/reatom/declareMapAtom"
 import { UserData } from "./UserData"
+import {map} from "@reatom/core";
 
 
 const {
@@ -13,6 +14,9 @@ const {
     user => user.id,
 )
 
+const trainersAtom = map(usersAtom, users => Object.values(users).filter(user => user.role === 'trainer'))
+const clientsAtom = map(usersAtom, users => Object.values(users).filter(user => user.role === 'client'))
+
 const usersActions = {
     removeUsers,
     updateUser,
@@ -22,5 +26,7 @@ const usersActions = {
 
 export {
     usersAtom,
+    trainersAtom,
+    clientsAtom,
     usersActions,
 }

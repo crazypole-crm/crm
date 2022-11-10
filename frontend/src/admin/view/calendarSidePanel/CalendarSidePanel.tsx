@@ -7,17 +7,33 @@ import styles from "./CalendarSidePanel.module.css"
 type CalendarSidePanelProps = {
     selectedDate: Date,
     filterList: FilterData[]
+    selectedFilters: string[]
     onDateChange: (date: Date) => void,
-    onFilterPanelChange: (selectedFilters: string[]) => void
+    onFiltersChange: (selectedFilters: string[]) => void
 }
 
-const CalendarSidePanel: FC<CalendarSidePanelProps> = ({selectedDate, filterList, onDateChange, onFilterPanelChange}) => {
+const CalendarSidePanel: FC<CalendarSidePanelProps> = ({
+    selectedDate,
+    filterList,
+    onDateChange,
+    onFiltersChange,
+    selectedFilters,
+}) => {
     return (
         <div className={styles.panel}>
-            <CalendarApp selectedDate={selectedDate} onDateChange={(value: Date) => {onDateChange(value)}}/>
-            <FilterPanel filterList={filterList} onFilterPanelChange={onFilterPanelChange}></FilterPanel>
+            <CalendarApp
+                selectedDate={selectedDate}
+                onDateChange={onDateChange}
+            />
+            <FilterPanel
+                selectedFilters={selectedFilters}
+                filterList={filterList}
+                onFiltersChange={onFiltersChange}
+            />
         </div>
     );
 };
 
-export default CalendarSidePanel;
+export {
+    CalendarSidePanel
+};

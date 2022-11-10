@@ -8,52 +8,49 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 type FiltersPanelProps = {
     filterList: FilterData[],
-    onFilterPanelChange: (selectedFilters: string[]) => void
+    selectedFilters: string[],
+    onFiltersChange: (selectedFilters: string[]) => void
 }
 
 
-function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-    type?: 'group'): MenuItem
-{
-    return {key, icon, children, label, type} as MenuItem;
+function getItem(key: React.Key, label: React.ReactNode, children?: MenuItem[]): MenuItem {
+    return {key, label, children};
 }
 
-function GetMenuItemsFromArray(array: FilterData[]) : MenuItem[] {
-    return array.map(element => getItem(element.id, element.id, element.icon, GetItemsDataFromArray(element.items)))
+function getItemsDataFromArray(array: ItemData[]) : MenuItem[] {
+    return array.map(option => getItem(option.id, option.name))
 }
 
-function GetItemsDataFromArray(array: ItemData[]) : MenuItem[] {
-    return array.map(option => getItem(option.id, option.id, null))
+function getMenuItemsFromArray(array: FilterData[]) : MenuItem[] {
+    return array.map(element => getItem(element.id, element.name, getItemsDataFromArray(element.items)))
 }
 
-const FilterPanel: FC<FiltersPanelProps> = ({filterList , onFilterPanelChange}) => {
+const FilterPanel: FC<FiltersPanelProps> = ({
+    filterList ,
+    onFiltersChange,
+    selectedFilters,
+}) => {
 
-    const items: MenuProps['items'] = GetMenuItemsFromArray(filterList);
-
-    const onClick: MenuProps['onClick'] = e => {
-        // console.log('click ', e);
-        // console.log('click ', e.item);
-    };
+    const items: MenuProps['items'] = getMenuItemsFromArray(filterList);
 
     const onSelect: MenuProps['onSelect'] = e => {
-        onFilterPanelChange(e.selectedKeys);
+        onFiltersChange(e.selectedKeys);
     };
 
     const onDeselect: MenuProps['onDeselect'] = e => {
-        onFilterPanelChange(e.selectedKeys);
+        onFiltersChange(e.selectedKeys);
     };
 
     return (
         <Menu
-            onClick={onClick}
             onSelect={onSelect}
             onDeselect={onDeselect}
-            style={{ width: 300 }}
-            defaultSelectedKeys={[]}
+            style={{
+                width: 300,
+                borderRadius: 5,
+                filter: 'drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.15))',
+            }}
+            selectedKeys={selectedFilters}
             defaultOpenKeys={[]}
             mode="inline"
             multiple

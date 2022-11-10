@@ -22,8 +22,8 @@ function randomInteger(min: number, max: number) {
 }
 
 function getRandomRole(): UserRole {
-    const roles: UserRole[] = ['admin', 'trainer', 'client']
-    const randomIndex = randomInteger(0, 2)
+    const roles: UserRole[] = ['admin', 'client']
+    const randomIndex = randomInteger(0, 1)
     return roles[randomIndex]
 }
 
@@ -84,7 +84,9 @@ function getAllUsersData(): Promise<Array<Api_UsersData>> {
             for (let i = 0; i < 100; i++) {
                 users.push(getRandomUserData())
             }
-            users.push(getRandomUserData('1', 'trainer'))
+            users.push(getRandomUserData('trainer1', 'trainer'))
+            users.push(getRandomUserData('trainer2', 'trainer'))
+            users.push(getRandomUserData('trainer3', 'trainer'))
             resolve(users)
         }, 1000)
     })

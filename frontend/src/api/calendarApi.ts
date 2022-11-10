@@ -5,19 +5,19 @@ import {TrainingData} from "../admin/viewModel/calendar/TrainingData";
 function getMockDirections(): DirectionData[] {
     return [
         {
-            id: '1',
+            id: 'direction1',
             name: 'Pole dance начинающие'
         },
         {
-            id: '2',
+            id: 'direction2',
             name: 'Pole exotic'
         },
         {
-            id: '3',
+            id: 'direction3',
             name: 'Йога'
         },
         {
-            id: '4',
+            id: 'direction4',
             name: 'Танцы'
         }
     ]
@@ -26,17 +26,17 @@ function getMockDirections(): DirectionData[] {
 function getMockHalls(): HallData[] {
     return [
         {
-            id: '1',
+            id: 'hall1',
             name: 'Пилонный зал',
             capacity: 10,
         },
         {
-            id: '2',
+            id: 'hall2',
             name: 'Воздушный зал',
             capacity: 6,
         },
         {
-            id: '3',
+            id: 'hall3',
             name: 'Малый зал',
             capacity: 5,
         }
@@ -47,9 +47,9 @@ function getMockTrainings(startDate: Date, endDate: Date): TrainingData[] {
     return [
         {
             id: '1',
-            directionId: '1',
-            hallId: '1',
-            trainerId: '1',
+            directionId: 'direction1',
+            hallId: 'hall1',
+            trainerId: 'trainer1',
             date: {
                 year: 2022,
                 month: 10,
@@ -67,20 +67,20 @@ function getMockTrainings(startDate: Date, endDate: Date): TrainingData[] {
         },
         {
             id: '2',
-            directionId: '1',
-            hallId: '1',
-            trainerId: '1',
+            directionId: 'direction2',
+            hallId: 'hall2',
+            trainerId: 'trainer2',
             date: {
                 year: 2022,
                 month: 10,
-                date: 11,
+                date: 8,
             },
             timeStart: {
-                hour: 8,
+                hour: 10,
                 minutes: 0,
             },
             timeEnd: {
-                hour: 9,
+                hour: 11,
                 minutes: 0,
             },
             clients: [],

@@ -3,6 +3,7 @@ import type {Moment} from 'moment';
 import React, {FC} from 'react';
 import styles from './CalendarApp.module.css'
 import moment from "moment";
+import ruRU from "antd/lib/calendar/locale/ru_RU";
 
 type CalendarAppProps = {
     selectedDate: Date,
@@ -30,8 +31,17 @@ const CalendarApp: FC<CalendarAppProps> = ({selectedDate, onDateChange}) => {
     }
 
     return (
-        <div className={styles.siteCalendarCard}>
-            <Calendar value={selectedMomentDate} fullscreen={false} onPanelChange={onPanelChange} onChange={onChange}/>
+        <div className={styles.sideCalendarCard}>
+            <Calendar
+                value={selectedMomentDate}
+                fullscreen={false}
+                onPanelChange={onPanelChange}
+                onChange={onChange}
+                style={{
+                    borderRadius: 5,
+                }}
+                locale={ruRU}
+            />
         </div>
     );
 };

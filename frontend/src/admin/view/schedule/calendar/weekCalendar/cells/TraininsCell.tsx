@@ -8,6 +8,14 @@ import {normalizeDate} from "../../../../users/table/userTableDataConvert";
 import {usersAtom} from "../../../../../viewModel/users/users";
 import {hallsAtom} from "../../../../../viewModel/hall/halls";
 import {AddPlusIcon} from "../../../../../../icons/AddPlusIcon";
+import {authorizedCurrentUser} from "../../../../../../currentUser/currentUser";
+import {TextWithEllipsis} from "../../../../../../common/text/TextWithEllipsis";
+import {Popover, Tooltip} from "antd";
+import {MouseEventHandler, useRef, useState} from "react";
+import {ActionList, ActionListItemData} from "../../../../../../common/actionList/ActionList";
+import {useHtmlElementEventHandler} from "../../../../../../core/hooks/useHtmlElementEventHandler";
+
+type ContextMenuItemId = 'replaceTrainer' | 'cancelTraining' | 'moveTraining' | 'editTraining' | 'deleteTraining'
 
 type TrainingCalendarCellProps = {
     trainingData: TrainingData,
@@ -33,41 +41,155 @@ function getFreePlaces(hallCapacity: number, usersCount: number) {
     return 'Все места заняты'
 }
 
+type AddPlusButtonProps = {
+    onAdd: () => void
+}
+
+function AddPlusButton({
+    onAdd,
+}: AddPlusButtonProps) {
+
+    return (
+        <div className={styles.plus} onClick={onAdd}>
+            <Tooltip
+                title={'Добавить событие'}
+                placement={'bottom'}
+                trigger={'hover'}
+                mouseEnterDelay={0.3}
+            >
+                <AddPlusIcon className={styles.plusIcon}/>
+            </Tooltip>
+        </div>
+    )
+}
+
 function TrainingCalendarCell({
     trainingData,
     time,
 }: TrainingCalendarCellProps) {
+    const currentUser = useAtom(authorizedCurrentUser)
     const directions = useAtom(directionsAtom)
     const halls = useAtom(hallsAtom)
     const users = useAtom(usersAtom)
+    const ref = useRef()
+    const [popoverOpened, setPopoverOpened] = useState(false)
 
     const trainer = users[trainingData.trainerId]
     const hall = halls[trainingData.hallId]
+    const direction = directions[trainingData.directionId]
 
     const onAdd = () => {
         console.log('add')
     }
 
+    const popoverItems: ActionListItemData<ContextMenuItemId>[] = [
+        {
+            id: 'replaceTrainer',
+            text: 'Поставить замену',
+        },
+        {
+            id: 'cancelTraining',
+            text: 'Отменить занятие',
+        },
+        {
+            id: 'moveTraining',
+            text: 'Перенести занятие',
+        },
+        {
+            id: 'editTraining',
+            text: 'Редактировать занятие',
+        },
+        {
+            id: 'deleteTraining',
+            text: 'Удалить занятие',
+        },
+    ]
+
+    const onPopoverItemClick = (id: ContextMenuItemId) => {
+        switch (id) {
+            case 'replaceTrainer':
+                console.log('replace trainer')
+                break
+            case "cancelTraining":
+                console.log('cancel Training')
+                break
+            case "moveTraining":
+                console.log('move Training')
+                break
+            case "editTraining":
+                console.log('edit Training')
+                break
+            case 'deleteTraining':
+                console.log('delete Training')
+                break
+            default:
+                return
+        }
+        setPopoverOpened(false)
+    }
+
+    useHtmlElementEventHandler('click', window, (e) => {
+        !e.defaultPrevented && setPopoverOpened(false)
+    })
+
+    const onTrainingInfoClick: MouseEventHandler<HTMLDivElement> = (e) => {
+        e.preventDefault()
+        if (e.button === 2) {
+            setPopoverOpened(true)
+            return
+        }
+
+        switch (currentUser.role) {
+            case "admin":
+            case "trainer":
+                console.log('edit training')
+                break
+            case "client":
+                console.log('record to training')
+                break
+        }
+    }
+
+    const trainingInfo =
+        <div className={styles.trainingInfo} onMouseDown={onTrainingInfoClick} onContextMenu={e => e.preventDefault()}>
+            <TextWithEllipsis
+                text={direction.name}
+                className={styles.directionTitle}
+                rows={2}
+            />
+            <div className={styles.time}>
+                {getDurationString(trainingData.timeStart, trainingData.timeEnd)}
+            </div>
+            <div className={styles.freePlaces}>
+                {getFreePlaces(hall.capacity, trainingData.clients.length)}
+            </div>
+            <div className={styles.trainerName}>
+                {getTrainerName(trainer.firstName, trainer.lastName)}
+            </div>
+        </div>
+
     return (
         <CalendarCell className={styles.cell}>
             <>
-                <div className={styles.trainingInfo}>
-                    <div className={styles.directionTitle}>
-                        {directions[trainingData.directionId].name}
-                    </div>
-                    <div className={styles.time}>
-                        {getDurationString(trainingData.timeStart, trainingData.timeEnd)}
-                    </div>
-                    <div className={styles.freePlaces}>
-                        {getFreePlaces(hall.capacity, trainingData.clients.length)}
-                    </div>
-                    <div className={styles.trainerName}>
-                        {getTrainerName(trainer.firstName, trainer.lastName)}
-                    </div>
-                </div>
-                <div className={styles.plus} onClick={onAdd}>
-                    <AddPlusIcon className={styles.plusIcon}/>
-                </div>
+                {
+                    currentUser.role === 'trainer' || currentUser.role === 'admin'
+                        ? <Popover
+                            ref={ref}
+                            open={popoverOpened}
+                            placement={'rightTop'}
+                            trigger={'contextMenu'}
+                            content={<ActionList items={popoverItems} onClick={onPopoverItemClick}/>}
+                        >
+                            {trainingInfo}
+                        </Popover>
+                        : trainingInfo
+                }
+
+                {
+                    currentUser.role === 'admin'
+                        ? <AddPlusButton onAdd={onAdd} />
+                        : undefined
+                }
             </>
         </CalendarCell>
     )
