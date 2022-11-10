@@ -128,6 +128,10 @@ function TrainingCalendarCell({
         setPopoverOpened(false)
     }
 
+    useHtmlElementEventHandler('wheel', window, (e) => {
+        setPopoverOpened(false)
+    })
+
     useHtmlElementEventHandler('click', window, (e) => {
         !e.defaultPrevented && setPopoverOpened(false)
     })
