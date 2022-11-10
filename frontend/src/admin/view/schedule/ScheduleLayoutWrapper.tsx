@@ -6,7 +6,7 @@ import {calendarLoadingAtom} from "../../viewModel/calendar/calendarLoading";
 import styles from './ScheduleLayoutWrapper.module.css'
 import {Preloader} from "../../../common/preloader/Preloader";
 import {FilterData} from "../../viewModel/filterPanel/FilterData";
-import CalendarSidePanel from "../calendar side panel/CalendarSidePanel";
+import CalendarSidePanel from "../calendarSidePanel/CalendarSidePanel";
 
 const onDateChangeExample = (value: Date) => {
     console.log(value.toString());

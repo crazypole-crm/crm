@@ -1,7 +1,8 @@
 import React, {FC} from 'react';
 import CalendarApp from "./calendar/CalendarApp";
 import {FilterData} from "../../viewModel/filterPanel/FilterData";
-import FilterPanel from "./filter panel/FilterPanel";
+import FilterPanel from "./filterPanel/FilterPanel";
+import styles from "./CalendarSidePanel.module.css"
 
 type CalendarSidePanelProps = {
     selectedDate: Date,
@@ -12,7 +13,7 @@ type CalendarSidePanelProps = {
 
 const CalendarSidePanel: FC<CalendarSidePanelProps> = ({selectedDate, filterList, onDateChange, onFilterPanelChange}) => {
     return (
-        <div>
+        <div className={styles.panel}>
             <CalendarApp selectedDate={selectedDate} onDateChange={(value: Date) => {onDateChange(value)}}/>
             <FilterPanel filterList={filterList} onFilterPanelChange={onFilterPanelChange}></FilterPanel>
         </div>

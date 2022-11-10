@@ -52,9 +52,9 @@ const FilterPanel: FC<FiltersPanelProps> = ({filterList , onFilterPanelChange}) 
             onClick={onClick}
             onSelect={onSelect}
             onDeselect={onDeselect}
-            style={{ width: 256 }}
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            style={{ width: 300 }}
+            defaultSelectedKeys={[]}
+            defaultOpenKeys={[]}
             mode="inline"
             multiple
             items={items}
