@@ -1,8 +1,8 @@
 import { TableUserNameType } from "./CollumnsData"
 import {optionalArray} from "../../../../core/array/array";
 
-function normalizeDate(date: string) {
-    return date.length === 1
+function normalizeDate(date: string | number) {
+    return String(date).length === 1
         ? `0${date}`
         : date
 }

@@ -1,0 +1,8 @@
+.flexContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.gridWrapper {
+    flex-grow: 1;
+}

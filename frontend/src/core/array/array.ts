@@ -8,6 +8,15 @@ function optionalArray<T>(array: Array<T | null | undefined | false>): Array<T> 
     return newArray
 }
 
+function getArrayWithNElements(n: number) {
+    const arr = []
+    for (let i = 0; i < n; i++) {
+        arr.push(i)
+    }
+    return arr
+}
+
 export {
     optionalArray,
+    getArrayWithNElements,
 }

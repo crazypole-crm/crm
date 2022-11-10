@@ -32,16 +32,16 @@ function randomPhone(): string|undefined {
     return show ? '89021025370' : undefined
 }
 
-function getRandomUserData(): Api_UsersData {
+function getRandomUserData(id?: string, role?: UserRole): Api_UsersData {
     return {
-        id: generateUuid(),
+        id: id || generateUuid(),
         avatarUrl: '',
         birthDay: Math.round(Math.random() * 10000000000000),
         lastVisit: Math.round(Math.random() * 10000000000000),
         firstName: 'Edward',
         lastName: 'King',
         middleName: `${randomInteger(0, 100)}`,
-        role: getRandomRole(),
+        role: role || getRandomRole(),
         email: `EdwardKing${randomInteger(0, 100)}`,
         phone: randomPhone(),
     }
@@ -54,6 +54,7 @@ function getUsersDataByIds(userIds: Array<string>): Promise<Array<Api_UsersData>
             for (let i = 0; i < 100; i++) {
                 users.push(getRandomUserData())
             }
+            users.push(getRandomUserData('1', 'trainer'))
             resolve(users)
         }, 1000)
     })
@@ -83,6 +84,7 @@ function getAllUsersData(): Promise<Array<Api_UsersData>> {
             for (let i = 0; i < 100; i++) {
                 users.push(getRandomUserData())
             }
+            users.push(getRandomUserData('1', 'trainer'))
             resolve(users)
         }, 1000)
     })

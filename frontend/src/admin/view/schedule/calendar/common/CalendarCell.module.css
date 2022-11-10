@@ -1,0 +1,8 @@
+.cell {
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    flex: 1 0 0;
+    box-shadow: 0 2px 0 #F0F0F0;
+    align-items: stretch;
+}

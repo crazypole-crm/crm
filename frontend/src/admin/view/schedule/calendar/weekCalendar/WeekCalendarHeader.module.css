@@ -1,0 +1,40 @@
+.weekRow {
+    margin-left: 90px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.dayCell {
+    height: 50px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dayCell.selectedDay .dateTitle {
+    color: #1890FF;
+}
+
+.dayCell.selectedDay .dayTitle {
+    color: #1890FFD9;
+}
+
+.dateTitle {
+    text-align: center;
+    font-family: Roboto;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 18px;
+    color: #000;
+}
+
+.dayTitle {
+    text-align: center;
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: rgba(0, 0, 0, 0.85);
+}
