@@ -1,6 +1,5 @@
 import React, {useRef} from "react";
 import styles from './Popup.module.css'
-import {useEventHandler} from "../../core/hooks/useEventHandler";
 import {Button} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
 

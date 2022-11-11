@@ -180,7 +180,7 @@ function TrainingDirection() {
     const options = useMemo(() => Object.values(directions).map(directionData => ({
         value: directionData.id,
         label: directionData.name
-    })), [])
+    })), [directions])
 
 
     return <Select
@@ -208,7 +208,7 @@ function TrainingHall() {
     const options = useMemo(() => Object.values(halls).map(hallData => ({
         value: hallData.id,
         label: hallData.name
-    })), [])
+    })), [halls])
 
     return <Select
         status={trainingHallError ? 'error' : ''}
@@ -235,7 +235,7 @@ function TrainingTrainer() {
     const options = useMemo(() => Object.values(trainers).map(trainerData => ({
         value: trainerData.id,
         label: [trainerData.lastName, trainerData.firstName, trainerData.middleName].filter(Boolean).join(' ')
-    })), [])
+    })), [trainers])
 
     return (
         <div className={styles.trainerRow}>

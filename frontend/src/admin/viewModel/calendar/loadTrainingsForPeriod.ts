@@ -1,6 +1,5 @@
-import {TrainingData} from "./TrainingData";
 import {CalendarApi} from "../../../api/calendarApi";
-import {declareAction, declareAtom} from "@reatom/core";
+import {declareAtom} from "@reatom/core";
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
 import {trainingsActions} from "./trainings";
 import {Time} from "./time";

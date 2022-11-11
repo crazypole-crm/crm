@@ -1,9 +1,8 @@
 import styles from './TextWithEllipsis.module.css'
 import {StyledComponent} from "../../core/styles/StyledComponent";
 import {Tooltip} from "antd";
-import { joinClassNames } from '../../core/styles/joinClassNames';
-import {useResizeObserver} from "../../core/hooks/useResizeObserver";
-import {useEffect, useLayoutEffect, useRef, useState} from "react";
+import {joinClassNames} from '../../core/styles/joinClassNames';
+import {useLayoutEffect, useRef} from "react";
 
 
 type TextWithEllipsisProps = StyledComponent<{
@@ -20,7 +19,7 @@ function TextWithEllipsis({
 
     useLayoutEffect(() => {
         ref.current && ref.current.style.setProperty('-webkit-line-clamp', `${rows}`)
-    }, [rows, ref.current])
+    }, [rows, ref.current, rows])
 
     return (
         <Tooltip

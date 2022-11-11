@@ -14,10 +14,7 @@ import {Popover, Tooltip} from "antd";
 import {MouseEventHandler, useRef, useState} from "react";
 import {ActionList, ActionListItemData} from "../../../../../../common/actionList/ActionList";
 import {useHtmlElementEventHandler} from "../../../../../../core/hooks/useHtmlElementEventHandler";
-import {
-    editTrainingPopupActions,
-    editTrainingPopupAtom
-} from "../../../../../viewModel/calendar/editTrainingPopup/editTrainingPopup";
+import {editTrainingPopupActions} from "../../../../../viewModel/calendar/editTrainingPopup/editTrainingPopup";
 
 type ContextMenuItemId = 'replaceTrainer' | 'cancelTraining' | 'moveTraining' | 'editTraining' | 'deleteTraining'
 

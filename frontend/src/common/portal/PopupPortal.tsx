@@ -2,9 +2,8 @@ import {Portal} from "./Portal";
 import React, {MutableRefObject, useCallback, useEffect, useRef, useState} from "react";
 import styles from './PopupPortal.module.css'
 import {addToStack, appearPreviousPopup, hiddenPreviousPopup, isLastPopup, removeFromStack} from "./popupStack";
-import { useCloseLayer } from "./useCloseLayer";
-import {popupAppearAnimation, popupHideAnimation } from "../popup/popupHideAnimation";
-import { verify } from "../../core/verify";
+import {popupAppearAnimation, popupHideAnimation} from "../popup/popupHideAnimation";
+import {verify} from "../../core/verify";
 import {useEventHandler} from "../../core/hooks/useEventHandler";
 import {useHtmlElementEventHandler} from "../../core/hooks/useHtmlElementEventHandler";
 

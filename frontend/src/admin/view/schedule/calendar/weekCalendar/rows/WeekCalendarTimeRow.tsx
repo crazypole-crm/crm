@@ -135,7 +135,7 @@ function WeekCalendarTimeRow({
                 weekStartDate={weekStartDate}
             />
         })
-    }, [rowToTrainingsMap, rowsCount, weekLength, time])
+    }, [rowToTrainingsMap, rowsCount, weekLength, time, weekStartDate])
 
     return (
         <div className={styles.weekTimeRow}>

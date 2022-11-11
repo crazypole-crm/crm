@@ -11,12 +11,7 @@ import {useAtomWithSelector} from "../../core/reatom/useAtomWithSelector";
 import {PopupPortal} from "../../common/portal/PopupPortal";
 import {EditUserPopup} from "./users/editUserPopup/EditUserPopup";
 import {ScheduleLayoutWrapper} from "./schedule/ScheduleLayoutWrapper";
-import {
-    editTrainingPopupActions,
-    editTrainingPopupAtom
-} from "../viewModel/calendar/editTrainingPopup/editTrainingPopup";
 import {EditTrainingPopup} from "./schedule/calendar/editTrainingPopup/EditTrainingPopup";
-import { Modal } from "antd"
 
 function PopupsLayout() {
     const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)

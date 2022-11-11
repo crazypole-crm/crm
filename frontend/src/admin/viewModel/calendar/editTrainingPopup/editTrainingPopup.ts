@@ -5,7 +5,6 @@ import {Time} from "../time";
 import {createTraining} from "../createTraining";
 import {verify} from "../../../../core/verify";
 import {saveTraining} from "../saveTraining";
-import {validateRequiredField} from "../../../../auth/viewModel/FieldErrorTypes";
 
 type EditTrainingPopupMode = 'edit' | 'create'
 
