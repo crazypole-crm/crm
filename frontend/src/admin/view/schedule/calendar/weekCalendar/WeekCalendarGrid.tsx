@@ -12,6 +12,7 @@ type WeekCalendarGridProps = {
     endTime: Time,
     weekLength: number,
     trainings: TrainingData[],
+    weekStartDate: Date,
 }
 
 function generateTimePoints(timeStep: Time, startTime: Time, endTime: Time) {
@@ -83,6 +84,7 @@ function WeekCalendarGrid({
     timeStep,
     weekLength,
     trainings,
+    weekStartDate,
 }: WeekCalendarGridProps) {
     const timePoints = useMemo(() => generateTimePoints(timeStep, startTime, endTime), [timeStep, endTime, startTime])
     const timeToTrainingsMap = useMemo(() => calculateTrainingsToPoint(trainings, timePoints), [trainings, timePoints])
@@ -97,6 +99,7 @@ function WeekCalendarGrid({
                     weekLength={weekLength}
                     trainings={timeToTrainingsMap.get(time) || []}
                     rowsCount={rowsCount}
+                    weekStartDate={weekStartDate}
                 />
             })}
         </div>

@@ -1,6 +1,7 @@
 import {DirectionData} from "../admin/viewModel/direction/DirectionData";
 import {HallData} from "../admin/viewModel/hall/HallData";
 import {TrainingData} from "../admin/viewModel/calendar/TrainingData";
+import {generateUuid} from "../core/uuid/generateUuid";
 
 function getMockDirections(): DirectionData[] {
     return [
@@ -114,11 +115,30 @@ function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Training
     })
 }
 
+function createTraining(trainingData: Omit<TrainingData, 'id'>): Promise<{id: string}> {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve({
+                id: generateUuid()
+            })
+        }, 1000)
+    })
+}
+
+function editTraining(trainingData: TrainingData): Promise<void> {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve()
+        }, 1000)
+    })
+}
 
 const CalendarApi = {
     getDirections,
     getHalls,
     getTrainingsForPeriod,
+    createTraining,
+    editTraining,
 }
 
 export {

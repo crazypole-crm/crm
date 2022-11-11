@@ -5,6 +5,8 @@ import {addToStack, appearPreviousPopup, hiddenPreviousPopup, isLastPopup, remov
 import { useCloseLayer } from "./useCloseLayer";
 import {popupAppearAnimation, popupHideAnimation } from "../popup/popupHideAnimation";
 import { verify } from "../../core/verify";
+import {useEventHandler} from "../../core/hooks/useEventHandler";
+import {useHtmlElementEventHandler} from "../../core/hooks/useHtmlElementEventHandler";
 
 
 type PropsType = {
@@ -28,11 +30,20 @@ const PopupLayout = React.forwardRef<HTMLDivElement, PopupLayoutProps>((
 ) => {
     const popupRef = ref as MutableRefObject<HTMLDivElement|null>
 
-    useCloseLayer(
-        'popup',
-        popupRef,
-        () => isLastPopup(popupRef) && closePopup(),
-    )
+    useEventHandler('mousedown', popupRef, e => {
+        e.preventDefault()
+    })
+
+
+    useEventHandler('click', popupRef, e => {
+        e.stopPropagation()
+    })
+
+    useHtmlElementEventHandler('mousedown', window, e => {
+        if (!e.defaultPrevented) {
+            isLastPopup(popupRef) && closePopup()
+        }
+    })
 
     return (
         <div className={styles.popupLayer}>

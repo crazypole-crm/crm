@@ -2,12 +2,15 @@ import styles from "./EmptyCalendarCell.module.css";
 import {CalendarCell} from "../../common/CalendarCell";
 import {AddPlusIcon} from "../../../../../../icons/AddPlusIcon";
 import {Time} from "../../../../../viewModel/calendar/time";
-import {useAtom} from "@reatom/react";
+import {useAction, useAtom} from "@reatom/react";
 import {authorizedCurrentUser} from "../../../../../../currentUser/currentUser";
 import {Tooltip} from "antd";
+import {editTrainingPopupActions} from "../../../../../viewModel/calendar/editTrainingPopup/editTrainingPopup";
+import {TrainingDate} from "../../../../../viewModel/calendar/TrainingData";
 
 type EmptyCalendarCellProps = {
     time: Time,
+    date: TrainingDate,
 }
 
 type AddPlusButtonProps = {
@@ -34,10 +37,17 @@ function AddPlusButton({
 
 function EmptyCalendarCell({
     time,
+    date,
 }: EmptyCalendarCellProps) {
     const currentUser = useAtom(authorizedCurrentUser)
+    const handleOpenEditTrainingPopup = useAction(editTrainingPopupActions.open)
+
     const onAdd = () => {
-        console.log('add training')
+        handleOpenEditTrainingPopup({
+            mode: 'create',
+            timeStart: time,
+            date,
+        })
     }
 
     return (

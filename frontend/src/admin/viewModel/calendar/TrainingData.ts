@@ -6,7 +6,7 @@ type TrainingDate = {
     date: number,
 }
 
-export type TrainingData = {
+type TrainingData = {
     id: string,
     directionId: string,
     trainerId: string,
@@ -16,4 +16,9 @@ export type TrainingData = {
     timeEnd: Time,
     description?: string,
     clients: string[],
+}
+
+export type {
+    TrainingDate,
+    TrainingData,
 }

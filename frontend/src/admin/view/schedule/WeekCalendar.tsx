@@ -53,6 +53,7 @@ function WeekCalendar({
                             endTime={endTime}
                             weekLength={weekLength}
                             trainings={trainings}
+                            weekStartDate={weekStartDate}
                         />
                 }
             </div>

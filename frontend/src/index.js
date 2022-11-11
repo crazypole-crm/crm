@@ -14,6 +14,7 @@ import {initExternalLayer} from "./common/layers/externalLayers";
 import {usersAtom} from "./admin/viewModel/users/users";
 import {directionsAtom} from "./admin/viewModel/direction/directions";
 import {hallsAtom} from "./admin/viewModel/hall/halls";
+import {trainingsAtom} from "./admin/viewModel/calendar/trainings";
 import 'moment/locale/ru';
 import moment from "moment";
 
@@ -23,7 +24,8 @@ const store = createStore(
     currentUserAtom,
     usersAtom,
     directionsAtom,
-    hallsAtom
+    hallsAtom,
+    trainingsAtom,
   })
 );
 

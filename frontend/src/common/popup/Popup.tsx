@@ -87,10 +87,6 @@ function PopupFooter({
 function Popup(props: PropsType) {
     const popupRef = useRef<HTMLDivElement|null>(null)
 
-    useEventHandler('click', popupRef, event => {
-        event.preventDefault()
-    })
-
     const withHeader = props.type === 'withHeader' || props.type === 'withHeaderAndFooter'
     const withFooter = props.type === 'withHeaderAndFooter' || props.type === 'withFooter'
 

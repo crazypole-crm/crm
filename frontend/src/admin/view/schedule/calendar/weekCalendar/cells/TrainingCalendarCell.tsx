@@ -1,7 +1,7 @@
 import {CalendarCell} from "../../common/CalendarCell";
 import styles from "./TrainingCell.module.css";
 import {TrainingData} from "../../../../../viewModel/calendar/TrainingData";
-import {useAtom} from "@reatom/react";
+import {useAction, useAtom} from "@reatom/react";
 import {directionsAtom} from "../../../../../viewModel/direction/directions";
 import {Time} from "../../../../../viewModel/calendar/time";
 import {normalizeDate} from "../../../../users/table/userTableDataConvert";
@@ -14,6 +14,10 @@ import {Popover, Tooltip} from "antd";
 import {MouseEventHandler, useRef, useState} from "react";
 import {ActionList, ActionListItemData} from "../../../../../../common/actionList/ActionList";
 import {useHtmlElementEventHandler} from "../../../../../../core/hooks/useHtmlElementEventHandler";
+import {
+    editTrainingPopupActions,
+    editTrainingPopupAtom
+} from "../../../../../viewModel/calendar/editTrainingPopup/editTrainingPopup";
 
 type ContextMenuItemId = 'replaceTrainer' | 'cancelTraining' | 'moveTraining' | 'editTraining' | 'deleteTraining'
 
@@ -74,12 +78,26 @@ function TrainingCalendarCell({
     const ref = useRef()
     const [popoverOpened, setPopoverOpened] = useState(false)
 
+    const handleOpenEditTrainingPopup = useAction(editTrainingPopupActions.open)
+
     const trainer = users[trainingData.trainerId]
     const hall = halls[trainingData.hallId]
     const direction = directions[trainingData.directionId]
 
     const onAdd = () => {
-        console.log('add')
+        handleOpenEditTrainingPopup({
+            mode: 'create',
+            timeStart: time,
+            date: trainingData.date,
+        })
+    }
+
+    const onEdit = () => {
+        console.log('handleOpenEditTrainingPopup')
+        handleOpenEditTrainingPopup({
+            mode: 'edit',
+            trainingData,
+        })
     }
 
     const popoverItems: ActionListItemData<ContextMenuItemId>[] = [
@@ -117,7 +135,7 @@ function TrainingCalendarCell({
                 console.log('move Training')
                 break
             case "editTraining":
-                console.log('edit Training')
+                onEdit()
                 break
             case 'deleteTraining':
                 console.log('delete Training')
@@ -136,17 +154,19 @@ function TrainingCalendarCell({
         !e.defaultPrevented && setPopoverOpened(false)
     })
 
-    const onTrainingInfoClick: MouseEventHandler<HTMLDivElement> = (e) => {
-        e.preventDefault()
+    const onTrainingMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
         if (e.button === 2) {
             setPopoverOpened(true)
             return
         }
+    }
 
+    const onTrainingInfoClick = (e: any) => {
+        e.stopPropagation()
         switch (currentUser.role) {
             case "admin":
             case "trainer":
-                console.log('edit training')
+                onEdit()
                 break
             case "client":
                 console.log('record to training')
@@ -155,7 +175,7 @@ function TrainingCalendarCell({
     }
 
     const trainingInfo =
-        <div className={styles.trainingInfo} onMouseDown={onTrainingInfoClick} onContextMenu={e => e.preventDefault()}>
+        <div className={styles.trainingInfo} onMouseDown={onTrainingMouseDown} onClick={onTrainingInfoClick} onContextMenu={e => e.preventDefault()}>
             <TextWithEllipsis
                 text={direction.name}
                 className={styles.directionTitle}

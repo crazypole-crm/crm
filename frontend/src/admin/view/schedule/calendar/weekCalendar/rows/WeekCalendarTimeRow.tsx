@@ -3,12 +3,12 @@ import {EmptyCalendarCell} from "../cells/EmptyCalendarCell";
 import styles from "./WeekCalendarTimeRow.module.css";
 import {CalendarRow} from "../../common/CalendarRow";
 import {compareTime, Time} from "../../../../../viewModel/calendar/time";
-import {TrainingData} from "../../../../../viewModel/calendar/TrainingData";
+import {TrainingData, TrainingDate} from "../../../../../viewModel/calendar/TrainingData";
 import { normalizeDate } from "../../../../users/table/userTableDataConvert";
 import {verify} from "../../../../../../core/verify";
 import {useMemo} from "react";
 import {normalizeDayNumber} from "../../../../../viewModel/calendar/normalizeDayNumber";
-import {TrainingCalendarCell} from "../cells/TraininsCell";
+import {TrainingCalendarCell} from "../cells/TrainingCalendarCell";
 
 // function calculate
 
@@ -16,6 +16,7 @@ type WeekCalendarRowProps = {
     weekLength: number,
     trainings: TrainingData[],
     time: Time,
+    weekStartDate: Date,
 }
 
 function isTrainingInThisDay(trainingDate: TrainingData, dayIndex: number) {
@@ -27,10 +28,19 @@ function isTrainingInThisDay(trainingDate: TrainingData, dayIndex: number) {
     return normalizeDayNumber(date) === dayIndex
 }
 
+function convertDateToTrainingDate(date: Date): TrainingDate {
+    return {
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        date: date.getDate(),
+    }
+}
+
 function WeekCalendarRow({
     weekLength,
     trainings,
     time,
+    weekStartDate,
 }: WeekCalendarRowProps) {
     const items = getArrayWithNElements(weekLength).map(index => {
         const rowTraining = trainings.find(training => isTrainingInThisDay(training, index))
@@ -43,10 +53,14 @@ function WeekCalendarRow({
                />
            )
         }
+        const copyWeekStartDate = new Date(weekStartDate)
+        copyWeekStartDate.setDate(copyWeekStartDate.getDate() + index)
+        const trainingDate = convertDateToTrainingDate(copyWeekStartDate)
         return (
             <EmptyCalendarCell
                 key={index}
                 time={time}
+                date={trainingDate}
             />
         )
     })
@@ -66,6 +80,7 @@ type WeekCalendarTimeRowProps = {
     weekLength: number,
     trainings: TrainingData[],
     rowsCount: number,
+    weekStartDate: Date,
 }
 
 
@@ -105,6 +120,7 @@ function WeekCalendarTimeRow({
     time,
     trainings,
     rowsCount,
+    weekStartDate,
 }: WeekCalendarTimeRowProps) {
     const rowToTrainingsMap = useMemo(() => getRowToTrainingsMap(trainings), [trainings])
 
@@ -116,6 +132,7 @@ function WeekCalendarTimeRow({
                 weekLength={weekLength}
                 time={time}
                 trainings={trainings || []}
+                weekStartDate={weekStartDate}
             />
         })
     }, [rowToTrainingsMap, rowsCount, weekLength, time])
