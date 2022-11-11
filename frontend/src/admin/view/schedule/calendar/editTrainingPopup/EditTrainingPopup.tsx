@@ -15,6 +15,8 @@ import {Moment} from "moment/moment";
 import {Time} from "../../../../viewModel/calendar/time";
 import TextArea from "antd/lib/input/TextArea";
 import { UserOutlined } from "@ant-design/icons";
+import ruRU from "antd/lib/calendar/locale/ru_RU";
+
 
 type FieldBlockProps = {
     title: string,
@@ -64,7 +66,7 @@ function TrainingDatePicker() {
         }
     }
 
-    return <DatePicker value={momentDate} onChange={onChange} />
+    return <DatePicker value={momentDate} onChange={onChange} locale={ruRU} />
 }
 
 function TrainingTimePeriod() {
