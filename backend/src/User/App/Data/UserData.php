@@ -5,11 +5,10 @@ namespace App\User\App\Data;
 
 class UserData
 {
-
     public function __construct(
         private string $userId,
         private string $email,
-        private string $firstName,
+        private ?string $firstName,
         private ?string $middleName,
         private ?string $lastName,
         private ?string $phone,
