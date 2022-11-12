@@ -102,5 +102,6 @@ class UserQueryService implements UserQueryServiceInterface
         $qb->addSelect($alias . '.' . UserTable::PHONE);
         $qb->addSelect($alias . '.' . UserTable::AVATAR_URL);
         $qb->addSelect($alias . '.' . UserTable::BIRTHDAY);
+        $qb->addSelect($alias . '.' . UserTable::LAST_VISIT);
     }
 }
