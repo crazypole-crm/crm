@@ -24,17 +24,45 @@ class UserService
     /**
      * @param string $email
      * @param string $password
+     * @param string|null $firstName
+     * @param string|null $middleName
+     * @param string|null $lastName
+     * @param string|null $phone
+     * @param string|null $avatarUrl
+     * @param int|null $birthday
+     * @param int|null $lastVisit
      * @return UserId
      * @throws InvalidUserEmailException
      */
-    public function createUser(string $email, string $password): UserId
+    public function createUser(
+        string $email,
+        string $password,
+        ?string $firstName = null,
+        ?string $middleName = null,
+        ?string $lastName = null,
+        ?string $phone = null,
+        ?string $avatarUrl = null,
+        ?int $birthday = null,
+        ?int $lastVisit = null,
+    ): UserId
     {
         $user = $this->repository->findUserByEmail($email);
         if ($user !== null)
         {
             throw new InvalidUserEmailException('User with this email already exist');
         }
-        $user = new User($this->repository->nextId(), new Email($email), new Password($password));
+        $user = new User(
+            $this->repository->nextId(),
+            new Email($email),
+            new Password($password),
+            $firstName,
+            $middleName,
+            $lastName,
+            $phone,
+            $avatarUrl,
+            $birthday,
+            $lastVisit,
+        );
         $this->repository->add($user);
         return $user->getUserId();
     }
@@ -91,6 +119,7 @@ class UserService
     }
 
     //TODO: обрабатывать событие отметки посещения и обновлять дату визита
+
     /**
      * @param UserId $userId
      * @param int|null $lastVisit
