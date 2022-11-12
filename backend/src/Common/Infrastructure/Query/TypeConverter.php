@@ -12,6 +12,10 @@ class TypeConverter
 
     public static function hydrateValue($value, int $valueType)
     {
+        if ($value === null)
+        {
+            return null;
+        }
         switch ($valueType)
         {
             case self::BOOL:
