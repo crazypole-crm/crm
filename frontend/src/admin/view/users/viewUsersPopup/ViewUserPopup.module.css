@@ -1,0 +1,44 @@
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.userInfoRow {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 74px;
+}
+
+.name {
+    font-family: Roboto;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 22px;
+    color: #000000
+}
+
+.fieldBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.fieldBlock:not(:last-child) {
+    margin-bottom: 30px;
+}
+
+.fieldTitle {
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 24px;
+    color: #BBBBBB;
+    margin-bottom: 10px;
+}
+
+.fieldValue {
+    font-family: Roboto;
+    font-size: 24px;
+    line-height: 24px;
+    color: #000000A6;
+    margin-left: 11px;
+}

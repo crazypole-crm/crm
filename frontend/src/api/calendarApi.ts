@@ -48,6 +48,7 @@ function getMockTrainings(startDate: Date, endDate: Date): TrainingData[] {
     return [
         {
             id: '1',
+            type: 'grouped',
             directionId: 'direction1',
             hallId: 'hall1',
             trainerId: 'trainer1',
@@ -68,6 +69,7 @@ function getMockTrainings(startDate: Date, endDate: Date): TrainingData[] {
         },
         {
             id: '2',
+            type: 'individual',
             directionId: 'direction2',
             hallId: 'hall2',
             trainerId: 'trainer2',
@@ -84,7 +86,7 @@ function getMockTrainings(startDate: Date, endDate: Date): TrainingData[] {
                 hour: 11,
                 minutes: 0,
             },
-            clients: [],
+            clientId: 'client1',
         }
     ]
 }
