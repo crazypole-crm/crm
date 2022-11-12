@@ -14,8 +14,7 @@ use App\User\Domain\Model\UserRepositoryInterface;
 
 class UserService
 {
-    /** @var UserRepositoryInterface */
-    private $repository;
+    private UserRepositoryInterface $repository;
 
     public function __construct(UserRepositoryInterface $repository)
     {
@@ -30,7 +29,6 @@ class UserService
      */
     public function createUser(string $email, string $password): UserId
     {
-        // TODO: обернуть в транзакцию
         $user = $this->repository->findUserByEmail($email);
         if ($user !== null)
         {
@@ -45,14 +43,15 @@ class UserService
      * @param UserId $userId
      * @param string $phone
      * @param string $firstName
+     * @param string $middleName
      * @param string $lastName
-     * @param Email $email`1
+     * @param Email $email
      * @param string $avatarUrl
+     * @param int|null $birthday
      * @throws InvalidUserIdException
      */
-    public function updateUserData(UserId $userId, string $phone, string $firstName, string $lastName, Email $email, string $avatarUrl): void
+    public function updateUserData(UserId $userId, string $phone, string $firstName, string $middleName, string $lastName, Email $email, string $avatarUrl, ?int $birthday = null): void
     {
-        //TODO: обернуть в транзакцию
         $user = $this->repository->findUserById($userId);
         if ($user === null)
         {
@@ -63,6 +62,8 @@ class UserService
         $user->setFirstName($firstName);
         $user->setEmail($email);
         $user->setAvatarUrl($avatarUrl);
+        $user->setMiddleName($middleName);
+        $user->setBirthday($birthday);
     }
 
     /**
@@ -79,7 +80,7 @@ class UserService
         {
             throw new InvalidUserIdException($userId);
         }
-        if ($user->getPassword() === $oldPassword)
+        if ((string)$user->getPassword() === $oldPassword)
         {
             $user->setPassword(new Password($newPassword));
         }
@@ -88,4 +89,21 @@ class UserService
             throw new InvalidUserPasswordException();
         }
     }
+
+    //TODO: обрабатывать событие отметки посещения и обновлять дату визита
+    /**
+     * @param UserId $userId
+     * @param int|null $lastVisit
+     * @throws InvalidUserIdException
+     */
+    public function updateLastVisitTime(UserId $userId, ?int $lastVisit): void
+    {
+        $user = $this->repository->findUserById($userId);
+        if ($user === null)
+        {
+            throw new InvalidUserIdException($userId);
+        }
+        $user->setLastVisit($lastVisit);
+    }
+
 }

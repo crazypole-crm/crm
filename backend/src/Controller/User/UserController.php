@@ -67,15 +67,16 @@ class UserController extends AbstractController
         {
             return new Response(null, Response::HTTP_UNAUTHORIZED);
         }
-        $userData = $this->userApi->getUserData($userId);
-        if ($userData === null)
-        {
-            return new Response(null, Response::HTTP_BAD_REQUEST);
-        }
-        $userData->setEmail($requestData['email']);
-        $userData->setFirstName($requestData['firstName']);
-        $userData->setLastName($requestData['lastName']);
-        $userData->setPhone($requestData['phoneNumber']);
+        $userData = New UserData(
+            $userId,
+            $requestData['email'],
+            $requestData['firstName'],
+            $requestData['middleName'],
+            $requestData['lastName'],
+            $requestData['phoneNumber'],
+            '',
+            $requestData['birthday'],
+        );
         $this->userApi->updateUserData($userData);
         return new Response();
     }
@@ -185,7 +186,10 @@ class UserController extends AbstractController
                 'avatarUrl' => $userData->getAvatarUrl(),
                 'phone' => $userData->getPhone(),
                 'firstName' => $userData->getFirstName(),
+                'middleName' => $userData->getMiddleName(),
                 'lastName' => $userData->getLastName(),
+                'birthday' => $userData->getBirthday(),
+                'lastVisit' => $userData->getLastVisit(),
             ];
         }
 
@@ -200,7 +204,10 @@ class UserController extends AbstractController
             'avatarUrl' => $userData->getAvatarUrl(),
             'phone' => $userData->getPhone(),
             'firstName' => $userData->getFirstName(),
+            'middleName' => $userData->getMiddleName(),
             'lastName' => $userData->getLastName(),
+            'birthday' => $userData->getBirthday(),
+            'lastVisit' => $userData->getLastVisit(),
         ];
 
         return json_encode($data, JSON_THROW_ON_ERROR);

@@ -57,7 +57,7 @@ class UserQueryService implements UserQueryServiceInterface
         $this->addUserFieldSelect($qb);
         $qb->where($qb->expr()->in('u.' . UserTable::USER_ID, ':userIds'));
         $qb->setParameter('userIds', $userIds, Connection::PARAM_STR_ARRAY);
-        $result = $qb->execute()->fetchAll();
+        $result = $qb->executeQuery()->fetchAllAssociative();
 
         $userData = [];
         foreach ($result as $item)
@@ -88,8 +88,7 @@ class UserQueryService implements UserQueryServiceInterface
         $qb = $this->conn->createQueryBuilder();
         $qb->from('user', 'u');
         $qb->addSelect('u.' . UserTable::USER_ID);
-        $qb->execute()->fetchAll(FetchMode::COLUMN);
-        return $qb->execute()->fetchAll(FetchMode::COLUMN);
+        return $qb->executeQuery()->fetchAllAssociative(FetchMode::COLUMN);
     }
 
     private function addUserFieldSelect(QueryBuilder $qb, string $alias = 'u'): void
@@ -98,8 +97,10 @@ class UserQueryService implements UserQueryServiceInterface
         $qb->addSelect($alias . '.' . UserTable::EMAIL);
         $qb->addSelect($alias . '.' . UserTable::PASSWORD);
         $qb->addSelect($alias . '.' . UserTable::FIRST_NAME);
+        $qb->addSelect($alias . '.' . UserTable::MIDDLE_NAME);
         $qb->addSelect($alias . '.' . UserTable::LAST_NAME);
         $qb->addSelect($alias . '.' . UserTable::PHONE);
         $qb->addSelect($alias . '.' . UserTable::AVATAR_URL);
+        $qb->addSelect($alias . '.' . UserTable::BIRTHDAY);
     }
 }

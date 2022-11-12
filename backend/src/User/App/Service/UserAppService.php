@@ -17,16 +17,11 @@ use App\User\Domain\Service\UserService;
 
 class UserAppService
 {
-    /** @var UserService */
-    private $userService;
-    /** @var UserQueryServiceInterface */
-    private $userQueryService;
-    /** @var UserAuthenticator */
-    private $authenticator;
-    /** @var TransactionInterface */
-    private $transaction;
-    /** @var MultiBlockingOperationExecutorInterface */
-    private $blockingOperatorExecutor;
+    private UserService $userService;
+    private UserQueryServiceInterface $userQueryService;
+    private UserAuthenticator $authenticator;
+    private TransactionInterface $transaction;
+    private MultiBlockingOperationExecutorInterface $blockingOperatorExecutor;
 
 
     public function __construct(UserService $userService, UserQueryServiceInterface $userQueryService, UserAuthenticator $authenticator, TransactionInterface $transaction, MultiBlockingOperationExecutorInterface $blockingOperationExecutor)
@@ -73,7 +68,16 @@ class UserAppService
             [LockNames::getUserId($userData->getUserId())],
             function () use ($userData): void
             {
-                $this->userService->updateUserData(new UserId($userData->getUserId()), $userData->getPhone(), $userData->getFirstName(), $userData->getLastName(), new Email($userData->getEmail()), $userData->getAvatarUrl());
+                $this->userService->updateUserData(
+                    new UserId($userData->getUserId()),
+                    $userData->getPhone(),
+                    $userData->getFirstName(),
+                    $userData->getMiddleName(),
+                    $userData->getLastName(),
+                    new Email($userData->getEmail()),
+                    $userData->getAvatarUrl(),
+                    $userData->getBirthday(),
+                );
             }
         );
         $this->transaction->execute($operation);
