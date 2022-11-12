@@ -10,13 +10,10 @@ import {hallsAtom} from "../../../../../viewModel/hall/halls";
 import {AddPlusIcon} from "../../../../../../icons/AddPlusIcon";
 import {authorizedCurrentUser} from "../../../../../../currentUser/currentUser";
 import {TextWithEllipsis} from "../../../../../../common/text/TextWithEllipsis";
-import {Popover, Tooltip} from "antd";
+import {Menu, MenuProps, Popover, Tooltip} from "antd";
 import {MouseEventHandler, useRef, useState} from "react";
-import {ActionList, ActionListItemData} from "../../../../../../common/actionList/ActionList";
 import {useHtmlElementEventHandler} from "../../../../../../core/hooks/useHtmlElementEventHandler";
 import {editTrainingPopupActions} from "../../../../../viewModel/calendar/editTrainingPopup/editTrainingPopup";
-
-type ContextMenuItemId = 'replaceTrainer' | 'cancelTraining' | 'moveTraining' | 'editTraining' | 'deleteTraining'
 
 type TrainingCalendarCellProps = {
     trainingData: TrainingData,
@@ -90,38 +87,49 @@ function TrainingCalendarCell({
     }
 
     const onEdit = () => {
-        console.log('handleOpenEditTrainingPopup')
         handleOpenEditTrainingPopup({
             mode: 'edit',
             trainingData,
         })
     }
 
-    const popoverItems: ActionListItemData<ContextMenuItemId>[] = [
+    const popoverItems: Required<MenuProps>['items'][number][] = [
         {
-            id: 'replaceTrainer',
-            text: 'Поставить замену',
+            key: 'replaceTrainer',
+            label: 'Разово оставить замену',
         },
         {
-            id: 'cancelTraining',
-            text: 'Отменить занятие',
+            key: 'cancelTraining',
+            label: 'Разово отменить занятие',
         },
         {
-            id: 'moveTraining',
-            text: 'Перенести занятие',
+            key: 'moveTraining',
+            label: 'Разово перенести занятие',
         },
         {
-            id: 'editTraining',
-            text: 'Редактировать занятие',
+            key: 'enrollTraining',
+            label: 'Записать на занятие',
         },
         {
-            id: 'deleteTraining',
-            text: 'Удалить занятие',
+            key: 'checkUserList',
+            label: 'Посмотреть занятые места',
+        },
+        {
+            key: 'addTraining',
+            label: 'Добавить занятие',
+        },
+        {
+            key: 'editTraining',
+            label: 'Редактировать занятие',
+        },
+        {
+            key: 'deleteTraining',
+            label: 'Удалить занятие',
         },
     ]
 
-    const onPopoverItemClick = (id: ContextMenuItemId) => {
-        switch (id) {
+    const onPopoverItemClick: MenuProps['onClick'] = (e) => {
+        switch (e.key) {
             case 'replaceTrainer':
                 console.log('replace trainer')
                 break
@@ -130,6 +138,15 @@ function TrainingCalendarCell({
                 break
             case "moveTraining":
                 console.log('move Training')
+                break
+            case 'enrollTraining':
+                console.log('enroll training')
+                break
+            case 'checkUserList':
+                console.log('check users for training')
+                break
+            case 'addTraining':
+                onAdd()
                 break
             case "editTraining":
                 onEdit()
@@ -159,7 +176,6 @@ function TrainingCalendarCell({
     }
 
     const onTrainingInfoClick = (e: any) => {
-        e.stopPropagation()
         switch (currentUser.role) {
             case "admin":
             case "trainer":
@@ -199,7 +215,14 @@ function TrainingCalendarCell({
                             open={popoverOpened}
                             placement={'rightTop'}
                             trigger={'contextMenu'}
-                            content={<ActionList items={popoverItems} onClick={onPopoverItemClick}/>}
+                            content={<Menu
+                                items={popoverItems}
+                                onClick={onPopoverItemClick}
+                                style={{
+                                    border: 0
+                                }}
+                            />}
+                            overlayClassName={styles.contextMenuPopover}
                         >
                             {trainingInfo}
                         </Popover>

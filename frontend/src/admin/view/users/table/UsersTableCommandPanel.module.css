@@ -8,3 +8,7 @@
     display: flex;
     gap: 10px;
 }
+
+.selectList {
+    padding: 12px 16px;
+}

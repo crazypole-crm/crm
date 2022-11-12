@@ -48,6 +48,7 @@ function CollumnsFilter({
             placement={'bottomRight'}
             open={open}
             onOpenChange={setOpen}
+            className={styles.selectList}
         >
             <Button
                 icon={<SettingOutlined />}
