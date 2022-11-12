@@ -77,7 +77,7 @@ class Api implements ApiInterface
         }
     }
 
-    public function getUsersData(array $userIds): array
+    public function getUsersData(?array $userIds): array
     {
         try
         {

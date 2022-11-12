@@ -15,8 +15,6 @@ interface UserQueryServiceInterface
     public function getUserDataById(string $userId): ?UserData;
 
     /**
-     * Undocumented function
-     *
      * @param string[]|null $userIds
      * @return UserData[]
      */

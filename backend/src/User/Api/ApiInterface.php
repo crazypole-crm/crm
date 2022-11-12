@@ -29,10 +29,10 @@ interface ApiInterface
     public function getUserData(string $userId): ?UserData;
 
     /**
-     * @param string[] $userIds
+     * @param string[]|null $userIds
      * @return UserData[]
      */
-    public function getUsersData(array $userIds): array;
+    public function getUsersData(?array $userIds): array;
 
     /**
      * @param ChangeUserPasswordInput $input

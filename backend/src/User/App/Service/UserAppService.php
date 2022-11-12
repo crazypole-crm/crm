@@ -54,10 +54,10 @@ class UserAppService
     }
 
     /**
-     * @param string[] $userIds
+     * @param string[]|null $userIds
      * @return UserData[]
      */
-    public function getUsersData(array $userIds): array
+    public function getUsersData(?array $userIds): array
     {
         return $this->userQueryService->listUsersData($userIds);
     }
