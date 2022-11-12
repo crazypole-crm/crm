@@ -14,36 +14,15 @@ import {Avatar, Checkbox, DatePicker, DatePickerProps, Modal, Select, TimePicker
 import {Moment} from "moment/moment";
 import {Time} from "../../../../viewModel/calendar/time";
 import TextArea from "antd/lib/input/TextArea";
-import { UserOutlined } from "@ant-design/icons";
+import {UserOutlined} from "@ant-design/icons";
 import ruRU from "antd/lib/calendar/locale/ru_RU";
+import {FieldBlock} from "../common/FieldBlock";
 
-
-type FieldBlockProps = {
-    title: string,
-    content: JSX.Element,
-    error?: boolean
-}
 
 type DisabledTime = {
     disabledHours: number[];
     disabledMinutes: number[];
 };
-
-function FieldBlock({
-    title,
-    content,
-    error = false,
-}: FieldBlockProps) {
-    return (
-        <div className={styles.blockContainer}>
-            <span className={styles.blockTitle}>{title}</span>
-            <div className={styles.blockContent}>{content}</div>
-            {error && <div className={styles.errorMessage}>
-                {'Поле обязательное'}
-            </div>}
-        </div>
-    )
-}
 
 function TrainingDatePicker() {
     const trainingDate = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingDate)

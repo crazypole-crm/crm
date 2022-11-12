@@ -16,8 +16,9 @@ import {TrainingData} from "../../viewModel/calendar/TrainingData";
 import {trainingsAtom} from "../../viewModel/calendar/trainings";
 import {loadTrainingsForPeriod, trainingsLoadingAtom} from "../../viewModel/calendar/loadTrainingsForPeriod";
 import {Time} from "../../viewModel/calendar/time";
+import {calendarSettingsAtom} from "../../viewModel/calendar/calendartSettings/calendarSettings";
 
-type CalendarType = 'week' | 'day'
+type CalendarType = 'week' | 'work-week' | 'day'
 
 const WEEK_LENGTH = 7
 const DAY_START_TIME = {
@@ -114,6 +115,7 @@ function Calendar() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
     const [selectedFilters, setSelectedFilters] = useState<string[]>([])
     const [lastWeekDateStart, setLastWeekDateStart] = useState<Date>(calculateWeekStartDate(selectedDate))
+    const calendarSettings = useAtom(calendarSettingsAtom)
     const halls = useAtom(hallsAtom)
     const directions = useAtom(directionsAtom)
     const trainers = useAtom(trainersAtom)
@@ -133,8 +135,8 @@ function Calendar() {
     useEffect(() => {
         const period = getPeriod(calendarType, lastWeekDateStart, {
             weekLength: WEEK_LENGTH,
-            dayEndTime: DAY_END_TIME,
-            dayStartTime: DAY_START_TIME,
+            dayEndTime: calendarSettings.dayStartTime,
+            dayStartTime: calendarSettings.dayEndTime,
         })
         handleLoadTrainings(period)
     }, [calendarType, lastWeekDateStart, handleLoadTrainings])
@@ -152,13 +154,14 @@ function Calendar() {
             <div className={styles.calendarWrapper}>
                 <CalendarSwitcher calendarType={calendarType} onCalendarTypeChanged={setCalendarType} />
                 {
-                    calendarType === 'week'
+                    calendarType === 'week' || calendarType === 'work-week'
                         ? <WeekCalendar
                             weekStartDate={lastWeekDateStart}
                             selectedDate={selectedDate}
-                            weekLength={WEEK_LENGTH}
-                            startTime={DAY_START_TIME}
-                            endTime={DAY_END_TIME}
+                            weekLength={calendarType === 'week' ? 7 : 5}
+                            startTime={calendarSettings.dayStartTime}
+                            endTime={calendarSettings.dayEndTime}
+                            timeStep={calendarSettings.stepTime}
                             loading={trainingsLoading}
                             trainings={filteredTrainings}
                         />

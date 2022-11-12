@@ -17,6 +17,7 @@ import {hallsAtom} from "./admin/viewModel/hall/halls";
 import {trainingsAtom} from "./admin/viewModel/calendar/trainings";
 import 'moment/locale/ru';
 import moment from "moment";
+import {calendarSettingsAtom} from "./admin/viewModel/calendar/calendartSettings/calendarSettings";
 
 const store = createStore(
   combine({
@@ -26,6 +27,7 @@ const store = createStore(
     directionsAtom,
     hallsAtom,
     trainingsAtom,
+    calendarSettingsAtom,
   })
 );
 
