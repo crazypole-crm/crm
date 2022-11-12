@@ -1,0 +1,7 @@
+.switcherContainer {
+    display: flex;
+    height: 56px;
+    align-items: center;
+    justify-content: end;
+    gap: 10px;
+}

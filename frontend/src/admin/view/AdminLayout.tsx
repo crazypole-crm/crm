@@ -1,39 +1,54 @@
-import { useAtom } from "@reatom/react"
-import { Layout } from "antd"
-import { Content } from "antd/lib/layout/layout"
-import { Redirect, Route, Switch } from "react-router-dom"
-import { Router } from "../../core/router/router"
-import { currentUserAtom } from "../../currentUser/currentUser"
+import {useAction, useAtom} from "@reatom/react"
+import {Redirect, Route, Switch} from "react-router-dom"
+import {Router} from "../../core/router/router"
+import {currentUserAtom} from "../../currentUser/currentUser"
 import styles from './AdminLayout.module.css'
-import { AdminHeader } from "./header/AdminHeader"
-import { Sidebar } from "./sidebar/Sidebar"
-import { UsersLayout } from "./users/UsersLayout"
+import {AdminHeader} from "./header/AdminHeader"
+import {Sidebar} from "./sidebar/Sidebar"
+import {UsersLayout} from "./users/UsersLayout"
+import {editUserPopupActions, editUserPopupAtom} from "../viewModel/editUserPopup/editUserPopup";
+import {useAtomWithSelector} from "../../core/reatom/useAtomWithSelector";
+import {PopupPortal} from "../../common/portal/PopupPortal";
+import {EditUserPopup} from "./users/editUserPopup/EditUserPopup";
+import {ScheduleLayoutWrapper} from "./schedule/ScheduleLayoutWrapper";
+import {EditTrainingPopup} from "./schedule/calendar/editTrainingPopup/EditTrainingPopup";
+import {CalendarSettingsPopup} from "./schedule/calendar/calendarSettins/CalendarSettingsPopup";
+
+function PopupsLayout() {
+    const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
+
+    const handleCloseEditUserPopup = useAction(editUserPopupActions.close)
+
+    return (
+        <>
+            <PopupPortal binding={<EditUserPopup/>} show={editUserPopupOpened} close={() => handleCloseEditUserPopup()} />
+            <EditTrainingPopup />
+            <CalendarSettingsPopup />
+        </>
+    )
+}
 
 
 function AdminLayout() {
     const currentUser = useAtom(currentUserAtom)
 
     if (!currentUser.isAuthUser) {
-        return (
-            <Switch>
-                <Redirect to={Router.Auth.url()} />
-            </Switch>
-        )
+        return <Redirect to={Router.Auth.url()} />
     }
 
     return (
-        <Layout>
+        <div className={styles.layout}>
             <AdminHeader />
-            <Layout hasSider>
+            <div className={styles.contentRow}>
                 <Sidebar />
-                <Content className={styles.content}>
+                <div className={styles.content}>
                     <Switch>
                         <Redirect exact from={Router.Admin.url()} to={Router.Dashboard.url()}/>
                         <Route exact path={[Router.Mark.url()]} >
                             <div>Mark Layout</div>
                         </Route>
                         <Route exact path={[Router.Schedule.url()]} >
-                            <div>Schedule Layout</div>
+                            <ScheduleLayoutWrapper />
                         </Route>
                         <Route exact path={[Router.User.url(':userId')]} >
                             <div>User Layout</div>
@@ -48,9 +63,10 @@ function AdminLayout() {
                             <div>Dashboard Layout</div>
                         </Route>
                     </Switch>
-                </Content>
-            </Layout>
-        </Layout>
+                </div>
+            </div>
+            <PopupsLayout />
+        </div>
     )
 }
 

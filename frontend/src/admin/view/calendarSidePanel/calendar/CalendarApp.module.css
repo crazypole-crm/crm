@@ -1,0 +1,7 @@
+.sideCalendarCard {
+    width: 300px;
+    border: 1px solid #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: 23px;
+    filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.15));
+}

@@ -1,0 +1,50 @@
+.cell {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.trainingInfo {
+    margin: 25px 0 15px 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    cursor: pointer;
+}
+
+.directionTitle {
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 20px;
+    color: #000000;
+    width: calc(100% - 13px);
+}
+
+.time,
+.trainerName,
+.freePlaces {
+    font-size: 16px;
+    line-height: 16px;
+    color: #000000BF;
+    margin-top: 5px;
+}
+
+.cell:hover .plus {
+    display: flex;
+}
+
+.plus {
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    cursor: pointer;
+}
+
+.plusIcon {
+    width: 50px;
+    height: 50px;
+    color: #1890FF;
+}

@@ -1,14 +1,16 @@
-
-import { DeleteOutlined, EditOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons'
-import { Button, Popover } from 'antd'
-import { useMemo, useState } from 'react'
-import { SelectList, SelectListItemData } from '../../../../common/selectList/SelectList'
-import { optionalArray } from '../../../../core/array/array'
-import { Router } from '../../../../core/router/router'
-import { COLLUMN_TO_TITLE_MAP, COLLUMS_IDS, DISABLED_COLLUMNS } from './userTableDataConsts'
-import { CollumnIdType } from './UsersTable'
+import {DeleteOutlined, EditOutlined, PlusOutlined, SettingOutlined} from '@ant-design/icons'
+import {Button, Popover} from 'antd'
+import {useMemo, useState} from 'react'
+import {SelectList, SelectListItemData} from '../../../../common/selectList/SelectList'
+import {optionalArray} from '../../../../core/array/array'
+import {COLLUMN_TO_TITLE_MAP, COLLUMS_IDS, DISABLED_COLLUMNS} from './userTableDataConsts'
+import {CollumnIdType} from './UsersTable'
 import styles from './UsersTableCommandPanel.module.css'
-import { VisibleCollumsData } from './CollumnsData'
+import {VisibleCollumsData} from './CollumnsData'
+import {useAction, useAtom} from "@reatom/react";
+import {editUserPopupActions} from "../../../viewModel/editUserPopup/editUserPopup";
+import {usersAtom} from "../../../viewModel/users/users";
+import {usersLoadingAtom} from "../../../viewModel/users/loadUsers";
 
 type UsersActionsButtonType = 'delete' | 'edit' | 'add'
 
@@ -21,6 +23,7 @@ function CollumnsFilter({
     setVisibleCollumns,
     visibleCollumns,
 }: CollumnsFilterProps) {
+    const usersLoading = useAtom(usersLoadingAtom)
     const [open, setOpen] = useState(false)
     
     const items: SelectListItemData<CollumnIdType>[] = COLLUMS_IDS.map(collumnId => ({
@@ -52,6 +55,7 @@ function CollumnsFilter({
                 ghost
                 size='large'
                 onClick={() => setOpen(true)}
+                disabled={usersLoading}
             />
         </Popover>
     )
@@ -69,9 +73,12 @@ function UsersTableCommandPanel({
     setVisibleCollumns,
     visibleCollumns,
 }: UsersActionsButtonProps) {
+    const users = useAtom(usersAtom)
+    const usersLoading = useAtom(usersLoadingAtom)
+    const handleOpenEditUserPopup = useAction(editUserPopupActions.open)
 
     const handleOnEditClick = () => {
-        Router.User.open(selectedRowKeys[0].toString())
+        handleOpenEditUserPopup(users[selectedRowKeys[0]])
     }
 
     const handleOnDeleteClick = () => {
@@ -79,12 +86,12 @@ function UsersTableCommandPanel({
     }
 
     const handleOnAddClick = () => {
-        console.log('add new user')
+        console.log(`add user`)
     }
 
     const buttons: UsersActionsButtonType[] = useMemo(() => {
         return optionalArray([
-            'add',
+            !selectedRowKeys.length && 'add',
             selectedRowKeys.length === 1 && 'edit',
             !!selectedRowKeys.length && 'delete'    
         ])
@@ -104,6 +111,7 @@ function UsersTableCommandPanel({
                                 onClick={handleOnEditClick}
                                 className={styles.submitButton}
                                 icon={<EditOutlined />}
+                                disabled={usersLoading}
                             >
                                 Редактировать
                             </Button>
@@ -116,6 +124,7 @@ function UsersTableCommandPanel({
                                 onClick={handleOnDeleteClick}
                                 className={styles.submitButton}
                                 icon={<DeleteOutlined />}
+                                disabled={usersLoading}
                             >
                                 Удалить
                             </Button>
@@ -128,6 +137,7 @@ function UsersTableCommandPanel({
                                 onClick={handleOnAddClick}
                                 className={styles.submitButton}
                                 icon={<PlusOutlined />}
+                                disabled={usersLoading}
                             >
                                 Добавить
                             </Button>

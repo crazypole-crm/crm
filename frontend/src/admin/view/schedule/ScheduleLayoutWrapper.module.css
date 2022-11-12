@@ -1,0 +1,11 @@
+.calendarLayoutWrapper {
+    width: 100%;
+    min-height: 100%;
+    position: relative;
+    background: #F0F2F5;
+}
+
+.calendarLayout {
+    display: flex;
+    padding: 0 16px 12px;
+}

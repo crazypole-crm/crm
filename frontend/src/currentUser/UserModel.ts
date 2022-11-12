@@ -1,3 +1,5 @@
+import {UserRole} from "../admin/viewModel/users/UserData";
+
 type UserModel = AuthenticatedUserModel | UnautenticatedUserModel;
 
 type AuthenticatedUserModel = {
@@ -5,11 +7,12 @@ type AuthenticatedUserModel = {
     id: string,
     email: string,
     avatarUrl: string,
-    phone: string,
-    firstName: string,
-    lastName: string,
-    middleName: string,
-    birthDay: Date,
+    role: UserRole,
+    phone?: string,
+    firstName?: string,
+    lastName?: string,
+    middleName?: string,
+    birthDay?: Date,
 };
 
 type UnautenticatedUserModel = {

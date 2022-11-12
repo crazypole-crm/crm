@@ -1,0 +1,29 @@
+.content {
+
+}
+
+.dropdownPicker {
+    z-index: 10001;
+}
+
+.timePeriod {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.trainerRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.repeatableBlock {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.checkbox {
+
+}

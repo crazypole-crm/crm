@@ -1,9 +1,10 @@
 import { CollumnIdType } from "./CollumnsData"
 
-const COLLUMS_IDS: CollumnIdType[] = ['name', 'birthDay', 'email', 'phone', 'lastVisit']
+const COLLUMS_IDS: CollumnIdType[] = ['name', 'role', 'birthDay', 'email', 'phone', 'lastVisit']
 
 const COLLUMN_TO_TITLE_MAP: Map<CollumnIdType, string> = new Map([
     ['name', 'Имя'],
+    ['role', 'Роль'],
     ['birthDay', 'День рождения'],
     ['email', 'Email'],
     ['phone', 'Номер телефона'],

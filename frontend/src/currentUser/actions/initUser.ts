@@ -13,6 +13,7 @@ const initUserDataAction = declareAsyncAction<void>(
                     ...data,
                     isAuthUser: true,
                     birthDay: new Date(data.birthDay),
+                    role: 'admin'
                 }
                 store.dispatch(currentUserActions.setCurrentUserData(modelUserData));
                 return Promise.resolve()

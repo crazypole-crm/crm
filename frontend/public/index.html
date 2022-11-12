@@ -16,4 +16,11 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root" class="root"></div>
   </body>
+  <script>
+    window.addEventListener('contextmenu', (event) => {
+      if (event.defaultPrevented) {
+        return false
+      }
+    })
+  </script>
 </html>

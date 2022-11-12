@@ -1,0 +1,15 @@
+.list {
+    display: flex;
+    flex-direction: column;
+}
+
+.listItem {
+    height: 30px;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+}
+
+.listItem:hover {
+    color: #1890ff;
+}
