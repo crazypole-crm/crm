@@ -20,7 +20,7 @@ interface UserQueryServiceInterface
      * @param string[] $userIds
      * @return UserData[]
      */
-    public function getUsersDataByIds(array $userIds): array;
+    public function listUsersData(array $userIds): array;
 
     /**
      * @param string $email
@@ -28,7 +28,4 @@ interface UserQueryServiceInterface
      * @return UserData|null
      */
     public function getUserDataByEmailAndPassword(string $email, string $password): ?UserData;
-
-
-    public function getAllUsers(): array;
 }

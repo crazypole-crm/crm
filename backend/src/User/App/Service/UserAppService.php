@@ -59,7 +59,7 @@ class UserAppService
      */
     public function getUsersData(array $userIds): array
     {
-        return $this->userQueryService->getUsersDataByIds($userIds);
+        return $this->userQueryService->listUsersData($userIds);
     }
 
     public function updateUserData(UserData $userData): void
@@ -108,11 +108,5 @@ class UserAppService
             }
         );
         $this->transaction->execute($operation);
-    }
-
-    //TODO: УДАЛИТь
-    public function getAllUsers(): array
-    {
-        return $this->userQueryService->getAllUsers();
     }
 }

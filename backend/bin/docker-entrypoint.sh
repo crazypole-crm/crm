@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 bin/console doctrine:migrations:migrate
 docker-php-entrypoint

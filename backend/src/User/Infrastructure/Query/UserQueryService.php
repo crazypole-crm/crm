@@ -11,7 +11,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 
 class UserQueryService implements UserQueryServiceInterface
 {
@@ -20,13 +19,10 @@ class UserQueryService implements UserQueryServiceInterface
     /** @var UserDataHydrator */
     private $hydrator;
 
-    private $logger;
-
-    public function __construct(EntityManagerInterface $em, UserDataHydrator $hydrator, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $em, UserDataHydrator $hydrator)
     {
         $this->conn = $em->getConnection();
         $this->hydrator = $hydrator;
-        $this->logger = $logger; 
     }
 
     public function getUserDataById(string $userId): ?UserData
@@ -47,10 +43,10 @@ class UserQueryService implements UserQueryServiceInterface
     }
 
     /**
-     * @param array $userIds
+     * @param array|null $userIds
      * @return array
      */
-    public function getUsersDataByIds(array $userIds): array
+    public function listUsersData(?array $userIds): array
     {
         $qb = $this->conn->createQueryBuilder();
         $qb->from('user', 'u');
@@ -80,15 +76,6 @@ class UserQueryService implements UserQueryServiceInterface
         $result = $qb->executeQuery()->fetchAssociative();
 
         return $result ? $this->hydrator->hydrateRow($result) : null;
-    }
-
-    //TODO: УДАЛИТЬ!
-    public function getAllUsers(): array
-    {
-        $qb = $this->conn->createQueryBuilder();
-        $qb->from('user', 'u');
-        $qb->addSelect('u.' . UserTable::USER_ID);
-        return $qb->executeQuery()->fetchAllAssociative(FetchMode::COLUMN);
     }
 
     private function addUserFieldSelect(QueryBuilder $qb, string $alias = 'u'): void
