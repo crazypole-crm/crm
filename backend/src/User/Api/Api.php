@@ -29,7 +29,17 @@ class Api implements ApiInterface
     {
         try
         {
-            return $this->userService->createUser($input->getEmail(), $input->getPassword());
+            return $this->userService->createUser(
+                $input->getEmail(),
+                $input->getPassword(),
+                $input->getFirstName(),
+                $input->getMiddleName(),
+                $input->getLastName(),
+                $input->getPhone(),
+                $input->getAvatarUrl(),
+                $input->getBirthday(),
+                $input->getLastVisit(),
+            );
         }
         catch (\Exception $e)
         {

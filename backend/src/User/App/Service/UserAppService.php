@@ -36,14 +36,51 @@ class UserAppService
     /**
      * @param string $email
      * @param string $password
+     * @param string|null $firstName
+     * @param string|null $middleName
+     * @param string|null $lastName
+     * @param string|null $phone
+     * @param string|null $avatarUrl
+     * @param int|null $birthday
+     * @param int|null $lastVisit
      * @return string
      */
-    public function createUser(string $email, string $password): string
+    public function createUser(
+        string $email,
+        string $password,
+        ?string $firstName = null,
+        ?string $middleName = null,
+        ?string $lastName = null,
+        ?string $phone = null,
+        ?string $avatarUrl = null,
+        ?int $birthday = null,
+        ?int $lastVisit = null,
+    ): string
     {
         return (string)$this->transaction->execute(
-            function () use ($email, $password): UserId
+            function () use (
+                $email,
+                $password,
+                $firstName,
+                $middleName,
+                $lastName,
+                $phone,
+                $avatarUrl,
+                $birthday,
+                $lastVisit
+            ): UserId
             {
-                return $this->userService->createUser($email, $password);
+                return $this->userService->createUser(
+                    $email,
+                    $password,
+                    $firstName,
+                    $middleName,
+                    $lastName,
+                    $phone,
+                    $avatarUrl,
+                    $birthday,
+                    $lastVisit,
+                );
             }
         );
     }

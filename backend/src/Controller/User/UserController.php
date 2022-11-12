@@ -46,6 +46,27 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/user/create")
+     */
+    public function createUser(Request $request): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        $input = new CreateUserInput(
+            $requestData['email'],
+            md5($requestData['password']),
+            $requestData['firstName'],
+            $requestData['middleName'],
+            $requestData['lastName'],
+            $requestData['phoneNumber'],
+            '',
+            $requestData['birthday'],
+        );
+        $userId = $this->userApi->createUser($input);
+
+        return new Response(json_encode(['id' => $userId], JSON_THROW_ON_ERROR));
+    }
+
+    /**
      * @Route("/logout")
      */
     public function logout(Request $request): void
@@ -57,6 +78,34 @@ class UserController extends AbstractController
      * @Route("/update/user_data")
      */
     public function updateUserData(Request $request): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+        $userData = New UserData(
+            $requestData['id'],
+            $requestData['email'],
+            $requestData['firstName'],
+            $requestData['middleName'],
+            $requestData['lastName'],
+            $requestData['phoneNumber'],
+            '',
+            $requestData['birthday'],
+        );
+        $this->userApi->updateUserData($userData);
+        return new Response();
+    }
+
+    /**
+     * @Route("/update/current_user_data")
+     */
+    public function updateCurrentUserData(Request $request): Response
     {
         $requestData = json_decode($request->getContent(), true);
         try
