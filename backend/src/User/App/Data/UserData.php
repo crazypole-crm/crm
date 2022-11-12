@@ -5,28 +5,18 @@ namespace App\User\App\Data;
 
 class UserData
 {
-    /** @var string */
-    private $userId;
-    /** @var string */
-    private $email;
-    /** @var string */
-    private $firstName;
-    /** @var string|null */
-    private $lastName;
-    /** @var string|null */
-    private $phone;
-    /** @var string|null */
-    private $avatarUrl;
 
-    public function __construct(string $userId, string $email, ?string $firstName = null, ?string $lastName = null, ?string $phone = null, ?string $avatarUrl = null)
-    {
-        $this->userId = $userId;
-        $this->email = $email;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->phone = $phone;
-        $this->avatarUrl = $avatarUrl;
-    }
+    public function __construct(
+        private string $userId,
+        private string $email,
+        private string $firstName,
+        private ?string $middleName,
+        private ?string $lastName,
+        private ?string $phone,
+        private ?string $avatarUrl,
+        private ?int $birthday = null,
+        private ?int $lastVisit = null,
+    ){}
 
     public function getUserId(): string
     {
@@ -78,8 +68,23 @@ class UserData
         $this->phone = $phone;
     }
 
-    public function setAvatarUrl(?string $avatarUrl): void
+    public function getMiddleName(): ?string
     {
-        $this->avatarUrl = $avatarUrl;
+        return $this->middleName;
+    }
+
+    public function setMiddleName(?string $middleName): void
+    {
+        $this->middleName = $middleName;
+    }
+
+    public function getBirthday(): ?int
+    {
+        return $this->birthday;
+    }
+
+    public function getLastVisit(): ?int
+    {
+        return $this->lastVisit;
     }
 }
