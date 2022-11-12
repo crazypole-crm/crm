@@ -126,9 +126,11 @@ function TrainingType() {
                 title={'Клиент:'}
                 content={<Select
                     placeholder={'Пользователь'}
+                    showSearch={true}
                     value={individualClient}
                     onChange={id => handleSetIndividualClient(id)}
                     options={clientsOption}
+                    filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
                     style={{
                         width: 200,
                     }}
