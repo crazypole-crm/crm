@@ -52,7 +52,10 @@ class UserQueryService implements UserQueryServiceInterface
         $qb->from('user', 'u');
         $this->addUserFieldSelect($qb);
         $qb->where($qb->expr()->in('u.' . UserTable::USER_ID, ':userIds'));
-        $qb->setParameter('userIds', $userIds, Connection::PARAM_STR_ARRAY);
+        if ($userIds !== null)
+        {
+            $qb->setParameter('userIds', $userIds, Connection::PARAM_STR_ARRAY);
+        }
         $result = $qb->executeQuery()->fetchAllAssociative();
 
         $userData = [];

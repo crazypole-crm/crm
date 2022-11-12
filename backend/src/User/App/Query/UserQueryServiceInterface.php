@@ -17,10 +17,10 @@ interface UserQueryServiceInterface
     /**
      * Undocumented function
      *
-     * @param string[] $userIds
+     * @param string[]|null $userIds
      * @return UserData[]
      */
-    public function listUsersData(array $userIds): array;
+    public function listUsersData(?array $userIds): array;
 
     /**
      * @param string $email
