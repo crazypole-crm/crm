@@ -12,4 +12,5 @@
 .content {
     overflow: auto;
     flex-grow: 1;
+    background: #F0F2F5;
 }

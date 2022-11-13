@@ -37,7 +37,7 @@ function Content() {
 function ReplaceTrainerPopup() {
     const calendarReplaceTrainerPopupOpened = useAtomWithSelector(replaceTrainerPopupAtom, x => x.opened)
     const handleCloseReplaceTrainerPopup = useAction(replaceTrainerPopupActions.close)
-    const handleCloseReplaceTrainerSubmit = useAction(replaceTrainerPopupActions.submit)
+    const handleSubmitReplaceTrainer = useAction(replaceTrainerPopupActions.submit)
 
     return <Modal
         title={'Заменить преподавателя'}
@@ -46,7 +46,7 @@ function ReplaceTrainerPopup() {
         okText={'Сохранить'}
         cancelText={'Отмена'}
         onCancel={handleCloseReplaceTrainerPopup}
-        onOk={handleCloseReplaceTrainerSubmit}
+        onOk={handleSubmitReplaceTrainer}
     >
         <Content/>
     </Modal>

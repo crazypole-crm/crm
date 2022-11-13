@@ -17,6 +17,8 @@ import {editTrainingPopupActions} from "../../../../../viewModel/calendar/editTr
 import {replaceTrainerPopupActions} from "../../../../../viewModel/calendar/replaceTrainerPopup/replaceTrainer";
 import {moveTrainingPopupActions} from "../../../../../viewModel/calendar/moveTrainingPopup/moveTrainingPopup";
 import {getValueByCheckedKey} from "../../../../../../core/getValueByCheckedKey";
+import {trainingActionPopupActions} from "../../../../../viewModel/calendar/trainingActionPopup/trainingActionPopup";
+import {clientsTrainingPopupActions} from "../../../../../viewModel/calendar/trainingClientsPopup/trainingClientsPopup";
 
 type TrainingCalendarCellProps = {
     trainingData: TrainingData,
@@ -77,7 +79,9 @@ function TrainingCalendarCell({
 
     const handleOpenEditTrainingPopup = useAction(editTrainingPopupActions.open)
     const handleOpenReplaceTrainerPopup = useAction(replaceTrainerPopupActions.open)
-    const handleMoveTrainingPopup = useAction(moveTrainingPopupActions.open)
+    const handleOpenMoveTrainingPopup = useAction(moveTrainingPopupActions.open)
+    const handleOpenTrainingActionPopup = useAction(trainingActionPopupActions.open)
+    const handleOpenClientsTrainingPopup = useAction(clientsTrainingPopupActions.open)
 
     const trainer = users[trainingData.trainerId]
     const hall = halls[trainingData.hallId]
@@ -106,11 +110,44 @@ function TrainingCalendarCell({
     }
 
     const onMoveTraining = () => {
-        handleMoveTrainingPopup({
+        handleOpenMoveTrainingPopup({
             id: trainingData.id,
             date: trainingData.date,
             endTime: trainingData.timeEnd,
             startTime: trainingData.timeEnd
+        })
+    }
+
+    const onCancelTraining = () => {
+        handleOpenTrainingActionPopup({
+            mode: 'cancel',
+            ...trainingData,
+        })
+    }
+
+    const onDeleteTraining = () => {
+        handleOpenTrainingActionPopup({
+            mode: 'delete',
+            ...trainingData,
+        })
+    }
+
+    const onRecordTraining = () => {
+        handleOpenTrainingActionPopup({
+            mode: 'record',
+            ...trainingData,
+        })
+    }
+
+    const onShowClients = () => {
+        const clientsData = new Map([
+            ['client1', false],
+            ['client2', false],
+            ['client3', false],
+        ])
+        handleOpenClientsTrainingPopup({
+            id: trainingData.id,
+            clients: clientsData,
         })
     }
 
@@ -152,13 +189,13 @@ function TrainingCalendarCell({
     const onPopoverItemClick: MenuProps['onClick'] = (e) => {
         const action = getValueByCheckedKey(e.key, {
             'replaceTrainer': onReplaceTrainer,
-            'cancelTraining': () => console.log('cancel Training'),
+            'cancelTraining': onCancelTraining,
             'moveTraining': onMoveTraining,
             'enrollTraining': () => console.log('enroll training'),
-            'checkUserList': () => console.log('check users for training'),
+            'checkUserList': onShowClients,
             'addTraining': onAdd,
             'editTraining': onEdit,
-            'deleteTraining': () => console.log('delete Training'),
+            'deleteTraining': onDeleteTraining,
         })
         action()
         setPopoverOpened(false)
@@ -186,7 +223,7 @@ function TrainingCalendarCell({
                 onEdit()
                 break
             case "client":
-                console.log('record to training')
+                onRecordTraining()
                 break
         }
     }

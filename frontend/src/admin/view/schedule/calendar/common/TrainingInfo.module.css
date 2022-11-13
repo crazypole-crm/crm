@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.direction {
+    font-family: Roboto;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 22px;
+    color: #000000;
+    margin-bottom: 9px;
+}
+
+.date {
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 22px;
+    color: #000000;
+    margin-bottom: 15px;
+}
+
+.timePeriod,
+.capacity {
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 22px;
+    color: #000000;
+    margin-bottom: 15px;
+}
+
+.description {
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 19px;
+}
+
+.trainerRow {
+    display: flex;
+    gap: 7px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.trainerName {
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 19px;
+}

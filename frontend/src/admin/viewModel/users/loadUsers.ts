@@ -44,6 +44,8 @@ function handleUsersData(store: Store, users: Array<Api_UsersData>, updateFn: (u
     users.push(getRandomUserData('trainer2', 'trainer'))
     users.push(getRandomUserData('trainer3', 'trainer'))
     users.push(getRandomUserData('client1', 'client'))
+    users.push(getRandomUserData('client2', 'client'))
+    users.push(getRandomUserData('client3', 'client'))
     const remappedUsers = users.map(user => ({
         ...user,
         birthDay: user.birthDay ? new Date(user.birthDay) : undefined,

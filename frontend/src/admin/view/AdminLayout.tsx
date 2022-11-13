@@ -16,6 +16,8 @@ import {CalendarSettingsPopup} from "./schedule/calendar/calendarSettins/Calenda
 import {ViewUserPopup} from "./users/viewUsersPopup/ViewUserPopup";
 import {ReplaceTrainerPopup} from "./schedule/calendar/replaceTrainerPopup/ReplaceTrainerPopup";
 import {MoveTrainingPopup} from "./schedule/calendar/moveTrainingPopup/MoveTrainingPopup";
+import {TrainingActionPopup} from "./schedule/calendar/trainingActionPopup/TrainingActionPopup";
+import {TrainingClientsPopup} from "./schedule/calendar/trainingClientsPopup/TrainingClientsPopup";
 
 function PopupsLayout() {
     const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
@@ -30,6 +32,8 @@ function PopupsLayout() {
             <ViewUserPopup />
             <ReplaceTrainerPopup />
             <MoveTrainingPopup />
+            <TrainingActionPopup />
+            <TrainingClientsPopup />
         </>
     )
 }
