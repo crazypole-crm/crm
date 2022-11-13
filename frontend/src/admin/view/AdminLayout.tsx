@@ -15,13 +15,13 @@ import {EditTrainingPopup} from "./schedule/calendar/editTrainingPopup/EditTrain
 import {CalendarSettingsPopup} from "./schedule/calendar/calendarSettins/CalendarSettingsPopup";
 
 function PopupsLayout() {
-    const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
+    // const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
 
-    const handleCloseEditUserPopup = useAction(editUserPopupActions.close)
+    // const handleCloseEditUserPopup = useAction(editUserPopupActions.close)
 
     return (
         <>
-            <PopupPortal binding={<EditUserPopup/>} show={editUserPopupOpened} close={() => handleCloseEditUserPopup()} />
+            <EditUserPopup />
             <EditTrainingPopup />
             <CalendarSettingsPopup />
         </>

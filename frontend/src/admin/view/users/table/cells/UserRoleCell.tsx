@@ -44,5 +44,6 @@ function UserRoleCell({
 }
 
 export {
+    mapRoleTypeToText,
     UserRoleCell,
 }
