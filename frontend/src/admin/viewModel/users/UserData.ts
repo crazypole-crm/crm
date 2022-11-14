@@ -1,6 +1,8 @@
 
 export type UserRole = 'admin' | 'trainer' | 'client'
 
+export const userRoles: UserRole[] = ['admin', 'trainer', 'client']
+
 export type UserData = {
     id: string,
     email: string,
