@@ -17,8 +17,8 @@
         <field name="lastName" column="last_name" type="string" nullable="true"/>
         <field name="phone" column="phone" type="string" unique="true" nullable="true"/>
         <field name="avatarUrl" column="avatar_url" type="string" nullable="true"/>
-        <field name="birthday" column="birthday" type="int" nullable="true"/>
-        <field name="lastVisit" column="last_visit" type="int" nullable="true"/>
+        <field name="birthday" column="birthday" type="integer" nullable="true"/>
+        <field name="lastVisit" column="last_visit" type="integer" nullable="true"/>
 
     </entity>
 </doctrine-mapping>
