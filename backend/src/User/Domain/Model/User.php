@@ -17,7 +17,18 @@ class User
     private ?string $avatarUrl;
     private ?int $lastVisit;
 
-    public function __construct(UserId $userId, Email $email, Password $password, ?string $firstName = null, ?string $lastName = null, ?string $phone = null, ?string $avatarUrl = null, ?string $middleName = null, ?int $birthday = null, ?int $lastVisit = null)
+    public function __construct(
+        UserId $userId,
+        Email $email,
+        Password $password,
+        ?string $firstName = null,
+        ?string $lastName = null,
+        ?string $phone = null,
+        ?string $avatarUrl = null,
+        ?string $middleName = null,
+        ?int $birthday = null,
+        ?int $lastVisit = null
+    )
     {
         $this->userId = (string)$userId;
         $this->assertEmailValid($email);
