@@ -6,13 +6,14 @@ type AuthenticatedUserModel = {
     isAuthUser: true;
     id: string,
     email: string,
-    avatarUrl: string,
+    avatarUrl?: string,
     role: UserRole,
     phone?: string,
     firstName?: string,
     lastName?: string,
     middleName?: string,
     birthDay?: Date,
+    lastVisit?: Date,
 };
 
 type UnautenticatedUserModel = {

@@ -6,6 +6,7 @@ import {SettingOutlined} from "@ant-design/icons";
 import {useAction, useAtom} from "@reatom/react";
 import {calendarSettingsPopupActions} from "../../viewModel/calendar/calendartSettings/calendarSettingsPopup";
 import {calendarSettingsAtom} from "../../viewModel/calendar/calendartSettings/calendarSettings";
+import {getValueByCheckedKey} from "../../../core/getValueByCheckedKey";
 
 type CalendarSwitcherProps = {
     calendarType: CalendarType,
@@ -25,17 +26,12 @@ function CalendarSwitcher({
     ]), [])
 
     const onChange = useCallback((e: RadioChangeEvent) => {
-        switch (e.target.value) {
-            case 'work-week':
-                onCalendarTypeChanged('work-week')
-                break
-            case 'week':
-                onCalendarTypeChanged('week')
-                break
-            case 'day':
-                onCalendarTypeChanged('day')
-                break
-        }
+        const action = getValueByCheckedKey(e.target.value, {
+            'work-week': () => onCalendarTypeChanged('work-week'),
+            'week': () => onCalendarTypeChanged('week'),
+            'day': () => onCalendarTypeChanged('day'),
+        })
+        action()
     }, [onCalendarTypeChanged])
 
     return (

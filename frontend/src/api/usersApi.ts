@@ -1,61 +1,23 @@
 import {HttpStatus} from "../core/http/HttpStatus";
-import {GetUserDataType} from "./currentUserApi";
 import {UserRole} from "../admin/viewModel/users/UserData";
-import {generateUuid} from "../core/uuid/generateUuid";
 
 type Api_UsersData = {
     id: string,
     email: string,
-    avatarUrl: string,
-    role: UserRole,
+    avatarUrl?: string,
     phone?: string,
     firstName?: string,
     lastName?: string,
     middleName?: string,
+    role: UserRole,
     birthDay?: number,
     lastVisit?: number,
-}
-
-function randomInteger(min: number, max: number) {
-    let rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
-}
-
-function getRandomRole(): UserRole {
-    const roles: UserRole[] = ['admin', 'client']
-    const randomIndex = randomInteger(0, 1)
-    return roles[randomIndex]
-}
-
-function randomPhone(): string|undefined {
-    const show = randomInteger(0, 1)
-    return show ? '89021025370' : undefined
-}
-
-function getRandomUserData(id?: string, role?: UserRole): Api_UsersData {
-    return {
-        id: id || generateUuid(),
-        avatarUrl: '',
-        birthDay: Math.round(Math.random() * 10000000000000),
-        lastVisit: Math.round(Math.random() * 10000000000000),
-        firstName: 'Edward',
-        lastName: 'King',
-        middleName: `${randomInteger(0, 100)}`,
-        role: role || getRandomRole(),
-        email: `EdwardKing${randomInteger(0, 100)}`,
-        phone: randomPhone(),
-    }
 }
 
 function getUsersDataByIds(userIds: Array<string>): Promise<Array<Api_UsersData>> {
     return new Promise(resolve => {
         setTimeout(() => {
-            const users = []
-            for (let i = 0; i < 100; i++) {
-                users.push(getRandomUserData())
-            }
-            users.push(getRandomUserData('1', 'trainer'))
-            resolve(users)
+            resolve([])
         }, 1000)
     })
     // return fetch('/get/users_data', {
@@ -78,18 +40,33 @@ function getUsersDataByIds(userIds: Array<string>): Promise<Array<Api_UsersData>
 }
 
 function getAllUsersData(): Promise<Array<Api_UsersData>> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            const users = []
-            for (let i = 0; i < 100; i++) {
-                users.push(getRandomUserData())
-            }
-            users.push(getRandomUserData('trainer1', 'trainer'))
-            users.push(getRandomUserData('trainer2', 'trainer'))
-            users.push(getRandomUserData('trainer3', 'trainer'))
-            resolve(users)
-        }, 1000)
+    // return new Promise(resolve => {
+    //     setTimeout(() => {
+    //         const users = []
+    //         for (let i = 0; i < 100; i++) {
+    //             users.push(getRandomUserData())
+    //         }
+    //         users.push(getRandomUserData('trainer1', 'trainer'))
+    //         users.push(getRandomUserData('trainer2', 'trainer'))
+    //         users.push(getRandomUserData('trainer3', 'trainer'))
+    //         resolve(users)
+    //     }, 1000)
+    // })
+
+    return fetch('/get/users_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 

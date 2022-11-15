@@ -1,4 +1,4 @@
-import {DeleteOutlined, EditOutlined, PlusOutlined, SettingOutlined} from '@ant-design/icons'
+import {DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, SettingOutlined} from '@ant-design/icons'
 import {Button, Popover} from 'antd'
 import {useMemo, useState} from 'react'
 import {SelectList, SelectListItemData} from '../../../../common/selectList/SelectList'
@@ -11,8 +11,11 @@ import {useAction, useAtom} from "@reatom/react";
 import {editUserPopupActions} from "../../../viewModel/editUserPopup/editUserPopup";
 import {usersAtom} from "../../../viewModel/users/users";
 import {usersLoadingAtom} from "../../../viewModel/users/loadUsers";
+import {authorizedCurrentUser} from "../../../../currentUser/currentUser";
+import {viewUserPopupActions} from "../../../viewModel/users/viewUserPopup/viewUserPopup";
+import {checkNever} from "../../../../core/checkNever";
 
-type UsersActionsButtonType = 'delete' | 'edit' | 'add'
+type UsersActionsButtonType = 'delete' | 'edit' | 'add' | 'view'
 
 type CollumnsFilterProps = {
     visibleCollumns: VisibleCollumsData,
@@ -42,13 +45,12 @@ function CollumnsFilter({
             content={<SelectList
                 items={items}
                 onCheckedChanged={handleCheckedChanged}
+                className={styles.selectList}
             />}
             trigger={'click'}
-            arrowPointAtCenter={true}
             placement={'bottomRight'}
             open={open}
             onOpenChange={setOpen}
-            className={styles.selectList}
         >
             <Button
                 icon={<SettingOutlined />}
@@ -74,12 +76,20 @@ function UsersTableCommandPanel({
     setVisibleCollumns,
     visibleCollumns,
 }: UsersActionsButtonProps) {
+    const currentUser = useAtom(authorizedCurrentUser)
     const users = useAtom(usersAtom)
     const usersLoading = useAtom(usersLoadingAtom)
     const handleOpenEditUserPopup = useAction(editUserPopupActions.open)
+    const handleOpenViewUserPopup = useAction(viewUserPopupActions.open)
 
     const handleOnEditClick = () => {
         handleOpenEditUserPopup(users[selectedRowKeys[0]])
+    }
+
+    const handleOnViewClick = () => {
+        handleOpenViewUserPopup({
+            ...users[selectedRowKeys[0]]
+        })
     }
 
     const handleOnDeleteClick = () => {
@@ -91,10 +101,13 @@ function UsersTableCommandPanel({
     }
 
     const buttons: UsersActionsButtonType[] = useMemo(() => {
+        const isAdmin = currentUser.role === 'admin'
+        const isTrainer = currentUser.role === 'trainer'
         return optionalArray([
-            !selectedRowKeys.length && 'add',
-            selectedRowKeys.length === 1 && 'edit',
-            !!selectedRowKeys.length && 'delete'    
+            (isAdmin && !selectedRowKeys.length) && 'add',
+            (isAdmin && selectedRowKeys.length === 1) && 'edit',
+            (isAdmin && !!selectedRowKeys.length) && 'delete',
+            ((isAdmin || isTrainer) && selectedRowKeys.length === 1) && 'view',
         ])
     }, [selectedRowKeys])
 
@@ -142,7 +155,21 @@ function UsersTableCommandPanel({
                             >
                                 Добавить
                             </Button>
+                        case 'view':
+                            return <Button
+                                key={buttonType}
+                                type='primary'
+                                ghost
+                                size='large'
+                                onClick={handleOnViewClick}
+                                className={styles.submitButton}
+                                icon={<EyeOutlined />}
+                                disabled={usersLoading}
+                            >
+                                Посмотреть
+                            </Button>
                         default:
+                            checkNever(buttonType)
                             throw new Error()
                     }
                 })}

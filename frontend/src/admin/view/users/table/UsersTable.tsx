@@ -22,7 +22,7 @@ interface DataType {
     phone?: string;
     lastVisit?: Date;
     role: UserRole,
-  }
+}
   
 interface TableParams {
     pagination?: TablePaginationConfig;
@@ -132,6 +132,10 @@ function UsersTable({
             onRow={onRowClick}
             onChange={handleTableChange}
             loading={!usersData}
+            style={{
+                borderRadius: 10,
+                background: "#ffffff"
+            }}
         />
     )
 }

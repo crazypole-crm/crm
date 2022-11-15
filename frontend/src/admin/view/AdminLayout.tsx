@@ -13,6 +13,11 @@ import {EditUserPopup} from "./users/editUserPopup/EditUserPopup";
 import {ScheduleLayoutWrapper} from "./schedule/ScheduleLayoutWrapper";
 import {EditTrainingPopup} from "./schedule/calendar/editTrainingPopup/EditTrainingPopup";
 import {CalendarSettingsPopup} from "./schedule/calendar/calendarSettins/CalendarSettingsPopup";
+import {ViewUserPopup} from "./users/viewUsersPopup/ViewUserPopup";
+import {ReplaceTrainerPopup} from "./schedule/calendar/replaceTrainerPopup/ReplaceTrainerPopup";
+import {MoveTrainingPopup} from "./schedule/calendar/moveTrainingPopup/MoveTrainingPopup";
+import {TrainingActionPopup} from "./schedule/calendar/trainingActionPopup/TrainingActionPopup";
+import {TrainingClientsPopup} from "./schedule/calendar/trainingClientsPopup/TrainingClientsPopup";
 
 function PopupsLayout() {
     const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
@@ -24,6 +29,11 @@ function PopupsLayout() {
             <PopupPortal binding={<EditUserPopup/>} show={editUserPopupOpened} close={() => handleCloseEditUserPopup()} />
             <EditTrainingPopup />
             <CalendarSettingsPopup />
+            <ViewUserPopup />
+            <ReplaceTrainerPopup />
+            <MoveTrainingPopup />
+            <TrainingActionPopup />
+            <TrainingClientsPopup />
         </>
     )
 }

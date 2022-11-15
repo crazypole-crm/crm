@@ -14,6 +14,11 @@ import {Menu, MenuProps, Popover, Tooltip} from "antd";
 import {MouseEventHandler, useRef, useState} from "react";
 import {useHtmlElementEventHandler} from "../../../../../../core/hooks/useHtmlElementEventHandler";
 import {editTrainingPopupActions} from "../../../../../viewModel/calendar/editTrainingPopup/editTrainingPopup";
+import {replaceTrainerPopupActions} from "../../../../../viewModel/calendar/replaceTrainerPopup/replaceTrainer";
+import {moveTrainingPopupActions} from "../../../../../viewModel/calendar/moveTrainingPopup/moveTrainingPopup";
+import {getValueByCheckedKey} from "../../../../../../core/getValueByCheckedKey";
+import {trainingActionPopupActions} from "../../../../../viewModel/calendar/trainingActionPopup/trainingActionPopup";
+import {clientsTrainingPopupActions} from "../../../../../viewModel/calendar/trainingClientsPopup/trainingClientsPopup";
 
 type TrainingCalendarCellProps = {
     trainingData: TrainingData,
@@ -73,6 +78,10 @@ function TrainingCalendarCell({
     const [popoverOpened, setPopoverOpened] = useState(false)
 
     const handleOpenEditTrainingPopup = useAction(editTrainingPopupActions.open)
+    const handleOpenReplaceTrainerPopup = useAction(replaceTrainerPopupActions.open)
+    const handleOpenMoveTrainingPopup = useAction(moveTrainingPopupActions.open)
+    const handleOpenTrainingActionPopup = useAction(trainingActionPopupActions.open)
+    const handleOpenClientsTrainingPopup = useAction(clientsTrainingPopupActions.open)
 
     const trainer = users[trainingData.trainerId]
     const hall = halls[trainingData.hallId]
@@ -93,10 +102,59 @@ function TrainingCalendarCell({
         })
     }
 
+    const onReplaceTrainer = () => {
+        handleOpenReplaceTrainerPopup({
+            trainerId: trainingData.trainerId,
+            id: trainingData.id,
+        })
+    }
+
+    const onMoveTraining = () => {
+        handleOpenMoveTrainingPopup({
+            id: trainingData.id,
+            date: trainingData.date,
+            endTime: trainingData.timeEnd,
+            startTime: trainingData.timeEnd
+        })
+    }
+
+    const onCancelTraining = () => {
+        handleOpenTrainingActionPopup({
+            mode: 'cancel',
+            ...trainingData,
+        })
+    }
+
+    const onDeleteTraining = () => {
+        handleOpenTrainingActionPopup({
+            mode: 'delete',
+            ...trainingData,
+        })
+    }
+
+    const onRecordTraining = () => {
+        handleOpenTrainingActionPopup({
+            mode: 'record',
+            ...trainingData,
+        })
+    }
+
+    const onShowClients = () => {
+        const clientsData = new Map([
+            ['client1', false],
+            ['client2', false],
+            ['client3', false],
+        ])
+        handleOpenClientsTrainingPopup({
+            id: trainingData.id,
+            clients: clientsData,
+        })
+    }
+
     const popoverItems: Required<MenuProps>['items'][number][] = [
         {
             key: 'replaceTrainer',
-            label: 'Разово оставить замену',
+            label: 'Разово поставить замену',
         },
         {
             key: 'cancelTraining',
@@ -129,34 +187,17 @@ function TrainingCalendarCell({
     ]
 
     const onPopoverItemClick: MenuProps['onClick'] = (e) => {
-        switch (e.key) {
-            case 'replaceTrainer':
-                console.log('replace trainer')
-                break
-            case "cancelTraining":
-                console.log('cancel Training')
-                break
-            case "moveTraining":
-                console.log('move Training')
-                break
-            case 'enrollTraining':
-                console.log('enroll training')
-                break
-            case 'checkUserList':
-                console.log('check users for training')
-                break
-            case 'addTraining':
-                onAdd()
-                break
-            case "editTraining":
-                onEdit()
-                break
-            case 'deleteTraining':
-                console.log('delete Training')
-                break
-            default:
-                return
-        }
+        const action = getValueByCheckedKey(e.key, {
+            'replaceTrainer': onReplaceTrainer,
+            'cancelTraining': onCancelTraining,
+            'moveTraining': onMoveTraining,
+            'enrollTraining': () => console.log('enroll training'),
+            'checkUserList': onShowClients,
+            'addTraining': onAdd,
+            'editTraining': onEdit,
+            'deleteTraining': onDeleteTraining,
+        })
+        action()
         setPopoverOpened(false)
     }
 
@@ -182,7 +223,7 @@ function TrainingCalendarCell({
                 onEdit()
                 break
             case "client":
-                console.log('record to training')
+                onRecordTraining()
                 break
         }
     }
@@ -198,7 +239,11 @@ function TrainingCalendarCell({
                 {getDurationString(trainingData.timeStart, trainingData.timeEnd)}
             </div>
             <div className={styles.freePlaces}>
-                {getFreePlaces(hall.capacity, trainingData.clients.length)}
+                {
+                    trainingData.type === 'grouped'
+                        ? getFreePlaces(hall.capacity, trainingData.clients.length)
+                        : 'Индивидуальное'
+                }
             </div>
             <div className={styles.trainerName}>
                 {getTrainerName(trainer.firstName, trainer.lastName)}
@@ -216,6 +261,7 @@ function TrainingCalendarCell({
                             placement={'rightTop'}
                             trigger={'contextMenu'}
                             content={<Menu
+                                selectedKeys={[]}
                                 items={popoverItems}
                                 onClick={onPopoverItemClick}
                                 style={{
@@ -228,7 +274,6 @@ function TrainingCalendarCell({
                         </Popover>
                         : trainingInfo
                 }
-
                 {
                     currentUser.role === 'admin'
                         ? <AddPlusButton onAdd={onAdd} />

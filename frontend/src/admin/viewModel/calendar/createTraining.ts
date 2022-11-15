@@ -1,11 +1,32 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import { TrainingData } from "./TrainingData";
+import {TrainingData, TrainingDate} from "./TrainingData";
 import {CalendarApi} from "../../../api/calendarApi";
 import {processStandardError} from "../../../core/error/processStandardError";
 import {trainingsActions} from "./trainings";
+import {Time} from "./time";
+
+type TrainingDataImpl = {
+    directionId: string,
+    trainerId: string,
+    hallId: string,
+    date: TrainingDate,
+    timeStart: Time,
+    timeEnd: Time,
+    description?: string,
+}
+
+type GroupedTrainingData = TrainingDataImpl & {
+    type: 'grouped',
+    clients: string[],
+}
+
+type IndividualTrainingData = TrainingDataImpl & {
+    type: 'individual',
+    clientId: string,
+}
 
 type CreateTrainingPayload = {
-    trainingData: Omit<TrainingData, 'id'>,
+    trainingData: GroupedTrainingData | IndividualTrainingData,
 }
 
 const createTraining = declareAsyncAction<CreateTrainingPayload>(

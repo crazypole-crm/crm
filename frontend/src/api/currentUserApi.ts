@@ -70,27 +70,11 @@ type GetUserDataType = {
     firstName: string,
     lastName: string,
     middleName: string,
-    birthDay: number,
-    lastVisit: number,
+    birthDay: number | null,
+    lastVisit: number | null,
 };
 
 function getUserData(): Promise<GetUserDataType> {
-    // return new Promise((resolve, reject) => {
-    //     setTimeout(() => {
-    //         resolve({
-    //             id: '1',
-    //             email: 'email@mail.com',
-    //             phone: '8901025370',
-    //             firstName: 'Эльдар',
-    //             lastName: 'Мухаметханов',
-    //             middleName: 'Тимурович',
-    //             avatarUrl: '',
-    //             birthDay: 1667656729791,
-    //             lastVisit: 1667656729792,
-    //         })
-    //         // reject()
-    //     }, 1000)
-    // })
     return fetch('/current/user_data', {
         method: 'POST',
     })

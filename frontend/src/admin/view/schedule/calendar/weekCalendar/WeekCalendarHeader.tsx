@@ -4,6 +4,7 @@ import {normalizeDayNumber} from "../../../../viewModel/calendar/normalizeDayNum
 import styles from './WeekCalendarHeader.module.css'
 import {getStylesWithMods} from "../../../../../core/styles/getStylesWithMods";
 import { getArrayWithNElements } from "../../../../../core/array/array";
+import {getValueByCheckedKey} from "../../../../../core/getValueByCheckedKey";
 
 type WeekCalendarHeaderProps = {
     weekStartDate: Date,
@@ -12,22 +13,15 @@ type WeekCalendarHeaderProps = {
 }
 
 function getWeekDayTitle(weekDayNumber: number) {
-    switch (weekDayNumber) {
-        case 0:
-            return 'Понедельник'
-        case 1:
-            return 'Вторник'
-        case 2:
-            return 'Среда'
-        case 3:
-            return 'Четверг'
-        case 4:
-            return 'Пятница'
-        case 5:
-            return 'Суббота'
-        case 6:
-            return 'Воскресенье'
-    }
+    return getValueByCheckedKey(weekDayNumber, {
+        0: 'Понедельник',
+        1: 'Вторник',
+        2: 'Среда',
+        3: 'Четверг',
+        4: 'Пятница',
+        5: 'Суббота',
+        6: 'Воскресенье',
+    })
 }
 
 type WeekDayCellProps = {

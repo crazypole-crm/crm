@@ -1,35 +1,26 @@
 import {UserRole} from "../../../../viewModel/users/UserData";
 import styles from './UserRoleCell.module.css'
 import {Tag} from "antd";
+import {getValueByCheckedKey} from "../../../../../core/getValueByCheckedKey";
 
 type UserRoleCellProps = {
     role: UserRole
 }
 
 function mapRoleTypeToColor(role: UserRole): string {
-    switch (role) {
-        case 'admin':
-            return 'green'
-        case 'trainer':
-            return 'geekblue'
-        case 'client':
-            return 'orange'
-        default:
-            throw new Error(`unknown user role ${role}`)
-    }
+    return getValueByCheckedKey(role, {
+        'admin': 'green',
+        'trainer': 'geekblue',
+        'client': 'orange',
+    })
 }
 
 function mapRoleTypeToText(role: UserRole): string {
-    switch (role) {
-        case 'admin':
-            return 'Администратор'
-        case 'trainer':
-            return 'Тренер'
-        case 'client':
-            return 'Клиент'
-        default:
-            throw new Error(`unknown user role ${role}`)
-    }
+    return getValueByCheckedKey(role, {
+        'admin': 'Администратор',
+        'trainer': 'Тренер',
+        'client': 'Клиент',
+    })
 }
 
 function UserRoleCell({

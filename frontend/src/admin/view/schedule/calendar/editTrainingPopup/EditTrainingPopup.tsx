@@ -7,136 +7,17 @@ import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelecto
 import styles from './EditTrainingPopup.module.css'
 import {directionsAtom} from "../../../../viewModel/direction/directions";
 import {hallsAtom} from "../../../../viewModel/hall/halls";
-import {trainersAtom} from "../../../../viewModel/users/users";
 import React, {useMemo} from "react";
-import moment from "moment";
-import {Avatar, Checkbox, DatePicker, DatePickerProps, Modal, Select, TimePicker} from "antd";
-import {Moment} from "moment/moment";
-import {Time} from "../../../../viewModel/calendar/time";
+import {Modal, Select} from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import {UserOutlined} from "@ant-design/icons";
-import ruRU from "antd/lib/calendar/locale/ru_RU";
 import {FieldBlock} from "../common/FieldBlock";
+import {RepeatableBlock} from "../common/RepeatableBlock";
+import {TrainingTrainer} from "../common/TrainingTrainer";
+import {clientsAtom} from "../../../../viewModel/users/users";
+import {getFullName} from "../../../../../common/name";
+import {TrainingDatePicker} from "../common/TrainingDatePicker";
+import { TrainingTimePeriod } from "../common/TrainingTimePeriod";
 
-
-type DisabledTime = {
-    disabledHours: number[];
-    disabledMinutes: number[];
-};
-
-function TrainingDatePicker() {
-    const trainingDate = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingDate)
-    const handleSetTrainingDate = useAction(editTrainingPopupActions.setTrainingDate)
-
-    const momentDate = useMemo(() => moment({
-        year: trainingDate.year,
-        month: trainingDate.month,
-        date: trainingDate.date
-    }), [trainingDate])
-
-    const onChange: DatePickerProps['onChange'] = (value) => {
-        if (value) {
-            const date = value.toDate()
-            handleSetTrainingDate({
-                date: date.getDate(),
-                month: date.getMonth(),
-                year: date.getFullYear(),
-            })
-        }
-    }
-
-    return <DatePicker value={momentDate} onChange={onChange} locale={ruRU} />
-}
-
-function TrainingTimePeriod() {
-    const trainingStartTime = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingStartTime)
-    const trainingEndTime = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingEndTime)
-    const handleSetTrainingStartTime = useAction(editTrainingPopupActions.setTrainingStartTime)
-    const handleSetTrainingEndTime = useAction(editTrainingPopupActions.setTrainingEndTime)
-
-    const momentTimeStart = useMemo(() => moment({
-        hour: trainingStartTime.hour,
-        minute: trainingStartTime.minutes,
-    }), [trainingStartTime])
-
-    const momentTimeEnd = useMemo(() => moment({
-        hour: trainingEndTime.hour,
-        minute: trainingEndTime.minutes,
-    }), [trainingEndTime])
-
-    const onChange = (value: Moment | null, setter: (value: Time) => void) => {
-        if (value) {
-            const date = value.toDate()
-            setter({
-                hour: date.getHours(),
-                minutes: date.getMinutes(),
-            })
-        }
-    }
-
-    const disabledStartTime: DisabledTime = useMemo(() => {
-        const disabledHours: number[] = []
-        const disabledMinutes: number[] = []
-
-        const endTimeHours = trainingEndTime.hour
-        for (let i = endTimeHours + 1; i < 24; i++) {
-            disabledHours.push(i)
-        }
-        if (endTimeHours === trainingStartTime.hour) {
-            const endTimeMinutes = trainingEndTime.minutes
-            for (let i = endTimeMinutes; i < 60; i++) {
-                disabledMinutes.push(i)
-            }
-        }
-
-        return {
-            disabledHours,
-            disabledMinutes,
-        }
-    }, [trainingEndTime, trainingStartTime])
-
-    const disabledEndTime: DisabledTime = useMemo(() => {
-        const disabledHours: number[] = []
-        const disabledMinutes: number[] = []
-
-        const startTimeHours = trainingStartTime.hour
-        for (let i = startTimeHours - 1; i >= 0; i--) {
-            disabledHours.push(i)
-        }
-
-        if (startTimeHours === trainingEndTime.hour) {
-            const startTimeMinutes = trainingStartTime.minutes
-            for (let i = startTimeMinutes; i >= 0; i--) {
-                disabledMinutes.push(i)
-            }
-        }
-
-        return {
-            disabledHours,
-            disabledMinutes,
-        }
-    }, [trainingStartTime, trainingEndTime])
-
-    return (
-        <div className={styles.timePeriod}>
-            <TimePicker
-                value={momentTimeStart}
-                format={'HH:mm'}
-                onSelect={value => onChange(value, handleSetTrainingStartTime)}
-                disabledHours={() => disabledStartTime.disabledHours}
-                disabledMinutes={() => disabledStartTime.disabledMinutes}
-            />
-            -
-            <TimePicker
-                value={momentTimeEnd}
-                format={'HH:mm'}
-                onSelect={value => onChange(value, handleSetTrainingEndTime)}
-                disabledHours={() => disabledEndTime.disabledHours}
-                disabledMinutes={() => disabledEndTime.disabledMinutes}
-            />
-        </div>
-    )
-}
 
 function TrainingDescription() {
     const trainingDescription = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingDescription)
@@ -205,68 +86,94 @@ function TrainingHall() {
     />
 }
 
-function TrainingTrainer() {
-    const trainingTrainer = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingTrainer)
-    const trainingTrainerError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingTrainerError)
-    const trainers = useAtom(trainersAtom)
-    const handleTrainingTrainer = useAction(editTrainingPopupActions.setTrainingTrainer)
+function TrainingType() {
+    const type = useAtomWithSelector(editTrainingPopupAtom, x => x.type)
+    const individualClient = useAtomWithSelector(editTrainingPopupAtom, x => x.individualClient)
+    const clients = useAtom(clientsAtom)
+    const handleSetType = useAction(editTrainingPopupActions.setType)
+    const handleSetIndividualClient = useAction(editTrainingPopupActions.setIndividualClient)
 
-    const trainer = useMemo(() => trainingTrainer && trainers.find(trainerData => trainerData.id === trainingTrainer), [trainers, trainingTrainer])
+    const typesOptions = [
+        {
+            value: 'grouped',
+            label: 'Групповое',
+        },
+        {
+            value: 'individual',
+            label: 'Индивидуальное',
+        }
+    ]
 
-    const options = useMemo(() => Object.values(trainers).map(trainerData => ({
-        value: trainerData.id,
-        label: [trainerData.lastName, trainerData.firstName, trainerData.middleName].filter(Boolean).join(' ')
-    })), [trainers])
-
-    return (
-        <div className={styles.trainerRow}>
-            {trainer && <Avatar size={50} icon={<UserOutlined />} src={trainer.avatarUrl || null} />}
-            <Select
-                status={trainingTrainerError ? 'error' : ''}
-                placeholder={'Тренер'}
-                showSearch
-                value={trainer && trainer.id}
-                onChange={id => handleTrainingTrainer(id)}
-                options={options}
-                filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                style={{
-                    width: 200,
-                }}
-            />
-        </div>
-    )
-}
-
-function RepeatableBlock() {
-    const repeatable = useAtomWithSelector(editTrainingPopupAtom, x => x.repeatable)
-    const handleSetRepeatable = useAction(editTrainingPopupActions.setRepeatable)
+    const clientsOption = clients.map(client => ({
+        value: client.id,
+        label: getFullName(client) || client.email,
+    }))
 
     return (
-        <div className={styles.repeatableBlock}>
-            <span className={styles.blockTitle}>{'Повторить на всё расписание:'}</span>
-            <Checkbox
-                className={styles.checkbox}
-                value={repeatable}
-                onChange={e => handleSetRepeatable(e.target.checked)}
+        <>
+            <FieldBlock
+                title={'Тип:'}
+                content={<Select
+                    value={type}
+                    onChange={id => handleSetType(id)}
+                    options={typesOptions}
+                    style={{
+                        width: 200,
+                    }}
+                />}
             />
-        </div>
+            {type === 'individual' && <FieldBlock
+                title={'Клиент:'}
+                content={<Select
+                    placeholder={'Пользователь'}
+                    showSearch={true}
+                    value={individualClient}
+                    onChange={id => handleSetIndividualClient(id)}
+                    options={clientsOption}
+                    filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                    style={{
+                        width: 200,
+                    }}
+                />}
+            />}
+        </>
     )
 }
 
 function Content() {
-    const trainingTrainerError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingTrainerError)
     const trainingDirectionError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingDirectionError)
     const trainingHallError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingHallError)
+    const trainingTrainerError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingTrainerError)
+    const trainingTrainer = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingTrainer)
+    const repeatable = useAtomWithSelector(editTrainingPopupAtom, x => x.repeatable)
+    const type = useAtomWithSelector(editTrainingPopupAtom, x => x.type)
+    const trainingDate = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingDate)
+    const trainingStartTime = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingStartTime)
+    const trainingEndTime = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingEndTime)
+
+    const handleSetTrainingDate = useAction(editTrainingPopupActions.setTrainingDate)
+    const handleSetRepeatable = useAction(editTrainingPopupActions.setRepeatable)
+    const handleTrainingTrainer = useAction(editTrainingPopupActions.setTrainingTrainer)
+    const handleTrainingStartTime = useAction(editTrainingPopupActions.setTrainingStartTime)
+    const handleTrainingEndTime = useAction(editTrainingPopupActions.setTrainingEndTime)
 
     return (
         <div className={styles.content}>
             <FieldBlock
                 title={'Дата:'}
-                content={<TrainingDatePicker/>}
+                content={<TrainingDatePicker
+                    trainingDate={trainingDate}
+                    setStrainingDate={handleSetTrainingDate}
+                />}
             />
             <FieldBlock
                 title={'Время:'}
-                content={<TrainingTimePeriod />}
+                content={<TrainingTimePeriod
+                    setTrainingEndTime={handleTrainingEndTime}
+                    setTrainingStartTime={handleTrainingStartTime}
+                    trainingEndTime={trainingEndTime}
+                    trainingStartTime={trainingStartTime}
+                />}
             />
             <FieldBlock
                 title={'Направление:'}
@@ -280,14 +187,22 @@ function Content() {
             />
             <FieldBlock
                 title={'Преподаватель:'}
-                content={<TrainingTrainer />}
+                content={<TrainingTrainer
+                    trainerId={trainingTrainer}
+                    setTrainerId={handleTrainingTrainer}
+                    trainerError={trainingTrainerError}
+                />}
                 error={trainingTrainerError}
             />
+            <TrainingType />
             <FieldBlock
                 title={'О занятии:'}
                 content={<TrainingDescription/>}
             />
-            <RepeatableBlock />
+            {type === 'grouped' && <RepeatableBlock
+                repeatable={repeatable}
+                setRepeatable={handleSetRepeatable}
+            />}
         </div>
     )
 }

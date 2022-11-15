@@ -1,0 +1,13 @@
+.repeatableBlock {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.blockTitle {
+    color: #1890FF;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22px;
+}

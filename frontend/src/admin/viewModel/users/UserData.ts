@@ -4,7 +4,7 @@ export type UserRole = 'admin' | 'trainer' | 'client'
 export type UserData = {
     id: string,
     email: string,
-    avatarUrl: string,
+    avatarUrl?: string,
     role: UserRole,
     phone?: string,
     firstName?: string,
