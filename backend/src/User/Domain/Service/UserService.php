@@ -56,10 +56,10 @@ class UserService
             new Email($email),
             new Password($password),
             $firstName,
-            $middleName,
             $lastName,
             $phone,
             $avatarUrl,
+            $middleName,
             $birthday,
             $lastVisit,
         );
