@@ -38,7 +38,6 @@ function DirectionsTableCommandPanel({
 
     const buttons: DirectionsActionsButtonType[] = useMemo(() => {
         const isAdmin = currentUser.role === 'admin'
-        //const isTrainer = currentUser.role === 'trainer'
         return optionalArray([
             (isAdmin && !selectedRowKeys.length) && 'add',
             (isAdmin && selectedRowKeys.length === 1) && 'edit',
