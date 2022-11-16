@@ -11,6 +11,7 @@ import {
 } from "../LayoutBlocksSize";
 import { DirectionData } from "../../viewModel/direction/DirectionData";
 import { stringValuesCompare } from "../users/table/userTableDataSort";
+import { DirectionsTableNameCell } from "./DirectionsTableNameCell";
 
 
 interface DataType {
@@ -22,7 +23,8 @@ const columns: ColumnsType<DataType> = [
     {
       title: 'Направление',
       dataIndex: 'name',
-      sorter: (a, b) => stringValuesCompare(a.name, b.name)
+      render: (_: any, record: DataType) => <DirectionsTableNameCell id={record.key} name={record.name}/>,
+      sorter: (a, b) => stringValuesCompare(a.name, b.name),
     },
 ];
   
@@ -79,19 +81,6 @@ function DirectionsTable({
 
     const tableHeight = useMemo(() => calcTableSize(windowHeight), [windowHeight])
 
-    const onRowClick = (record: DataType) => {
-        return {
-            onClick: () => {
-                if (selectedRowKeys.includes(record.key)) {
-                    setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.key))
-                }
-                else {
-                    setSelectedRowKeys([...selectedRowKeys, record.key])
-                }
-            }
-        }
-    }
-
     const rowSelection: TableRowSelection<DataType> = {
         selectedRowKeys,
         onChange: setSelectedRowKeys,
@@ -114,7 +103,6 @@ function DirectionsTable({
             scroll={{
                 y: tableHeight,
             }}
-            onRow={onRowClick}
             onChange={handleTableChange}
             loading={!directionsData}
             style={{
