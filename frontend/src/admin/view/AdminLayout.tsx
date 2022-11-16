@@ -18,6 +18,7 @@ import {ReplaceTrainerPopup} from "./schedule/calendar/replaceTrainerPopup/Repla
 import {MoveTrainingPopup} from "./schedule/calendar/moveTrainingPopup/MoveTrainingPopup";
 import {TrainingActionPopup} from "./schedule/calendar/trainingActionPopup/TrainingActionPopup";
 import {TrainingClientsPopup} from "./schedule/calendar/trainingClientsPopup/TrainingClientsPopup";
+import { DirectionsLayout } from "./directions/DirectionsLayout"
 
 function PopupsLayout() {
     const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
@@ -71,6 +72,9 @@ function AdminLayout() {
                         </Route>
                         <Route exact path={[Router.Dashboard.url()]} >
                             <div>Dashboard Layout</div>
+                        </Route>
+                        <Route exact path={[Router.Directions.url()]} >
+                            <DirectionsLayout />
                         </Route>
                     </Switch>
                 </div>

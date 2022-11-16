@@ -1,4 +1,4 @@
-import {CalendarOutlined, MenuFoldOutlined, TeamOutlined} from "@ant-design/icons";
+import {CalendarOutlined, MenuFoldOutlined, NodeIndexOutlined, TeamOutlined} from "@ant-design/icons";
 import {Menu, MenuProps} from "antd";
 import {useState} from "react";
 import {useLocation} from "react-router-dom";
@@ -28,6 +28,7 @@ function getItem(
 const items: MenuItem[] = [
     getItem('Календарь', 'calendar', <CalendarOutlined/>),
     getItem('Пользователи', 'users-list', <TeamOutlined/>),
+    getItem('Направления', 'directions-list', <NodeIndexOutlined />),
 ];
 
 function getDefaultSelectedSection(path: string): string {
@@ -36,6 +37,8 @@ function getDefaultSelectedSection(path: string): string {
             return 'calendar'
         case Router.UsersList.url():
             return 'users-list'
+        case Router.Directions.url():
+            return 'directions-list'
     }
     return ''
 }
@@ -75,6 +78,9 @@ function Sidebar() {
                 break
             case 'calendar':
                 Router.Schedule.open()
+                break
+            case 'directions-list':
+                Router.Directions.open()
                 break
         }
     };
