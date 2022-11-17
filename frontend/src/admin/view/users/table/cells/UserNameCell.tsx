@@ -21,7 +21,10 @@ function UserNameCell({
 
     const onClick = () => {
         if (currentUser.role === 'admin') {
-            handleOpenEditUserPopup(users[name.id])
+            handleOpenEditUserPopup({
+                userData: users[name.id],
+                mode: 'edit',
+            })
         }
         else {
             handleOpenViewUserPopup(users[name.id])

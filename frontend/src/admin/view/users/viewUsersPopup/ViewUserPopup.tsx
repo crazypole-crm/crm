@@ -19,6 +19,9 @@ function UserInfo() {
                 size={150}
                 icon={<UserOutlined />}
                 src={avatarUrl}
+                style={{
+                    flexShrink: 0,
+                }}
             />
             <div className={styles.name}>
                 {fullName}

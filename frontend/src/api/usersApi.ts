@@ -1,5 +1,6 @@
 import {HttpStatus} from "../core/http/HttpStatus";
 import {UserRole} from "../admin/viewModel/users/UserData";
+import {generateUuid} from "../core/uuid/generateUuid";
 
 type Api_UsersData = {
     id: string,
@@ -40,19 +41,6 @@ function getUsersDataByIds(userIds: Array<string>): Promise<Array<Api_UsersData>
 }
 
 function getAllUsersData(): Promise<Array<Api_UsersData>> {
-    // return new Promise(resolve => {
-    //     setTimeout(() => {
-    //         const users = []
-    //         for (let i = 0; i < 100; i++) {
-    //             users.push(getRandomUserData())
-    //         }
-    //         users.push(getRandomUserData('trainer1', 'trainer'))
-    //         users.push(getRandomUserData('trainer2', 'trainer'))
-    //         users.push(getRandomUserData('trainer3', 'trainer'))
-    //         resolve(users)
-    //     }, 1000)
-    // })
-
     return fetch('/get/users_data', {
         method: 'POST',
         headers: {
@@ -69,10 +57,71 @@ function getAllUsersData(): Promise<Array<Api_UsersData>> {
         })
 }
 
+type Api_EditUserData = {
+    id: string,
+    email: string,
+    role: UserRole,
+    avatarUrl?: string,
+    phoneNumber?: string,
+    firstName?: string,
+    lastName?: string,
+    middleName?: string,
+    birthday?: number,
+}
+
+function editUser(userData: Api_EditUserData): Promise<void> {
+    return fetch('/update/user_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
+}
+
+type Api_CreateUserData = {
+    email: string,
+    role: UserRole,
+    password: string,
+    avatarUrl?: string,
+    phoneNumber?: string,
+    firstName?: string,
+    lastName?: string,
+    middleName?: string,
+    birthday?: number,
+}
+
+function createUser(userData: Api_CreateUserData): Promise<{id: string}> {
+    return fetch('/user/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
+}
 
 const UsersApi = {
     getUsersDataByIds,
     getAllUsersData,
+    editUser,
+    createUser,
 }
 
 export type {

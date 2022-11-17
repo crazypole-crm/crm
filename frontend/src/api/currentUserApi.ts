@@ -3,17 +3,17 @@ import {goToAuth} from "../core/link/goToUrl";
 
 type Api_UserInfo = {
     id: string,
-    firstName: string,
-    lastName: string,
-    middleName: string,
     email: string,
-    phone: string,
-    birthDay: number,
-    lastVisit: number,
+    avatarUrl?: string,
+    firstName?: string,
+    middleName?: string,
+    lastName?: string,
+    phoneNumber?: string,
+    birthday?: number,
 }
 
 function setUserInfo(userInfo: Api_UserInfo): Promise<Response> {
-    return fetch('/update/user_data', {
+    return fetch('/update/current_user_data', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

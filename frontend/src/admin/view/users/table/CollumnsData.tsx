@@ -22,7 +22,6 @@ const COLLUMNS: ColumnsType<DataType> = [
         dataIndex: 'name',
         render: name => <UserNameCell name={name}/>,
         sorter: (a, b) => nameCompare(a.name, b.name),
-        width: 400,
         defaultSortOrder: 'ascend'
     },
     {
@@ -53,7 +52,7 @@ const COLLUMNS: ColumnsType<DataType> = [
         render: dateToString,
         sorter: (a, b) => dateCompare(a.lastVisit, b.lastVisit)
     },
-];
+]
 
 type VisibleCollumsData = {
     [item: string]: boolean

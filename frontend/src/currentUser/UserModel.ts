@@ -1,19 +1,9 @@
-import {UserRole} from "../admin/viewModel/users/UserData";
+import {UserData, UserRole} from "../admin/viewModel/users/UserData";
 
 type UserModel = AuthenticatedUserModel | UnautenticatedUserModel;
 
-type AuthenticatedUserModel = {
+type AuthenticatedUserModel = UserData & {
     isAuthUser: true;
-    id: string,
-    email: string,
-    avatarUrl?: string,
-    role: UserRole,
-    phone?: string,
-    firstName?: string,
-    lastName?: string,
-    middleName?: string,
-    birthDay?: Date,
-    lastVisit?: Date,
 };
 
 type UnautenticatedUserModel = {
