@@ -53,10 +53,13 @@ function CollapsedBlock({
     onCollapseButtonClick,
 }: CollapsedBlockProps) {
     return (
-        <div className={getStylesWithMods(styles.collapsedBlock, {
-            [styles.collapsedSider]: collapsed,
-        })}>
-            <div className={styles.collapseButton} onClick={onCollapseButtonClick}>
+        <div
+            className={getStylesWithMods(styles.collapsedBlock, {
+                [styles.collapsedSider]: collapsed,
+            })}
+             onClick={onCollapseButtonClick}
+        >
+            <div className={styles.collapseButton}>
                 <MenuFoldOutlined />
             </div>
         </div>
