@@ -69,16 +69,16 @@ class UserService
 
     /**
      * @param UserId $userId
-     * @param string $phone
-     * @param string $firstName
-     * @param string $middleName
-     * @param string $lastName
+     * @param string|null $phone
+     * @param string|null $firstName
+     * @param string|null $middleName
+     * @param string|null $lastName
      * @param Email $email
-     * @param string $avatarUrl
+     * @param string|null $avatarUrl
      * @param string|null $birthday
      * @throws InvalidUserIdException
      */
-    public function updateUserData(UserId $userId, string $phone, string $firstName, string $middleName, string $lastName, Email $email, string $avatarUrl, ?string $birthday = null): void
+    public function updateUserData(UserId $userId, ?string $phone, ?string $firstName, ?string $middleName, ?string $lastName, Email $email, ?string $avatarUrl, ?string $birthday = null): void
     {
         $user = $this->repository->findUserById($userId);
         if ($user === null)
