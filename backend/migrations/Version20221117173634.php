@@ -21,8 +21,8 @@ final class Version20221117173634 extends AbstractMigration
     {
         $this->addSql(<<<SQL
             ALTER TABLE user
-                MODIFY birthday VARCHAR,
-                MODIFY last_visit VARCHAR,
+                MODIFY birthday VARCHAR(128),
+                MODIFY last_visit VARCHAR(128)
 SQL
         );
     }
