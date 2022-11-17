@@ -124,7 +124,7 @@ class UserController extends AbstractController
             $requestData['lastName'] ?? null,
             $requestData['phoneNumber'] ?? null,
             '',
-            $requestData['birthday' ?? null],
+            $requestData['birthday'] ?? null,
         );
         $this->userApi->updateUserData($userData);
         return new Response();
