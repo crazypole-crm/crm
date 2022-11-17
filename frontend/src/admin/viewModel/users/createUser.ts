@@ -1,14 +1,14 @@
-import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {processStandardError} from "../../../core/error/processStandardError";
-import {usersActions} from "./users";
-import {UsersApi} from "../../../api/usersApi";
 import {UserData} from "./UserData";
+import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
+import {UsersApi} from "../../../api/usersApi";
+import {usersActions} from "./users";
+import {processStandardError} from "../../../core/error/processStandardError";
 
-const updateUser = declareAsyncAction<Omit<UserData, 'lastVisit'>>(
-    'updateUser',
+
+const createUser = declareAsyncAction<Omit<UserData, 'id' | 'lastVisit'> & {password: string}>(
+    'user.createUser',
     (userData, store) => {
-        return UsersApi.editUser({
-            id: userData.id,
+        return UsersApi.createUser({
             avatarUrl: userData.avatarUrl,
             email: userData.email,
             firstName: userData.firstName,
@@ -17,10 +17,12 @@ const updateUser = declareAsyncAction<Omit<UserData, 'lastVisit'>>(
             lastName: userData.lastName,
             phoneNumber: userData.phone,
             birthday: userData.birthDay?.getTime(),
+            password: userData.password,
         })
-            .then(() => {
+            .then(({id}) => {
                 store.dispatch(usersActions.updateUser({
                     ...userData,
+                    id,
                 }))
             })
             .catch(processStandardError)
@@ -28,5 +30,5 @@ const updateUser = declareAsyncAction<Omit<UserData, 'lastVisit'>>(
 )
 
 export {
-    updateUser,
+    createUser,
 }

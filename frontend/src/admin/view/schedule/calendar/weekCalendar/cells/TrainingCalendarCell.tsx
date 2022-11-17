@@ -19,6 +19,7 @@ import {moveTrainingPopupActions} from "../../../../../viewModel/calendar/moveTr
 import {getValueByCheckedKey} from "../../../../../../core/getValueByCheckedKey";
 import {trainingActionPopupActions} from "../../../../../viewModel/calendar/trainingActionPopup/trainingActionPopup";
 import {clientsTrainingPopupActions} from "../../../../../viewModel/calendar/trainingClientsPopup/trainingClientsPopup";
+import {optionalArray} from "../../../../../../core/array/array";
 
 type TrainingCalendarCellProps = {
     trainingData: TrainingData,
@@ -151,7 +152,7 @@ function TrainingCalendarCell({
         })
     }
 
-    const popoverItems: Required<MenuProps>['items'][number][] = [
+    const popoverItems: Required<MenuProps>['items'][number][] = optionalArray([
         {
             key: 'replaceTrainer',
             label: 'Разово поставить замену',
@@ -168,7 +169,7 @@ function TrainingCalendarCell({
             key: 'enrollTraining',
             label: 'Записать на занятие',
         },
-        {
+        trainingData.type === 'grouped' && {
             key: 'checkUserList',
             label: 'Посмотреть занятые места',
         },
@@ -184,7 +185,7 @@ function TrainingCalendarCell({
             key: 'deleteTraining',
             label: 'Удалить занятие',
         },
-    ]
+    ])
 
     const onPopoverItemClick: MenuProps['onClick'] = (e) => {
         const action = getValueByCheckedKey(e.key, {

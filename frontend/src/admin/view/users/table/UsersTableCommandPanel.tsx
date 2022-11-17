@@ -83,7 +83,10 @@ function UsersTableCommandPanel({
     const handleOpenViewUserPopup = useAction(viewUserPopupActions.open)
 
     const handleOnEditClick = () => {
-        handleOpenEditUserPopup(users[selectedRowKeys[0]])
+        handleOpenEditUserPopup({
+            userData: users[selectedRowKeys[0]],
+            mode: 'edit',
+        })
     }
 
     const handleOnViewClick = () => {
@@ -97,7 +100,9 @@ function UsersTableCommandPanel({
     }
 
     const handleOnAddClick = () => {
-        console.log(`add user`)
+        handleOpenEditUserPopup({
+            mode: 'create',
+        })
     }
 
     const buttons: UsersActionsButtonType[] = useMemo(() => {

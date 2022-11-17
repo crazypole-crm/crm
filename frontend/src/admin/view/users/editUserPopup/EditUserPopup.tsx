@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useAction } from "@reatom/react"
+import { useAction, useAtom } from "@reatom/react"
 import { editUserPopupActions, editUserPopupAtom } from "../../../viewModel/editUserPopup/editUserPopup"
 import {useAtomWithSelector} from "../../../../core/reatom/useAtomWithSelector";
 import { Avatar, DatePicker, DatePickerProps, Input, Modal, Select } from "antd";
@@ -11,19 +11,11 @@ import UserPicUploader from "./UserPicUploader";
 import moment, { Moment } from "moment";
 import ruRU from "antd/lib/calendar/locale/ru_RU";
 import { EditUserPopupInputBlock } from "./EditUserPopupInputBlock";
+import {authorizedCurrentUser, currentUserAtom} from "../../../../currentUser/currentUser";
+import { optionalArray } from "../../../../core/array/array";
 
 const fieldStyle: React.CSSProperties = {
-    //padding: 12,
-    //paddingLeft: 8,
-    //paddingRight: 8,
     width: 320,
-    //height: 55,
-    //borderRadius: 10,
-    //fontFamily: 'Roboto',
-    //fontStyle: normal,
-    //fontWeight: 400,
-    //fontSize: 24,
-    //lineHeight: 24px,
 }
 
 function UserLastNameInput() {
@@ -69,9 +61,9 @@ function UserBirthDayPicker() {
 
     const disabledDate = (date: Moment) => {
         return date > moment(new Date)
-    };
+    }
 
-    const momentDate = useMemo(() => moment(userBirthDay), [userBirthDay])
+    const momentDate = useMemo(() => userBirthDay && moment(userBirthDay), [userBirthDay])
 
     const onChange: DatePickerProps['onChange'] = (value) => {
         if (value) {
@@ -125,10 +117,6 @@ function UserRoleSelect() {
         onChange={handleSetUserRole}
         options={[
             {
-                value: userRoles[0],
-                label: mapRoleTypeToText(userRoles[0]),
-            },
-            {
                 value: userRoles[1],
                 label: mapRoleTypeToText(userRoles[1]),
             },
@@ -176,6 +164,9 @@ function Content() {
     const userLastName = useAtomWithSelector(editUserPopupAtom, x => x.userLastName)
     const userFirstName = useAtomWithSelector(editUserPopupAtom, x => x.userFirstName)
     const userMiddleName = useAtomWithSelector(editUserPopupAtom, x => x.userMiddleName)
+    const popupMode = useAtomWithSelector(editUserPopupAtom, x => x.popupMode)
+    const userId = useAtomWithSelector(editUserPopupAtom, x => x.userId)
+    const currentUser = useAtom(authorizedCurrentUser)
 
     return (
         <div className={styles.content}>
@@ -184,7 +175,7 @@ function Content() {
                     <Avatar size={150} icon={<UserOutlined />} />
                     <UserPicUploader/>
                 </div>
-                <p className={styles.userName}>{userLastName+' '+userFirstName+' '+userMiddleName}</p>
+                <p className={styles.userName}>{optionalArray([userLastName, userFirstName, userMiddleName]).join(' ')}</p>
             </div>
             <div className={styles.fieldsBlock}>
                 <EditUserPopupInputBlock
@@ -216,19 +207,19 @@ function Content() {
                     errorEmpty={userEmptyEmailError}
                     errorIncorrect={userIncorrectEmailError}
                 />
-                <EditUserPopupInputBlock
+                {(popupMode === 'create' || currentUser.id === userId) && <EditUserPopupInputBlock
                     title={'Новый пароль'}
                     content={<UserPasswordInput/>}
-                />
-                <EditUserPopupInputBlock
+                />}
+                {currentUser.role === 'admin' && <EditUserPopupInputBlock
                     title={'Роль'}
                     content={<UserRoleSelect/>}
-                />
-                <EditUserPopupInputBlock
+                />}
+                {(popupMode === 'create' || currentUser.id === userId) &&<EditUserPopupInputBlock
                     title={'Повторите пароль'}
                     content={<UserPasswordCheckInput/>}
                     errorIncorrect={userPasswordCheckError}
-                />
+                />}
             </div>
         </div>
     )
