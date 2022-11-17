@@ -8,6 +8,7 @@ const SCHEDULE = '/schedule'
 const MARK = '/mark'
 const SETTINGS = '/settings'
 const DASHBOARD = '/dashboard'
+const DIRECTIONS = '/courses'
 
 let RouterHistory: History|null = null
 
@@ -72,6 +73,12 @@ function generateDashboardUrl() {
 function openDashboard(push: boolean = false) {
     replaceUrl(generateDashboardUrl(), push)
 }
+function generateDirectionsUrl() {
+    return `${ADMIN}${DIRECTIONS}`
+}
+function openDirections(push: boolean = false) {
+    replaceUrl(generateDirectionsUrl(), push)
+}
 
 const Router = {
     Auth: {
@@ -105,6 +112,10 @@ const Router = {
     Dashboard: {
         open: openDashboard,
         url: generateDashboardUrl,
+    },
+    Directions: {
+        open: openDirections,
+        url: generateDirectionsUrl,
     }
 }
 
