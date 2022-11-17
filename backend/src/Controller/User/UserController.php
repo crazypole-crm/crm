@@ -207,6 +207,11 @@ class UserController extends AbstractController
         return new Response();
     }
 
+    /**
+     * @param UserData[] $usersData
+     * @return string
+     * @throws \JsonException
+     */
     private function serializeUsersData(array $usersData): string
     {
         $data = [];

@@ -7,9 +7,9 @@ use App\Common\Domain\Uuid;
 
 interface RoomRepositoryInterface
 {
-    public function findRoomById(Uuid $eventId): ?Room;
+    public function findRoomById(Uuid $eventId): ?Hall;
 
-    public function add(Room $room): void;
+    public function add(Hall $room): void;
 
-    public function remove(Room $room): void;
+    public function remove(Hall $room): void;
 }

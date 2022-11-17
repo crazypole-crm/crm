@@ -5,13 +5,13 @@ namespace App\Event\Infrastructure\Persistence;
 
 use App\Common\Domain\Uuid;
 use App\Event\Domain\Model\Training;
-use App\Event\Domain\Model\EventRepositoryInterface;
+use App\Event\Domain\Model\TrainingRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 
-class EventRepository implements EventRepositoryInterface
+class TrainingRepository implements TrainingRepositoryInterface
 {
     /** @var EntityRepository|ObjectRepository */
     private $repo;

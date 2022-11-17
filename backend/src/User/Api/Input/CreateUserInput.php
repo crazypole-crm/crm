@@ -5,7 +5,6 @@ namespace App\User\Api\Input;
 
 class CreateUserInput
 {
-
     public function __construct(
         private string $email,
         private string $password,
@@ -14,8 +13,8 @@ class CreateUserInput
         private ?string $lastName = null,
         private ?string $phone = null,
         private ?string $avatarUrl = null,
-        private ?int $birthday = null,
-        private ?int $lastVisit = null,
+        private ?string $birthday = null,
+        private ?string $lastVisit = null,
     ){}
 
     public function getEmail(): string
@@ -53,12 +52,12 @@ class CreateUserInput
         return $this->avatarUrl;
     }
 
-    public function getBirthday(): ?int
+    public function getBirthday(): ?string
     {
         return $this->birthday;
     }
 
-    public function getLastVisit(): ?int
+    public function getLastVisit(): ?string
     {
         return $this->lastVisit;
     }

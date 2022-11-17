@@ -5,7 +5,7 @@ namespace App\Event\Domain\Model;
 
 use App\Common\Domain\Uuid;
 
-class Room
+class Hall
 {
     public function __construct(
         private Uuid $id,

@@ -29,8 +29,8 @@ class UserService
      * @param string|null $lastName
      * @param string|null $phone
      * @param string|null $avatarUrl
-     * @param int|null $birthday
-     * @param int|null $lastVisit
+     * @param string|null $birthday
+     * @param string|null $lastVisit
      * @return UserId
      * @throws InvalidUserEmailException
      */
@@ -42,8 +42,8 @@ class UserService
         ?string $lastName = null,
         ?string $phone = null,
         ?string $avatarUrl = null,
-        ?int $birthday = null,
-        ?int $lastVisit = null,
+        ?string $birthday = null,
+        ?string $lastVisit = null,
     ): UserId
     {
         $user = $this->repository->findUserByEmail($email);
@@ -75,10 +75,10 @@ class UserService
      * @param string $lastName
      * @param Email $email
      * @param string $avatarUrl
-     * @param int|null $birthday
+     * @param string|null $birthday
      * @throws InvalidUserIdException
      */
-    public function updateUserData(UserId $userId, string $phone, string $firstName, string $middleName, string $lastName, Email $email, string $avatarUrl, ?int $birthday = null): void
+    public function updateUserData(UserId $userId, string $phone, string $firstName, string $middleName, string $lastName, Email $email, string $avatarUrl, ?string $birthday = null): void
     {
         $user = $this->repository->findUserById($userId);
         if ($user === null)
@@ -122,10 +122,10 @@ class UserService
 
     /**
      * @param UserId $userId
-     * @param int|null $lastVisit
+     * @param string|null $lastVisit
      * @throws InvalidUserIdException
      */
-    public function updateLastVisitTime(UserId $userId, ?int $lastVisit): void
+    public function updateLastVisitTime(UserId $userId, ?string $lastVisit): void
     {
         $user = $this->repository->findUserById($userId);
         if ($user === null)

@@ -13,8 +13,8 @@ class UserData
         private ?string $lastName,
         private ?string $phone,
         private ?string $avatarUrl,
-        private ?int $birthday = null,
-        private ?int $lastVisit = null,
+        private ?string $birthday = null,
+        private ?string $lastVisit = null,
     ){}
 
     public function getUserId(): string
@@ -77,12 +77,12 @@ class UserData
         $this->middleName = $middleName;
     }
 
-    public function getBirthday(): ?int
+    public function getBirthday(): ?string
     {
         return $this->birthday;
     }
 
-    public function getLastVisit(): ?int
+    public function getLastVisit(): ?string
     {
         return $this->lastVisit;
     }

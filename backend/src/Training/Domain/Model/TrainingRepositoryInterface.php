@@ -5,7 +5,7 @@ namespace App\Event\Domain\Model;
 
 use App\Common\Domain\Uuid;
 
-interface EventRepositoryInterface
+interface TrainingRepositoryInterface
 {
     public function findEventById(Uuid $eventId): ?Training;
 

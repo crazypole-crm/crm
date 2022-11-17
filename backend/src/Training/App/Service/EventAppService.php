@@ -45,7 +45,7 @@ class EventAppService
         return (string)$this->transaction->execute(
             function () use ($title, $startDate, $endDate, $organizerId, $description, $place): Uuid
             {
-                return $this->eventService->createEvent($title, $startDate, $endDate, new Uuid($organizerId), $description, $place);
+                return $this->eventService->createTraining($title, $startDate, $endDate, new Uuid($organizerId), $description, $place);
             }
         );
     }

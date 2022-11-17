@@ -41,8 +41,8 @@ class UserAppService
      * @param string|null $lastName
      * @param string|null $phone
      * @param string|null $avatarUrl
-     * @param int|null $birthday
-     * @param int|null $lastVisit
+     * @param string|null $birthday
+     * @param string|null $lastVisit
      * @return string
      */
     public function createUser(
@@ -53,8 +53,8 @@ class UserAppService
         ?string $lastName = null,
         ?string $phone = null,
         ?string $avatarUrl = null,
-        ?int $birthday = null,
-        ?int $lastVisit = null,
+        ?string $birthday = null,
+        ?string $lastVisit = null,
     ): string
     {
         return (string)$this->transaction->execute(

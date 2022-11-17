@@ -29,7 +29,7 @@ class UserTable
         self::LAST_NAME => TypeConverter::STRING,
         self::PHONE => TypeConverter::STRING,
         self::AVATAR_URL => TypeConverter::STRING,
-        self::BIRTHDAY => TypeConverter::INTEGER,
-        self::LAST_VISIT => TypeConverter::INTEGER,
+        self::BIRTHDAY => TypeConverter::STRING,
+        self::LAST_VISIT => TypeConverter::STRING,
     ];
 }

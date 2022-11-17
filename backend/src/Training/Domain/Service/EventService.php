@@ -7,19 +7,19 @@ use App\Common\Domain\Uuid;
 use App\Common\Domain\UuidGenerator;
 use App\Event\Domain\Exception\EventNotFoundException;
 use App\Event\Domain\Model\Training;
-use App\Event\Domain\Model\EventRepositoryInterface;
+use App\Event\Domain\Model\TrainingRepositoryInterface;
 
 class EventService
 {
-    /** @var EventRepositoryInterface */
+    /** @var TrainingRepositoryInterface */
     private $repository;
 
-    public function __construct(EventRepositoryInterface $repository)
+    public function __construct(TrainingRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
-    public function createEvent(string $title, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $organizerId, ?string $description, ?string $place): Uuid
+    public function createTraining(string $title, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $courseId, ?string $description, ?Uuid $trainerId): Uuid
     {
         $event = new Training(new Uuid(UuidGenerator::generateUuid()), $title, $description, $startDate, $endDate, $place, $organizerId, null, false);
         $this->repository->add($event);

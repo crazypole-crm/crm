@@ -13,9 +13,9 @@ class User
     private ?string $middleName;
     private ?string $lastName;
     private ?string $phone;
-    private ?int $birthday;
+    private ?string $birthday;
     private ?string $avatarUrl;
-    private ?int $lastVisit;
+    private ?string $lastVisit;
 
     public function __construct(
         UserId $userId,
@@ -26,8 +26,8 @@ class User
         ?string $phone = null,
         ?string $avatarUrl = null,
         ?string $middleName = null,
-        ?int $birthday = null,
-        ?int $lastVisit = null
+        ?string $birthday = null,
+        ?string $lastVisit = null
     )
     {
         $this->userId = (string)$userId;
@@ -160,17 +160,17 @@ class User
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getBirthday(): ?int
+    public function getBirthday(): ?string
     {
         return $this->birthday;
     }
 
     /**
-     * @param int|null $birthday
+     * @param string|null $birthday
      */
-    public function setBirthday(?int $birthday): void
+    public function setBirthday(?string $birthday): void
     {
         $this->birthday = $birthday;
     }
@@ -192,17 +192,17 @@ class User
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getLastVisit(): ?int
+    public function getLastVisit(): ?string
     {
         return $this->lastVisit;
     }
 
     /**
-     * @param int|null $lastVisit
+     * @param string|null $lastVisit
      */
-    public function setLastVisit(?int $lastVisit): void
+    public function setLastVisit(?string $lastVisit): void
     {
         $this->lastVisit = $lastVisit;
     }

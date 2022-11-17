@@ -7,24 +7,14 @@ use App\Common\Domain\Uuid;
 
 class Training
 {
-    /** @var Uuid */
-    private $id;
-    /** @var string */
-    private $name;
-    /** @var string */
-    private $description;
-    /** @var \DateTimeImmutable */
-    private $startDate;
-    /** @var \DateTimeImmutable */
-    private $endDate;
-    /** @var string */
-    private $place;
-    /** @var Uuid */
-    private $organizerId;
-    /** @var int|null */
-    private $repetitionSchedule;
-    /** @var bool */
-    private $isRepeatable;
+    private Uuid $id;
+    private string $name;
+    private string $description;
+    private \DateTimeImmutable $startDate;
+    private \DateTimeImmutable $endDate;
+    private Uuid $hallId;
+    private Uuid $courseId;
+    private Uuid $trainerId;
 
     public function __construct(
         Uuid $id,
@@ -32,10 +22,9 @@ class Training
         string $description,
         \DateTimeImmutable $startDate,
         \DateTimeImmutable $endDate,
-        string $place,
-        Uuid $organizerId,
-        ?int $repetitionSchedule,
-        bool $isRepeatable
+        Uuid $hallId,
+        Uuid $courseId,
+        Uuid $trainerId
     )
     {
         $this->id = $id;
@@ -44,10 +33,9 @@ class Training
         $this->assertEndDateValid($endDate, $startDate);
         $this->startDate = $startDate;
         $this->endDate = $endDate;
-        $this->place = $place;
-        $this->organizerId = $organizerId;
-        $this->repetitionSchedule = $repetitionSchedule;
-        $this->isRepeatable = $isRepeatable;
+        $this->hallId = $hallId;
+        $this->courseId = $courseId;
+        $this->trainerId = $trainerId;
     }
 
     public function getId(): Uuid
@@ -75,24 +63,19 @@ class Training
         return $this->endDate;
     }
 
-    public function getPlace(): string
+    public function getHallId(): Uuid
     {
-        return $this->place;
+        return $this->hallId;
     }
 
-    public function getOrganizerId(): Uuid
+    public function getCourseId(): Uuid
     {
-        return $this->organizerId;
+        return $this->courseId;
     }
 
-    public function getRepetitionSchedule(): ?int
+    public function getTrainerId(): Uuid
     {
-        return $this->repetitionSchedule;
-    }
-
-    public function isRepeatable(): bool
-    {
-        return $this->isRepeatable;
+        return $this->trainerId;
     }
 
     public function setId(Uuid $id): void
