@@ -94,6 +94,19 @@ function DirectionsTable({
 
     const data = useMemo(() => directionsData && remapDirectionDataToTableData(directionsData), [directionsData])
 
+    const onRowClick = (record: DataType) => {
+        return {
+            onClick: () => {
+                if (selectedRowKeys.includes(record.key)) {
+                    setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.key))
+                }
+                else {
+                    setSelectedRowKeys([...selectedRowKeys, record.key])
+                }
+            }
+        }
+    }
+
     return (
         <Table
             columns={columns}
@@ -104,6 +117,7 @@ function DirectionsTable({
                 y: tableHeight,
             }}
             onChange={handleTableChange}
+            onRow={onRowClick}
             loading={!directionsData}
             style={{
                 borderRadius: 10,

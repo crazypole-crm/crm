@@ -1,12 +1,10 @@
 import styles from './DirectionsLayout.module.css'
 import {useEffect, useState} from "react";
 import {useAction, useAtom} from "@reatom/react";
-import { directionsLoadingAtom, loadDirections } from "../../viewModel/direction/loadDirections";
-import { directionsAtom } from "../../viewModel/direction/directions";
-import { DirectionsTable } from './DirectionsTable';
-import { Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { DirectionsTableCommandPanel } from './DirectionsCommandPanel';
+import {directionsLoadingAtom, loadDirections} from "../../viewModel/direction/loadDirections";
+import {directionsAtom} from "../../viewModel/direction/directions";
+import {DirectionsTable} from './DirectionsTable';
+import {DirectionsTableCommandPanel} from './DirectionsCommandPanel';
 
 function DirectionsLayout() {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
