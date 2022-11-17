@@ -28,7 +28,7 @@ final class Version20211007163907 extends AbstractMigration
                 first_name VARCHAR(256),
                 last_name VARCHAR(256),
                 middle_name VARCHAR(256),
-                phone VARCHAR(12) UNIQUE,
+                phone VARCHAR(12),
                 birthday INT,
                 avatar_url VARCHAR(12),
                 last_visit INT,
