@@ -9,7 +9,7 @@ type Api_UserInfo = {
     middleName?: string,
     lastName?: string,
     phoneNumber?: string,
-    birthday?: number,
+    birthday?: string,
 }
 
 function setUserInfo(userInfo: Api_UserInfo): Promise<Response> {
@@ -70,8 +70,8 @@ type GetUserDataType = {
     firstName: string,
     lastName: string,
     middleName: string,
-    birthDay: number | null,
-    lastVisit: number | null,
+    birthDay: string | null,
+    lastVisit: string | null,
 };
 
 function getUserData(): Promise<GetUserDataType> {

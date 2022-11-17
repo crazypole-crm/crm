@@ -28,8 +28,8 @@ function getRandomUserData(id?: string, role?: UserRole): Api_UsersData {
     return {
         id: id || generateUuid(),
         avatarUrl: '',
-        birthDay: Math.round(Math.random() * 10000000000000),
-        lastVisit: Math.round(Math.random() * 10000000000000),
+        birthday: String((Math.round(Math.random() * 10000000000000))),
+        lastVisit: String(Math.round(Math.random() * 10000000000000)),
         firstName: 'Edward',
         lastName: 'King',
         middleName: `${randomInteger(0, 100)}`,
@@ -48,8 +48,8 @@ function handleUsersData(store: Store, users: Array<Api_UsersData>, updateFn: (u
     users.push(getRandomUserData('client3', 'client'))
     const remappedUsers = users.map(user => ({
         ...user,
-        birthDay: user.birthDay ? new Date(user.birthDay) : undefined,
-        lastVisit: user.lastVisit ? new Date(user.lastVisit) : undefined,
+        birthDay: user.birthday ? new Date(Number(user.birthday)) : undefined,
+        lastVisit: user.lastVisit ? new Date(Number(user.lastVisit)) : undefined,
         role: user.role || getRandomRole()
     }))
     updateFn(remappedUsers)

@@ -67,14 +67,6 @@ const [userPasswordAtom, setUserPassword] = declareAtomWithSetter<string|null>('
 
 const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<string|null>('editUser.userPasswordCheck', null)
 
-const [userLastNameErrorAtom, setUserLastNameError] = declareAtomWithSetter('editUser.userLastNameError', false, on => [
-    on(setUserLastName, () => false)
-])
-
-const [userFirstNameErrorAtom, setUserFirstNameError] = declareAtomWithSetter('editUser.userFirstNameError', false, on => [
-    on(setUserFirstName, () => false)
-])
-
 const [userPhoneErrorAtom, setUserPhoneError] = declareAtomWithSetter('editUser.userPhoneError', false, on => [
     on(setUserPhone, () => false)
 ])
@@ -108,21 +100,17 @@ const submit = declareAction('editUser.submit',
 
         const currentUserId = store.getState(authorizedCurrentUser).id
 
-        const userLastNameError = !userLastName
-        const userFirstNameError = !userFirstName
         const userPhoneError = userPhone ? !RegExp(/^\d{11}$/).test(userPhone) : false
         const userEmptyEmailError = !userEmail
         const userIncorrectEmailError = userEmptyEmailError ? false : !RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(userEmail)
         const userPasswordCheckError = (userPassword !== userPasswordCheck)
 
-        store.dispatch(setUserLastNameError(userLastNameError))
-        store.dispatch(setUserFirstNameError(userFirstNameError))
         store.dispatch(setUserPhoneError(userPhoneError))
         store.dispatch(setUserEmptyEmailError(userEmptyEmailError))
         store.dispatch(setUserIncorrectEmailError(userIncorrectEmailError))
         store.dispatch(setUserPasswordCheckError(userPasswordCheckError))
 
-        if (userLastNameError || userFirstNameError || userPhoneError || userEmptyEmailError || userIncorrectEmailError || userPasswordCheckError) {
+        if (userPhoneError || userEmptyEmailError || userIncorrectEmailError || userPasswordCheckError) {
             return
         }
 
@@ -180,8 +168,6 @@ const editUserPopupAtom = combine({
     userPassword: userPasswordAtom,
     userPasswordCheck: userPasswordCheckAtom,
     userBirthDay: userBirthDayAtom,
-    userLastNameError: userLastNameErrorAtom,
-    userFirstNameError: userFirstNameErrorAtom,
     userPhoneError: userPhoneErrorAtom,
     userEmptyEmailError: userEmptyEmailErrorAtom,
     userIncorrectEmailError: userIncorrectEmailErrorAtom,
@@ -201,8 +187,6 @@ const editUserPopupActions = {
     setUserRole,
     setUserPassword,
     setUserPasswordCheck,
-    setUserLastNameError,
-    setUserFirstNameError,
     setUserPhoneError,
     setUserEmptyEmailError,
     setUserIncorrectEmailError,

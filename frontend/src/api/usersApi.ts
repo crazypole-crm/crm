@@ -11,8 +11,8 @@ type Api_UsersData = {
     lastName?: string,
     middleName?: string,
     role: UserRole,
-    birthDay?: number,
-    lastVisit?: number,
+    birthday?: string,
+    lastVisit?: string,
 }
 
 function getUsersDataByIds(userIds: Array<string>): Promise<Array<Api_UsersData>> {
@@ -66,7 +66,7 @@ type Api_EditUserData = {
     firstName?: string,
     lastName?: string,
     middleName?: string,
-    birthday?: number,
+    birthday?: string,
 }
 
 function editUser(userData: Api_EditUserData): Promise<void> {
@@ -96,7 +96,7 @@ type Api_CreateUserData = {
     firstName?: string,
     lastName?: string,
     middleName?: string,
-    birthday?: number,
+    birthday?: string,
 }
 
 function createUser(userData: Api_CreateUserData): Promise<{id: string}> {

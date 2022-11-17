@@ -16,7 +16,7 @@ const createUser = declareAsyncAction<Omit<UserData, 'id' | 'lastVisit'> & {pass
             middleName: userData.middleName,
             lastName: userData.lastName,
             phoneNumber: userData.phone,
-            birthday: userData.birthDay?.getTime(),
+            birthday: String(userData.birthDay?.getTime()),
             password: userData.password,
         })
             .then(({id}) => {

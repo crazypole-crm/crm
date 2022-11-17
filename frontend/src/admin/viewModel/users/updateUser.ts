@@ -16,7 +16,7 @@ const updateUser = declareAsyncAction<Omit<UserData, 'lastVisit'>>(
             middleName: userData.middleName,
             lastName: userData.lastName,
             phoneNumber: userData.phone,
-            birthday: userData.birthDay?.getTime(),
+            birthday: userData.birthDay ? String(userData.birthDay.getTime()) : undefined,
         })
             .then(() => {
                 store.dispatch(usersActions.updateUser({

@@ -31,6 +31,7 @@ function TimeStepBlock() {
     }
 
     return <TimePicker
+        minuteStep={15}
         value={momentTimeStep}
         onSelect={onChange}
         format={'HH:mm'}
