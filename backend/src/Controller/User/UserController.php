@@ -54,12 +54,12 @@ class UserController extends AbstractController
         $input = new CreateUserInput(
             $requestData['email'],
             md5($requestData['password']),
-            $requestData['firstName'],
-            $requestData['middleName'],
-            $requestData['lastName'],
-            $requestData['phoneNumber'],
+            $requestData['firstName'] ?? null,
+            $requestData['middleName'] ?? null,
+            $requestData['lastName'] ?? null,
+            $requestData['phoneNumber'] ?? null,
             '',
-            $requestData['birthday'],
+            $requestData['birthday'] ?? null,
         );
         $userId = $this->userApi->createUser($input);
 
@@ -88,15 +88,15 @@ class UserController extends AbstractController
         {
             return new Response(null, Response::HTTP_UNAUTHORIZED);
         }
-        $userData = New UserData(
+        $userData = new UserData(
             $requestData['id'],
             $requestData['email'],
-            $requestData['firstName'],
-            $requestData['middleName'],
-            $requestData['lastName'],
-            $requestData['phoneNumber'],
+            $requestData['firstName'] ?? null,
+            $requestData['middleName'] ?? null,
+            $requestData['lastName'] ?? null,
+            $requestData['phoneNumber'] ?? null,
             '',
-            $requestData['birthday'],
+            $requestData['birthday'] ?? null,
         );
         $this->userApi->updateUserData($userData);
         return new Response();
@@ -116,15 +116,15 @@ class UserController extends AbstractController
         {
             return new Response(null, Response::HTTP_UNAUTHORIZED);
         }
-        $userData = New UserData(
+        $userData = new UserData(
             $userId,
             $requestData['email'],
-            $requestData['firstName'],
-            $requestData['middleName'],
-            $requestData['lastName'],
-            $requestData['phoneNumber'],
+            $requestData['firstName'] ?? null,
+            $requestData['middleName'] ?? null,
+            $requestData['lastName'] ?? null,
+            $requestData['phoneNumber'] ?? null,
             '',
-            $requestData['birthday'],
+            $requestData['birthday' ?? null],
         );
         $this->userApi->updateUserData($userData);
         return new Response();
