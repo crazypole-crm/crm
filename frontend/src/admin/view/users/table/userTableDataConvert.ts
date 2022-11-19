@@ -11,7 +11,7 @@ function dateToString(date: Date | undefined) {
     if (!date) {
         return '-'
     }
-    return `${normalizeDate(date.getDate().toString())}.${normalizeDate(date.getMonth().toString())}.${date.getFullYear()}`
+    return `${normalizeDate(date.getDate().toString())}.${normalizeDate((date.getMonth() + 1).toString())}.${date.getFullYear()}`
 }
 
 function joinName(name: TableUserNameType) {

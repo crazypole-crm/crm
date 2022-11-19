@@ -80,7 +80,7 @@ function editUser(userData: Api_EditUserData): Promise<void> {
         .then(response => {
             switch (response.status) {
                 case HttpStatus.OK:
-                    return Promise.resolve(response.json())
+                    return Promise.resolve()
                 default:
                     return Promise.reject(response)
             }

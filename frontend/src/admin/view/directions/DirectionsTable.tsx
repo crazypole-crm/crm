@@ -21,7 +21,7 @@ interface DataType {
 
 const columns: ColumnsType<DataType> = [
     {
-      title: 'Направление',
+      title: 'Название',
       dataIndex: 'name',
       render: (_: any, record: DataType) => <DirectionsTableNameCell id={record.key} name={record.name}/>,
       sorter: (a, b) => stringValuesCompare(a.name, b.name),
