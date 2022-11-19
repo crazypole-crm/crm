@@ -68,7 +68,7 @@ class TrainingData implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'eventId' => $this->trainingId,
+            'trainingId' => $this->trainingId,
             'title' => $this->title,
             'description' => $this->description,
             'startDate' => $this->startDate->getTimestamp(),
