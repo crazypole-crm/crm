@@ -85,7 +85,7 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         return $data;
     }
 
-    private function addTrainingFieldSelect(QueryBuilder $qb, string $alias = 'e'): void
+    private function addTrainingFieldSelect(QueryBuilder $qb, string $alias = 't'): void
     {
         $qb->addSelect($alias . '.' . TrainingTable::TRAINING_ID);
         $qb->addSelect($alias . '.' . TrainingTable::TITLE);
