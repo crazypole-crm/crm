@@ -9,7 +9,7 @@ class Training
 {
     private Uuid $id;
     private string $name;
-    private string $description;
+    private ?string $description;
     private \DateTimeImmutable $startDate;
     private \DateTimeImmutable $endDate;
     private Uuid $hallId;
@@ -20,7 +20,7 @@ class Training
     public function __construct(
         Uuid $id,
         string $name,
-        string $description,
+        ?string $description,
         \DateTimeImmutable $startDate,
         \DateTimeImmutable $endDate,
         Uuid $hallId,

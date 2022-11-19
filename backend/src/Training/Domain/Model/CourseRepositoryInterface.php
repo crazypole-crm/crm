@@ -7,7 +7,7 @@ use App\Common\Domain\Uuid;
 
 interface CourseRepositoryInterface
 {
-    public function findById(Uuid $eventId): ?Course;
+    public function findById(Uuid $courseId): ?Course;
 
     public function add(Course $course): void;
 

@@ -9,6 +9,7 @@ use App\Training\Api\ApiInterface;
 use App\Training\Api\Input\CreateEventInput;
 use App\Training\Api\Input\EditEventInput;
 use App\Training\App\Query\ListTrainingInput;
+use App\Training\Domain\Model\TrainingType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,10 +40,10 @@ class EventController extends AbstractController
             $userId = $this->securityContext->getAuthenticatedUserId();
             $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
             $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
-            $input = new CreateEventInput($requestData['title'], $requestData['description'], $startDate, $endDate, $userId, $requestData['place']);
-            $eventId = $this->eventApi->createEvent($input);
-            $this->eventApi->inviteUsers($requestData['userIds'], $eventId);
-            return new Response(json_encode(['eventId' => $eventId]), Response::HTTP_OK);
+            $type = $this->convertTrainingType($requestData['type']);
+            $input = new CreateEventInput($requestData['title'], $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['courseId'], $type);
+            $trainingId = $this->eventApi->createEvent($input);
+            return new Response(json_encode(['trainingId' => $trainingId]), Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)
         {
@@ -144,5 +145,14 @@ class EventController extends AbstractController
         {
             return new Response(null, Response::HTTP_UNAUTHORIZED);
         }
+    }
+
+    private function convertTrainingType(string $type): int
+    {
+        return match ($type)
+        {
+            'group' => TrainingType::GROUP_TRAINING,
+            'individual' => TrainingType::INDIVIDUAL_TRAINING,
+        };
     }
 }
