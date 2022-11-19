@@ -21,7 +21,7 @@ final class Version20221119103049 extends AbstractMigration
             (
                 id VARCHAR(64) PRIMARY KEY,
                 name VARCHAR(256) NOT NULL,
-                capability INTEGER NOT NULL,
+                capability INTEGER NOT NULL
             );
 SQL
         );

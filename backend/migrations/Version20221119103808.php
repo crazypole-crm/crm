@@ -27,7 +27,7 @@ final class Version20221119103808 extends AbstractMigration
                 course_id VARCHAR(64) NOT NULL,
                 hall_id VARCHAR(64) NOT NULL,
                 trainer_id VARCHAR(64) NOT NULL,
-                type TINYINT NOT NULL,
+                type TINYINT NOT NULL
             );
 SQL
         );

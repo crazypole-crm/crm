@@ -20,7 +20,7 @@ final class Version20221119103528 extends AbstractMigration
             CREATE TABLE course
             (
                 id VARCHAR(64) PRIMARY KEY,
-                name VARCHAR(256) NOT NULL,
+                name VARCHAR(256) NOT NULL
             );
 SQL
         );
