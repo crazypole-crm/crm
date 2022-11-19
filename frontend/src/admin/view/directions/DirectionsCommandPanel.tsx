@@ -1,13 +1,13 @@
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons"
-import { useAtom } from "@reatom/react"
-import { Button } from "antd"
-import React, { useMemo } from "react"
-import { optionalArray } from "../../../core/array/array"
-import { checkNever } from "../../../core/checkNever"
-import { authorizedCurrentUser } from "../../../currentUser/currentUser"
-import { directionsAtom } from "../../viewModel/direction/directions"
-import { directionsLoadingAtom } from "../../viewModel/direction/loadDirections"
+import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons"
+import {useAction, useAtom} from "@reatom/react"
+import {Button} from "antd"
+import React, {useMemo} from "react"
+import {optionalArray} from "../../../core/array/array"
+import {checkNever} from "../../../core/checkNever"
+import {authorizedCurrentUser} from "../../../currentUser/currentUser"
+import {directionsLoadingAtom} from "../../viewModel/direction/loadDirections"
 import styles from '../users/table/UsersTableCommandPanel.module.css'
+import {deleteDirection} from "../../viewModel/direction/deleteDirection";
 
 type DirectionsActionsButtonType = 'delete' | 'edit' | 'add' 
 
@@ -21,6 +21,7 @@ function DirectionsTableCommandPanel({
     const currentUser = useAtom(authorizedCurrentUser)
     //const directions = useAtom(directionsAtom)
     const directionsLoading = useAtom(directionsLoadingAtom)
+    const handleDeleteDirection = useAction(deleteDirection)
     // const handleOpenEditDirectiopnPopup = useAction(editDirectionPopupActions.open)
 
     const handleOnEditClick = () => {
@@ -29,7 +30,7 @@ function DirectionsTableCommandPanel({
     }
 
     const handleOnDeleteClick = () => {
-        console.log(`delete dirs with ids`, selectedRowKeys)
+        handleDeleteDirection(String(selectedRowKeys[0]))
     }
 
     const handleOnAddClick = () => {

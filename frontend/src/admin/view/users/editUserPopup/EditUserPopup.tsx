@@ -73,7 +73,7 @@ function UserBirthDayPicker() {
         locale={ruRU} 
         allowClear={true}
         disabledDate={disabledDate}
-        format={'DD/MM/YY'}
+        format={'DD/MM/YYYY'}
         style={fieldStyle}
     />
 }

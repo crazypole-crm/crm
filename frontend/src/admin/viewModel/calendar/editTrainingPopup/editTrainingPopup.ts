@@ -2,9 +2,9 @@ import {combine, declareAction, declareAtom} from "@reatom/core";
 import {declareAtomWithSetter} from "../../../../core/reatom/declareAtomWithSetter";
 import {TrainingData, TrainingDate, TrainingType} from "../TrainingData";
 import {Time} from "../time";
-import {createTraining} from "../createTraining";
+import {createTraining} from "../calendaActions/createTraining";
 import {verify} from "../../../../core/verify";
-import {saveTraining} from "../saveTraining";
+import {saveTraining} from "../calendaActions/saveTraining";
 
 type EditTrainingPopupMode = 'edit' | 'create'
 
@@ -39,7 +39,7 @@ const [individualClientAtom, setIndividualClient] = declareAtomWithSetter<string
     on(open, (_, value) => {
         if (value.mode === 'edit') {
             if (value.trainingData.type === 'individual') {
-                return value.trainingData.clientId
+                return null
             }
         }
         return null
@@ -135,8 +135,6 @@ const submit = declareAction('editTraining.submit',
         const trainingStartTime = store.getState(trainingStartTimeAtom)
         const trainingEndTime = store.getState(trainingEndTimeAtom)
         const trainingDescription = store.getState(trainingDirectionAtom)
-        const trainingType = store.getState(typeAtom)
-        const trainingIndividualClient = store.getState(individualClientAtom)
 
         const trainingHallError = !trainingHall
         const trainingDirectionError = !trainingDirection
@@ -151,71 +149,30 @@ const submit = declareAction('editTraining.submit',
         }
 
         if (mode === 'create') {
-            if (trainingType === 'grouped') {
-                store.dispatch(createTraining({
-                    trainingData: {
-                        type: 'grouped',
-                        date: trainingDate,
-                        directionId: verify(trainingDirection),
-                        hallId: verify(trainingHall),
-                        trainerId: verify(trainingTrainer),
-                        timeStart: trainingStartTime,
-                        timeEnd: trainingEndTime,
-                        description: trainingDescription || '',
-                        clients: [],
-                    }
-                }))
-            }
-            else {
-                store.dispatch(createTraining({
-                    trainingData: {
-                        type: 'individual',
-                        date: trainingDate,
-                        directionId: verify(trainingDirection),
-                        hallId: verify(trainingHall),
-                        trainerId: verify(trainingTrainer),
-                        timeStart: trainingStartTime,
-                        timeEnd: trainingEndTime,
-                        description: trainingDescription || '',
-                        clientId: verify(trainingIndividualClient),
-                    }
-                }))
-            }
+            store.dispatch(createTraining({
+                type: 'individual',
+                date: trainingDate,
+                directionId: verify(trainingDirection),
+                hallId: verify(trainingHall),
+                trainerId: verify(trainingTrainer),
+                timeStart: trainingStartTime,
+                timeEnd: trainingEndTime,
+                description: trainingDescription || undefined,
+            }))
         }
 
         if (mode === 'edit') {
-            if (trainingType === 'grouped') {
-                store.dispatch(saveTraining({
-                    trainingData: {
-                        type: 'grouped',
-                        date: trainingDate,
-                        directionId: verify(trainingDirection),
-                        hallId: verify(trainingHall),
-                        trainerId: verify(trainingTrainer),
-                        timeStart: trainingStartTime,
-                        timeEnd: trainingEndTime,
-                        clients: [],
-                        description: trainingDescription || '',
-                        id: verify(trainingId),
-                    }
-                }))
-            }
-            else {
-                store.dispatch(saveTraining({
-                    trainingData: {
-                        type: 'individual',
-                        date: trainingDate,
-                        directionId: verify(trainingDirection),
-                        hallId: verify(trainingHall),
-                        trainerId: verify(trainingTrainer),
-                        timeStart: trainingStartTime,
-                        timeEnd: trainingEndTime,
-                        clientId: verify(trainingIndividualClient),
-                        description: trainingDescription || '',
-                        id: verify(trainingId),
-                    }
-                }))
-            }
+            store.dispatch(saveTraining({
+                type: 'grouped',
+                date: trainingDate,
+                directionId: verify(trainingDirection),
+                hallId: verify(trainingHall),
+                trainerId: verify(trainingTrainer),
+                timeStart: trainingStartTime,
+                timeEnd: trainingEndTime,
+                description: trainingDescription || '',
+                id: verify(trainingId),
+            }))
         }
     }
 )

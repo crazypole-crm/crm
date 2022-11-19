@@ -14,7 +14,7 @@ import {directionsAtom} from "../../viewModel/direction/directions";
 import {trainersAtom} from "../../viewModel/users/users";
 import {TrainingData} from "../../viewModel/calendar/TrainingData";
 import {trainingsAtom} from "../../viewModel/calendar/trainings";
-import {loadTrainingsForPeriod, trainingsLoadingAtom} from "../../viewModel/calendar/loadTrainingsForPeriod";
+import {loadTrainingsForPeriod, trainingsLoadingAtom} from "../../viewModel/calendar/calendaActions/loadTrainingsForPeriod";
 import {Time} from "../../viewModel/calendar/time";
 import {calendarSettingsAtom} from "../../viewModel/calendar/calendartSettings/calendarSettings";
 
@@ -83,6 +83,8 @@ type CalendarConfig = {
 function setTimeToDate(date: Date, time: Time) {
     date.setHours(time.hour)
     date.setMinutes(time.minutes)
+    date.setMilliseconds(0)
+    date.setSeconds(0)
 }
 
 function getPeriod(calendarType: CalendarType, periodStartDate: Date, calendarConfig: CalendarConfig): {startDate: Date, endDate: Date} {

@@ -24,7 +24,7 @@ function AddPlusButton({
     return (
         <div className={styles.plus} onClick={onAdd}>
             <Tooltip
-                title={'Добавить событие'}
+                title={'Добавить занятие'}
                 placement={'bottom'}
                 trigger={'hover'}
                 mouseEnterDelay={0.3}

@@ -54,15 +54,6 @@ function getTimePeriodString(startTime: Time, endTime: Time) {
     return `${normalizeDate(startTime.hour)}:${normalizeDate(startTime.minutes)} - ${normalizeDate(endTime.hour)}:${normalizeDate(endTime.minutes)}`
 }
 
-function getFreePlaces(hallCapacity: number, usersCount: number) {
-    const freePlaces = Math.max(hallCapacity - usersCount, 0)
-    if (freePlaces > 0) {
-        return `Свободно ${freePlaces} места`
-    }
-    return 'Все места заняты'
-}
-
-
 function TrainerInfo(trainerData: UserData) {
     return (
         <div className={styles.trainerRow}>
@@ -81,16 +72,20 @@ function TrainingInfo({
 }: TrainingInfo) {
     const trainers = useAtom(trainersAtom)
     const directions = useAtom(directionsAtom)
-    const halls = useAtom(hallsAtom)
 
     return (
         <div className={styles.container}>
             <div className={styles.direction}>{directions[trainingData.directionId].name}</div>
             <div className={styles.date}>{getDateString(trainingData.date)}</div>
             <div className={styles.timePeriod}>{getTimePeriodString(trainingData.timeStart, trainingData.timeEnd)}</div>
-            <div className={styles.capacity}>{trainingData.type === 'grouped'
-                ? getFreePlaces(halls[trainingData.hallId].capacity, trainingData.clients.length)
-                : 'Индивидуальное занятие'}</div>
+            <div className={styles.capacity}>
+                {
+                    getValueByCheckedKey(trainingData.type, {
+                        'grouped': 'Групповое',
+                        'individual': 'Индивидуальное',
+                    })
+                }
+            </div>
             <TrainerInfo {...verify(trainers.find(trainer => trainingData.trainerId === trainer.id))} />
             <div className={styles.description}>О занятии: {trainingData.description || 'Пока нет описания'}</div>
         </div>

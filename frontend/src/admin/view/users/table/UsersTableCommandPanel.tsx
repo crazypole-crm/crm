@@ -14,6 +14,7 @@ import {usersLoadingAtom} from "../../../viewModel/users/loadUsers";
 import {authorizedCurrentUser} from "../../../../currentUser/currentUser";
 import {viewUserPopupActions} from "../../../viewModel/users/viewUserPopup/viewUserPopup";
 import {checkNever} from "../../../../core/checkNever";
+import {deleteUser} from "../../../viewModel/users/deleteUser";
 
 type UsersActionsButtonType = 'delete' | 'edit' | 'add' | 'view'
 
@@ -81,6 +82,7 @@ function UsersTableCommandPanel({
     const usersLoading = useAtom(usersLoadingAtom)
     const handleOpenEditUserPopup = useAction(editUserPopupActions.open)
     const handleOpenViewUserPopup = useAction(viewUserPopupActions.open)
+    const handleDeleteUser = useAction(deleteUser)
 
     const handleOnEditClick = () => {
         handleOpenEditUserPopup({
@@ -96,7 +98,7 @@ function UsersTableCommandPanel({
     }
 
     const handleOnDeleteClick = () => {
-        console.log(`delete user with ids`, selectedRowKeys)
+        handleDeleteUser(String(selectedRowKeys[0]))
     }
 
     const handleOnAddClick = () => {

@@ -8,8 +8,9 @@ type TrainingDate = {
 
 type TrainingType = 'grouped' | 'individual'
 
-type TrainingDataImpl = {
+type TrainingData = {
     id: string,
+    type: TrainingType,
     directionId: string,
     trainerId: string,
     hallId: string,
@@ -19,22 +20,8 @@ type TrainingDataImpl = {
     description?: string,
 }
 
-type GroupedTrainingData = TrainingDataImpl & {
-    type: 'grouped',
-    clients: string[],
-}
-
-type IndividualTrainingData = TrainingDataImpl & {
-    type: 'individual',
-    clientId: string,
-}
-
-type TrainingData = GroupedTrainingData | IndividualTrainingData
-
 export type {
     TrainingDate,
     TrainingData,
     TrainingType,
-    GroupedTrainingData,
-    IndividualTrainingData,
 }
