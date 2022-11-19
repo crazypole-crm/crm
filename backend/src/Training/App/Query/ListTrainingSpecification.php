@@ -6,22 +6,22 @@ namespace App\Training\App\Query;
 class ListTrainingSpecification
 {
     public function __construct(
-        private \DateTimeImmutable $startDate,
-        private \DateTimeImmutable $endDate,
-        private array $eventIds,
+        private ?\DateTimeImmutable $startDate,
+        private ?\DateTimeImmutable $endDate,
+        private ?array $eventIds,
     ){}
 
-    public function getStartDate(): \DateTimeImmutable
+    public function getStartDate(): ?\DateTimeImmutable
     {
         return $this->startDate;
     }
 
-    public function getEndDate(): \DateTimeImmutable
+    public function getEndDate(): ?\DateTimeImmutable
     {
         return $this->endDate;
     }
 
-    public function getEventIds(): array
+    public function getEventIds(): ?array
     {
         return $this->eventIds;
     }

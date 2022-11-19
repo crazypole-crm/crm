@@ -133,7 +133,10 @@ class EventController extends AbstractController
             $endDate = $requestData['endDate'] ?? null;
             $trainingIds = $requestData['trainingIds'] ?? null;
             $trainings = $this->eventApi->listTrainings(
-                new ListTrainingInput($startDate, $endDate, $trainingIds)
+                new ListTrainingInput(
+                    (new \DateTimeImmutable())->setTimestamp($startDate === null ? null : $startDate / 1000),
+                    (new \DateTimeImmutable())->setTimestamp($endDate === null ? null : $endDate / 1000),
+                    $trainingIds)
             );
             return new Response(json_encode($trainings, JSON_THROW_ON_ERROR), Response::HTTP_OK);
         }

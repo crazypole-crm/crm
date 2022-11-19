@@ -6,25 +6,25 @@ namespace App\Training\App\Query;
 class ListTrainingInput
 {
     public function __construct(
-        private \DateTimeImmutable $startDate,
-        private \DateTimeImmutable $endDate,
-        private array $trainingIds,
+        private ?\DateTimeImmutable $startDate,
+        private ?\DateTimeImmutable $endDate,
+        private ?array $trainingIds,
     ){}
 
-    public function getStartDate(): \DateTimeImmutable
+    public function getStartDate(): ?\DateTimeImmutable
     {
         return $this->startDate;
     }
 
-    public function getEndDate(): \DateTimeImmutable
+    public function getEndDate(): ?\DateTimeImmutable
     {
         return $this->endDate;
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getTrainingIds(): array
+    public function getTrainingIds(): ?array
     {
         return $this->trainingIds;
     }

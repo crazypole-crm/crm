@@ -9,13 +9,11 @@ use App\Training\App\Query\ListTrainingInput;
 use App\Training\App\Query\ListTrainingSpecification;
 use App\Training\App\Query\TrainingQueryServiceInterface;
 use App\Training\App\Service\EventAppService;
-use App\Training\App\Service\UserInvitationAppService;
 
 class Api implements ApiInterface
 {
     public function __construct(
         private EventAppService $eventAppService,
-        private UserInvitationAppService $invitationService,
         private TrainingQueryServiceInterface $trainingQueryService)
     {}
 
