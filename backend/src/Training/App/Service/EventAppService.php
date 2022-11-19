@@ -6,9 +6,9 @@ namespace App\Event\App\Service;
 use App\Common\App\Transaction\MultiBlockingOperationExecutorInterface;
 use App\Common\App\Transaction\TransactionInterface;
 use App\Common\Domain\Uuid;
-use App\Event\App\Data\EventData;
+use App\Event\App\Data\TrainingData;
 use App\Event\App\Lock\LockNames;
-use App\Event\App\Query\EventQueryServiceInterface;
+use App\Event\App\Query\TrainingQueryServiceInterface;
 use App\Event\App\Query\UserInvitationQueryServiceInterface;
 use App\Event\Domain\Service\EventService;
 
@@ -16,7 +16,7 @@ class EventAppService
 {
     /** @var EventService */
     private $eventService;
-    /** @var EventQueryServiceInterface */
+    /** @var TrainingQueryServiceInterface */
     private $eventQueryService;
     /** @var UserInvitationQueryServiceInterface */
     private $invitationQueryService;
@@ -26,7 +26,7 @@ class EventAppService
     private $blockingOperatorExecutor;
 
     public function __construct(
-        EventQueryServiceInterface $eventQueryService,
+        TrainingQueryServiceInterface $eventQueryService,
         UserInvitationQueryServiceInterface $invitationQueryService,
         EventService $eventService,
         TransactionInterface $transaction,
@@ -75,7 +75,7 @@ class EventAppService
         $this->transaction->execute($operation);
     }
 
-    public function getEventData(string $eventId): ?EventData
+    public function getEventData(string $eventId): ?TrainingData
     {
         //TODO: если EventData null
         $eventData = $this->eventQueryService->getEventData($eventId);
@@ -83,29 +83,29 @@ class EventAppService
         {
             throw new \RuntimeException("invalid event id {'$eventId'}");
         }
-        $invitedUsersMap = $this->invitationQueryService->getInvitedUsersByEventIds([$eventData->getEventId()]);
-        $eventData->setInvitedUserIds($invitedUsersMap[$eventData->getEventId()]);
+        $invitedUsersMap = $this->invitationQueryService->getInvitedUsersByEventIds([$eventData->getTrainingId()]);
+        $eventData->setInvitedUserIds($invitedUsersMap[$eventData->getTrainingId()]);
         return $eventData;
     }
 
     /**
      * @param string $userId
-     * @return EventData[]
+     * @return TrainingData[]
      */
     public function getUserEvents(string $userId): array
     {
-        $eventsData = $this->eventQueryService->getUserEvents($userId);
+        $eventsData = $this->eventQueryService->getUserTrainings($userId);
         $eventIds = array_map(
-            static function (EventData $eventData): string
+            static function (TrainingData $eventData): string
             {
-                return $eventData->getEventId();
+                return $eventData->getTrainingId();
             },
             $eventsData
         );
         $invitedUsersMap = $this->invitationQueryService->getInvitedUsersByEventIds($eventIds);
         foreach ($eventsData as $eventData)
         {
-            $eventData->setInvitedUserIds($invitedUsersMap[$eventData->getEventId()] ?? []);
+            $eventData->setInvitedUserIds($invitedUsersMap[$eventData->getTrainingId()] ?? []);
         }
 
         return $eventsData;

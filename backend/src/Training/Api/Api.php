@@ -5,22 +5,20 @@ namespace App\Event\Api;
 
 use App\Event\Api\Input\CreateEventInput;
 use App\Event\Api\Input\EditEventInput;
-use App\Event\App\Data\EventData;
+use App\Event\App\Data\TrainingData;
+use App\Event\App\Query\ListTrainingInput;
+use App\Event\App\Query\ListTrainingSpecification;
+use App\Event\App\Query\TrainingQueryServiceInterface;
 use App\Event\App\Service\EventAppService;
 use App\Event\App\Service\UserInvitationAppService;
 
 class Api implements ApiInterface
 {
-    /** @var EventAppService */
-    private $eventAppService;
-    /** @var UserInvitationAppService */
-    private $invitationService;
-
-    public function __construct(EventAppService $appService, UserInvitationAppService $invitationService)
-    {
-        $this->eventAppService = $appService;
-        $this->invitationService = $invitationService;
-    }
+    public function __construct(
+        private EventAppService $eventAppService,
+        private UserInvitationAppService $invitationService,
+        private TrainingQueryServiceInterface $trainingQueryService)
+    {}
 
     public function createEvent(CreateEventInput $input): string
     {
@@ -28,7 +26,7 @@ class Api implements ApiInterface
         return $this->eventAppService->createEvent($input->getTitle(), $input->getStartDate(), $input->getEndDate(), $input->getOrganizerId(), $input->getDescription(), $input->getPlace());
     }
 
-    public function getEventDataById(string $eventId): ?EventData
+    public function getEventDataById(string $eventId): ?TrainingData
     {
         return $this->eventAppService->getEventData($eventId);
     }
@@ -59,4 +57,14 @@ class Api implements ApiInterface
         return $this->eventAppService->getUserEvents($userId);
     }
 
+    public function listTraining(ListTrainingInput $input): array
+    {
+        return $this->trainingQueryService->listEvent(
+            new ListTrainingSpecification(
+                $input->getStartDate(),
+                $input->getEndDate(),
+                $input->getTrainingIds(),
+            )
+        );
+    }
 }

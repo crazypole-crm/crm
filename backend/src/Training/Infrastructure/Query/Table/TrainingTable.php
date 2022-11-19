@@ -5,23 +5,25 @@ namespace App\Event\Infrastructure\Query\Table;
 
 use App\Common\Infrastructure\Query\TypeConverter;
 
-class EventTable
+class TrainingTable
 {
-    public const EVENT_ID = 'event_id';
+    public const TRAINING_ID = 'id';
     public const TITLE = 'name';
     public const DESCRIPTION = 'description';
     public const START_DATE = 'start_date';
     public const END_DATE = 'end_date';
-    public const ORGANIZER_ID = 'organizer_id';
-    public const PLACE = 'place';
+    public const TRAINER_ID = 'trainer_id';
+    public const HALL_ID = 'hall_id';
+    public const COURSE_ID = 'course_id';
 
     public const EVENT_FIELDS = [
-        self::EVENT_ID => TypeConverter::STRING,
+        self::TRAINING_ID => TypeConverter::STRING,
         self::TITLE => TypeConverter::STRING,
         self::DESCRIPTION => TypeConverter::STRING,
         self::START_DATE => TypeConverter::DATE_TIME,
         self::END_DATE => TypeConverter::DATE_TIME,
-        self::ORGANIZER_ID => TypeConverter::STRING,
-        self::PLACE => TypeConverter::STRING,
+        self::TRAINER_ID => TypeConverter::STRING,
+        self::HALL_ID => TypeConverter::STRING,
+        self::COURSE_ID => TypeConverter::STRING,
     ];
 }
