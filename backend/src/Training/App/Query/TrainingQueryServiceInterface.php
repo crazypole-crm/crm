@@ -19,5 +19,5 @@ interface TrainingQueryServiceInterface
      * @param ListTrainingSpecification $spec
      * @return TrainingData[]
      */
-    public function listEvent(ListTrainingSpecification $spec): array;
+    public function listTrainings(ListTrainingSpecification $spec): array;
 }

@@ -19,6 +19,7 @@ class TrainingDataHydrator
         $trainerId = TypeConverter::hydrateValue($data[TrainingTable::TRAINER_ID], TrainingTable::EVENT_FIELDS[TrainingTable::TRAINER_ID]);
         $hallId = TypeConverter::hydrateValue($data[TrainingTable::HALL_ID], TrainingTable::EVENT_FIELDS[TrainingTable::HALL_ID]);
         $courseId = TypeConverter::hydrateValue($data[TrainingTable::COURSE_ID], TrainingTable::EVENT_FIELDS[TrainingTable::COURSE_ID]);
-        return new TrainingData($eventId, $title, $description, $startDate, $endDate, $trainerId, $hallId, $courseId);
+        $type = TypeConverter::hydrateValue($data[TrainingTable::TRAINING_TYPE], TrainingTable::EVENT_FIELDS[TrainingTable::TRAINING_TYPE]);
+        return new TrainingData($eventId, $title, $description, $startDate, $endDate, $trainerId, $hallId, $courseId, $type);
     }
 }

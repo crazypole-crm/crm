@@ -32,5 +32,5 @@ interface ApiInterface
 
     public function removeEvent(string $eventId): void;
 
-    public function listTraining(ListTrainingInput $input): array;
+    public function listTrainings(ListTrainingInput $input): array;
 }

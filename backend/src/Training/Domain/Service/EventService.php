@@ -38,7 +38,7 @@ class EventService
      */
     public function editEvent(string $eventId, string $title, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $organizerId, ?string $description, ?string $place): void
     {
-        $event = $this->repository->findEventById(new Uuid($eventId));
+        $event = $this->repository->findTrainingById(new Uuid($eventId));
         if ($event === null)
         {
             throw new EventNotFoundException($eventId);
@@ -57,7 +57,7 @@ class EventService
      */
     public function removeEvent(string $eventId)
     {
-        $event = $this->repository->findEventById(new Uuid($eventId));
+        $event = $this->repository->findTrainingById(new Uuid($eventId));
         if ($event === null)
         {
             throw new EventNotFoundException($eventId);

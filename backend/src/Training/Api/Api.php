@@ -26,11 +26,6 @@ class Api implements ApiInterface
         return $this->eventAppService->createEvent($input->getTitle(), $input->getStartDate(), $input->getEndDate(), $input->getOrganizerId(), $input->getDescription(), $input->getPlace());
     }
 
-    public function getEventDataById(string $eventId): ?TrainingData
-    {
-        return $this->eventAppService->getEventData($eventId);
-    }
-
     public function editEvent(EditEventInput $input): void
     {
         //TODO: обработка исключений
@@ -52,14 +47,9 @@ class Api implements ApiInterface
         $this->eventAppService->removeEvent($eventId);
     }
 
-    public function getEventsDataByUserId(string $userId): array
+    public function listTrainings(ListTrainingInput $input): array
     {
-        return $this->eventAppService->getUserEvents($userId);
-    }
-
-    public function listTraining(ListTrainingInput $input): array
-    {
-        return $this->trainingQueryService->listEvent(
+        return $this->trainingQueryService->listTrainings(
             new ListTrainingSpecification(
                 $input->getStartDate(),
                 $input->getEndDate(),

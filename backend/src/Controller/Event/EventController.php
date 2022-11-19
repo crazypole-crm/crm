@@ -122,9 +122,9 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/list/events")
+     * @Route("/list/trainings")
      */
-    public function listEvents(Request $request): Response
+    public function listTrainings(Request $request): Response
     {
         $requestData = json_decode($request->getContent(), true);
         try
@@ -132,7 +132,7 @@ class EventController extends AbstractController
             $startDate = $requestData['startDate'] ?? null;
             $endDate = $requestData['endDate'] ?? null;
             $trainingIds = $requestData['trainingIds'] ?? null;
-            $trainings = $this->eventApi->listTraining(
+            $trainings = $this->eventApi->listTrainings(
                 new ListTrainingInput($startDate, $endDate, $trainingIds)
             );
             return new Response(json_encode($trainings, JSON_THROW_ON_ERROR), Response::HTTP_OK);

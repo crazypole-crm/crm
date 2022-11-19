@@ -7,7 +7,7 @@ use App\Common\Domain\Uuid;
 
 interface TrainingRepositoryInterface
 {
-    public function findEventById(Uuid $eventId): ?Training;
+    public function findTrainingById(Uuid $trainingId): ?Training;
 
     public function add(Training $event): void;
 

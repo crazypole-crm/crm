@@ -13,10 +13,8 @@ use Doctrine\Persistence\ObjectRepository;
 
 class TrainingRepository implements TrainingRepositoryInterface
 {
-    /** @var EntityRepository|ObjectRepository */
-    private $repo;
-    /** @var EntityManager */
-    private $em;
+    private EntityRepository|ObjectRepository $repo;
+    private EntityManager $em;
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -24,19 +22,9 @@ class TrainingRepository implements TrainingRepositoryInterface
         $this->repo = $em->getRepository(Training::class);
     }
 
-    public function findEventByEmail(string $email): ?Training
+    public function findTrainingById(Uuid $trainingId): ?Training
     {
-        return $this->repo->findOneBy(['email' => $email]);
-    }
-
-    public function findEventByEmailAndUsername(string $email, string $username): ?Training
-    {
-        return $this->repo->findOneBy(['email' => $email, 'username' => $username]);
-    }
-
-    public function findEventById(Uuid $eventId): ?Training
-    {
-        return $this->repo->findOneBy(['id' => $eventId]);
+        return $this->repo->findOneBy(['id' => $trainingId]);
     }
 
     public function add(Training $event): void

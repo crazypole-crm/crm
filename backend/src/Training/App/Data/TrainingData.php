@@ -15,6 +15,7 @@ class TrainingData implements \JsonSerializable
         private string $trainerId,
         private string $hallId,
         private string $courseId,
+        private int $type,
     ){}
 
     public function getTrainingId(): string
@@ -57,6 +58,11 @@ class TrainingData implements \JsonSerializable
         return $this->courseId;
     }
 
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
     public function jsonSerialize()
     {
         return [
@@ -68,6 +74,7 @@ class TrainingData implements \JsonSerializable
             'trainerId' => $this->trainerId,
             'hallId' => $this->hallId,
             'courseId' => $this->courseId,
+            'type' => $this->type,
         ];
     }
 }

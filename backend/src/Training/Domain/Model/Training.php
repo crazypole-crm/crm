@@ -15,6 +15,7 @@ class Training
     private Uuid $hallId;
     private Uuid $courseId;
     private Uuid $trainerId;
+    private int $type;
 
     public function __construct(
         Uuid $id,
@@ -24,7 +25,8 @@ class Training
         \DateTimeImmutable $endDate,
         Uuid $hallId,
         Uuid $courseId,
-        Uuid $trainerId
+        Uuid $trainerId,
+        int $type,
     )
     {
         $this->id = $id;
@@ -36,6 +38,7 @@ class Training
         $this->hallId = $hallId;
         $this->courseId = $courseId;
         $this->trainerId = $trainerId;
+        $this->type = $type;
     }
 
     public function getId(): Uuid
@@ -111,6 +114,11 @@ class Training
     public function setOrganizerId(Uuid $organizerId): void
     {
         $this->organizerId = $organizerId;
+    }
+
+    public function getType(): int
+    {
+        return $this->type;
     }
 
     private function assertEndDateValid(\DateTimeImmutable $endDate, \DateTimeImmutable $startDate): void

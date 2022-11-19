@@ -15,6 +15,7 @@ class TrainingTable
     public const TRAINER_ID = 'trainer_id';
     public const HALL_ID = 'hall_id';
     public const COURSE_ID = 'course_id';
+    public const TRAINING_TYPE = 'type';
 
     public const EVENT_FIELDS = [
         self::TRAINING_ID => TypeConverter::STRING,
@@ -25,5 +26,6 @@ class TrainingTable
         self::TRAINER_ID => TypeConverter::STRING,
         self::HALL_ID => TypeConverter::STRING,
         self::COURSE_ID => TypeConverter::STRING,
+        self::TRAINING_TYPE => TypeConverter::INTEGER,
     ];
 }

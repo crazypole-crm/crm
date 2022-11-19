@@ -23,11 +23,11 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         $this->hydrator = $hydrator;
     }
 
-    public function listEvent(ListTrainingSpecification $spec): array
+    public function listTrainings(ListTrainingSpecification $spec): array
     {
         $qb = $this->conn->createQueryBuilder();
         $qb->from('training', 't');
-        $this->addEventFieldSelect($qb);
+        $this->addTrainingFieldSelect($qb);
         if ($spec->getStartDate() !== null)
         {
             $qb->where($qb->expr()->gte('t.' . TrainingTable::START_DATE, ':startDate'));
@@ -56,7 +56,7 @@ class TrainingQueryService implements TrainingQueryServiceInterface
 
         $qb = $this->conn->createQueryBuilder();
         $qb->from('event', 'e');
-        $this->addEventFieldSelect($qb);
+        $this->addTrainingFieldSelect($qb);
         $qb->where("{$const(TrainingTable::TRAINING_ID)} = :trainingId");
         $query = $qb->getSQL();
         $result = $this->conn->executeQuery($query, ['trainingId' => $eventId])->fetchAssociative();
@@ -68,7 +68,7 @@ class TrainingQueryService implements TrainingQueryServiceInterface
     {
         $qb = $this->conn->createQueryBuilder();
         $qb->from('event', 'e');
-        $this->addEventFieldSelect($qb);
+        $this->addTrainingFieldSelect($qb);
         $qb->leftJoin('e', 'user_invitation', 'ui', 'e.event_id = ui.event_id');
         $qb->where($qb->expr()->eq('e.' . TrainingTable::TRAINER_ID, ':organizerId'));
         $qb->orWhere($qb->expr()->eq('ui.user_id', ':userId'));
@@ -85,7 +85,7 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         return $data;
     }
 
-    private function addEventFieldSelect(QueryBuilder $qb, string $alias = 'e'): void
+    private function addTrainingFieldSelect(QueryBuilder $qb, string $alias = 'e'): void
     {
         $qb->addSelect($alias . '.' . TrainingTable::TRAINING_ID);
         $qb->addSelect($alias . '.' . TrainingTable::TITLE);
@@ -95,5 +95,6 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         $qb->addSelect($alias . '.' . TrainingTable::TRAINER_ID);
         $qb->addSelect($alias . '.' . TrainingTable::HALL_ID);
         $qb->addSelect($alias . '.' . TrainingTable::COURSE_ID);
+        $qb->addSelect($alias . '.' . TrainingTable::TRAINING_TYPE);
     }
 }
