@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\App\Lock;
+namespace App\Training\App\Lock;
 
 class LockNames
 {

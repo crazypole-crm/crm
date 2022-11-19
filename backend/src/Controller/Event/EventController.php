@@ -5,10 +5,10 @@ namespace App\Controller\Event;
 
 use App\Common\Exception\UserNotAuthenticated;
 use App\Common\Security\SecurityContextInterface;
-use App\Event\Api\ApiInterface;
-use App\Event\Api\Input\CreateEventInput;
-use App\Event\Api\Input\EditEventInput;
-use App\Event\App\Query\ListTrainingInput;
+use App\Training\Api\ApiInterface;
+use App\Training\Api\Input\CreateEventInput;
+use App\Training\Api\Input\EditEventInput;
+use App\Training\App\Query\ListTrainingInput;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\App\Service;
+namespace App\Training\App\Service;
 
 use App\Common\App\Transaction\MultiBlockingOperationExecutorInterface;
 use App\Common\App\Transaction\TransactionInterface;
 use App\Common\Domain\Uuid;
-use App\Event\App\Data\TrainingData;
-use App\Event\App\Lock\LockNames;
-use App\Event\App\Query\TrainingQueryServiceInterface;
-use App\Event\App\Query\UserInvitationQueryServiceInterface;
-use App\Event\Domain\Service\EventService;
+use App\Training\App\Data\TrainingData;
+use App\Training\App\Lock\LockNames;
+use App\Training\App\Query\TrainingQueryServiceInterface;
+use App\Training\App\Query\UserInvitationQueryServiceInterface;
+use App\Training\Domain\Service\EventService;
 
 class EventAppService
 {

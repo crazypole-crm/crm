@@ -1,16 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Api;
+namespace App\Training\Api;
 
-use App\Event\Api\Input\CreateEventInput;
-use App\Event\Api\Input\EditEventInput;
-use App\Event\App\Data\TrainingData;
-use App\Event\App\Query\ListTrainingInput;
-use App\Event\App\Query\ListTrainingSpecification;
-use App\Event\App\Query\TrainingQueryServiceInterface;
-use App\Event\App\Service\EventAppService;
-use App\Event\App\Service\UserInvitationAppService;
+use App\Training\Api\Input\CreateEventInput;
+use App\Training\Api\Input\EditEventInput;
+use App\Training\App\Query\ListTrainingInput;
+use App\Training\App\Query\ListTrainingSpecification;
+use App\Training\App\Query\TrainingQueryServiceInterface;
+use App\Training\App\Service\EventAppService;
+use App\Training\App\Service\UserInvitationAppService;
 
 class Api implements ApiInterface
 {

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\App\Service;
+namespace App\Training\App\Service;
 
-use App\Event\Domain\Service\UserInvitationService;
+use App\Training\Domain\Service\UserInvitationService;
 
 class UserInvitationAppService
 {

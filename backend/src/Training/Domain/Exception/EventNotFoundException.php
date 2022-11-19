@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Domain\Exception;
+namespace App\Training\Domain\Exception;
 
 class EventNotFoundException extends \Exception
 {

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Infrastructure\Persistence;
+namespace App\Training\Infrastructure\Persistence;
 
 use App\Common\Domain\Uuid;
-use App\Event\Domain\Model\Training;
-use App\Event\Domain\Model\TrainingRepositoryInterface;
+use App\Training\Domain\Model\Training;
+use App\Training\Domain\Model\TrainingRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;

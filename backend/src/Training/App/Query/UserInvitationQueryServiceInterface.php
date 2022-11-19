@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\App\Query;
+namespace App\Training\App\Query;
 
 interface UserInvitationQueryServiceInterface
 {

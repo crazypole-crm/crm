@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Domain\Model;
+namespace App\Training\Domain\Model;
 
 class TrainingType
 {

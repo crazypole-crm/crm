@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\App\Query;
+namespace App\Training\App\Query;
 
-use App\Event\App\Data\TrainingData;
+use App\Training\App\Data\TrainingData;
 
 interface TrainingQueryServiceInterface
 {

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Infrastructure\Query\Hydrator;
+namespace App\Training\Infrastructure\Query\Hydrator;
 
 use App\Common\Infrastructure\Query\TypeConverter;
-use App\Event\App\Data\TrainingData;
-use App\Event\Infrastructure\Query\Table\TrainingTable;
+use App\Training\App\Data\TrainingData;
+use App\Training\Infrastructure\Query\Table\TrainingTable;
 
 class TrainingDataHydrator
 {

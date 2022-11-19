@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Infrastructure\Query;
+namespace App\Training\Infrastructure\Query;
 
-use App\Event\App\Query\UserInvitationQueryServiceInterface;
+use App\Training\App\Query\UserInvitationQueryServiceInterface;
 use Doctrine\DBAL\Connection;
 
 class UserInvitationQueryService implements UserInvitationQueryServiceInterface

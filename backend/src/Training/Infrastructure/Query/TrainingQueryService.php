@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Infrastructure\Query;
+namespace App\Training\Infrastructure\Query;
 
-use App\Event\App\Data\TrainingData;
-use App\Event\App\Query\ListTrainingSpecification;
-use App\Event\App\Query\TrainingQueryServiceInterface;
-use App\Event\Infrastructure\Query\Hydrator\TrainingDataHydrator;
-use App\Event\Infrastructure\Query\Table\TrainingTable;
+use App\Training\App\Data\TrainingData;
+use App\Training\App\Query\ListTrainingSpecification;
+use App\Training\App\Query\TrainingQueryServiceInterface;
+use App\Training\Infrastructure\Query\Hydrator\TrainingDataHydrator;
+use App\Training\Infrastructure\Query\Table\TrainingTable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\App\Data;
+namespace App\Training\App\Data;
 
-use App\Event\Domain\Model\TrainingType;
+use App\Training\Domain\Model\TrainingType;
 
 class TrainingData implements \JsonSerializable
 {

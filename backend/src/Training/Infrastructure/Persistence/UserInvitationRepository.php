@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Infrastructure\Persistence;
+namespace App\Training\Infrastructure\Persistence;
 
-use App\Event\Domain\Model\UserInvitation;
-use App\Event\Domain\Model\UserInvitationRepositoryInterface;
+use App\Training\Domain\Model\UserInvitation;
+use App\Training\Domain\Model\UserInvitationRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;

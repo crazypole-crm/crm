@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Domain\Service;
+namespace App\Training\Domain\Service;
 
 use App\Common\Domain\Uuid;
 use App\Common\Domain\UuidGenerator;
-use App\Event\Domain\Exception\EventNotFoundException;
-use App\Event\Domain\Model\Training;
-use App\Event\Domain\Model\TrainingRepositoryInterface;
+use App\Training\Domain\Exception\EventNotFoundException;
+use App\Training\Domain\Model\Training;
+use App\Training\Domain\Model\TrainingRepositoryInterface;
 
 class EventService
 {

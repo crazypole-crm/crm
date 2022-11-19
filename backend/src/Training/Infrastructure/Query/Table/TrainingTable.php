@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Event\Infrastructure\Query\Table;
+namespace App\Training\Infrastructure\Query\Table;
 
 use App\Common\Infrastructure\Query\TypeConverter;
 
