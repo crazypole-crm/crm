@@ -19,12 +19,9 @@ import {MoveTrainingPopup} from "./schedule/calendar/moveTrainingPopup/MoveTrain
 import {TrainingActionPopup} from "./schedule/calendar/trainingActionPopup/TrainingActionPopup";
 import {TrainingClientsPopup} from "./schedule/calendar/trainingClientsPopup/TrainingClientsPopup";
 import { DirectionsLayout } from "./directions/DirectionsLayout"
+import {RecordToTrainingPopup} from "./schedule/calendar/recordToTrainingPopup/RecordToTrainingPopup";
 
 function PopupsLayout() {
-    // const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
-
-    // const handleCloseEditUserPopup = useAction(editUserPopupActions.close)
-
     return (
         <>
             <EditUserPopup />
@@ -35,6 +32,7 @@ function PopupsLayout() {
             <MoveTrainingPopup />
             <TrainingActionPopup />
             <TrainingClientsPopup />
+            <RecordToTrainingPopup />
         </>
     )
 }
@@ -54,28 +52,16 @@ function AdminLayout() {
                 <Sidebar />
                 <div className={styles.content}>
                     <Switch>
-                        <Redirect exact from={Router.Admin.url()} to={Router.Dashboard.url()}/>
-                        <Route exact path={[Router.Mark.url()]} >
-                            <div>Mark Layout</div>
-                        </Route>
                         <Route exact path={[Router.Schedule.url()]} >
                             <ScheduleLayoutWrapper />
-                        </Route>
-                        <Route exact path={[Router.User.url(':userId')]} >
-                            <div>User Layout</div>
                         </Route>
                         <Route exact path={[Router.UsersList.url()]} >
                             <UsersLayout/>
                         </Route>
-                        <Route exact path={[Router.Settings.url()]} >
-                            <div>Settings Layout</div>
-                        </Route>
-                        <Route exact path={[Router.Dashboard.url()]} >
-                            <div>Dashboard Layout</div>
-                        </Route>
                         <Route exact path={[Router.Directions.url()]} >
                             <DirectionsLayout />
                         </Route>
+                        <Redirect to={Router.Schedule.url()}/>
                     </Switch>
                 </div>
             </div>

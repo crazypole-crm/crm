@@ -1,13 +1,12 @@
 import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelector";
 import {useAction, useAtom} from "@reatom/react";
 import {Checkbox, Modal, Table} from "antd";
-import React, { useMemo } from "react";
+import React, {useMemo} from "react";
 import {
     clientsTrainingPopupActions,
     clientsTrainingPopupAtom
 } from "../../../../viewModel/calendar/trainingClientsPopup/trainingClientsPopup";
 import {ColumnsType} from "antd/lib/table";
-import {roleCompare} from "../../../users/table/userTableDataSort";
 import {UserData} from "../../../../viewModel/users/UserData";
 import {verify} from "../../../../../core/verify";
 import {getFullName} from "../../../../../common/name";
@@ -22,7 +21,6 @@ interface DataType {
     },
 }
 
-type ColumnIdType = 'name' | 'attendance'
 
 const COLUMNS: ColumnsType<DataType> = [
     {
@@ -76,6 +74,7 @@ function remapClientsDataToTableData(clients: UserData[], clientsAttendance: Map
 
 function ClientsTable() {
     const clientsData = useAtomWithSelector(clientsTrainingPopupAtom, x => x.clientsData)
+    const clientsLoading = useAtomWithSelector(clientsTrainingPopupAtom, x => x.clientsLoading)
     const clients = useAtom(clientsAtom)
 
     const data = useMemo(() => clientsData && remapClientsDataToTableData(clients, clientsData), [clientsData])
@@ -87,6 +86,7 @@ function ClientsTable() {
             y: 600,
         }}
         pagination={false}
+        loading={clientsLoading}
     />
 }
 

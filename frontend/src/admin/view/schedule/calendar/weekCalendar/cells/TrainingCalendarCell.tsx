@@ -20,6 +20,9 @@ import {getValueByCheckedKey} from "../../../../../../core/getValueByCheckedKey"
 import {trainingActionPopupActions} from "../../../../../viewModel/calendar/trainingActionPopup/trainingActionPopup";
 import {clientsTrainingPopupActions} from "../../../../../viewModel/calendar/trainingClientsPopup/trainingClientsPopup";
 import {optionalArray} from "../../../../../../core/array/array";
+import {
+    recordToTrainingPopupActions
+} from "../../../../../viewModel/calendar/recordToTrainingPopup/recordToTrainingPopup";
 
 type TrainingCalendarCellProps = {
     trainingData: TrainingData,
@@ -37,14 +40,6 @@ function getTrainerName(firstName?: string, lastName?: string) {
     return `${firstName} ${lastName[0]}.`
 }
 
-function getFreePlaces(hallCapacity: number, usersCount: number) {
-    const freePlaces = Math.max(hallCapacity - usersCount, 0)
-    if (freePlaces > 0) {
-        return `Свободно ${freePlaces} места`
-    }
-    return 'Все места заняты'
-}
-
 type AddPlusButtonProps = {
     onAdd: () => void
 }
@@ -56,7 +51,7 @@ function AddPlusButton({
     return (
         <div className={styles.plus} onClick={onAdd}>
             <Tooltip
-                title={'Добавить событие'}
+                title={'Добавить занятие'}
                 placement={'bottom'}
                 trigger={'hover'}
                 mouseEnterDelay={0.3}
@@ -83,9 +78,9 @@ function TrainingCalendarCell({
     const handleOpenMoveTrainingPopup = useAction(moveTrainingPopupActions.open)
     const handleOpenTrainingActionPopup = useAction(trainingActionPopupActions.open)
     const handleOpenClientsTrainingPopup = useAction(clientsTrainingPopupActions.open)
+    const handleOpenRecordToTrainingPopup = useAction(recordToTrainingPopupActions.open)
 
     const trainer = users[trainingData.trainerId]
-    const hall = halls[trainingData.hallId]
     const direction = directions[trainingData.directionId]
 
     const onAdd = () => {
@@ -141,14 +136,14 @@ function TrainingCalendarCell({
     }
 
     const onShowClients = () => {
-        const clientsData = new Map([
-            ['client1', false],
-            ['client2', false],
-            ['client3', false],
-        ])
         handleOpenClientsTrainingPopup({
             id: trainingData.id,
-            clients: clientsData,
+        })
+    }
+
+    const onRecordToTraining = () => {
+        handleOpenRecordToTrainingPopup({
+            trainingId: trainingData.id,
         })
     }
 
@@ -192,7 +187,7 @@ function TrainingCalendarCell({
             'replaceTrainer': onReplaceTrainer,
             'cancelTraining': onCancelTraining,
             'moveTraining': onMoveTraining,
-            'enrollTraining': () => console.log('enroll training'),
+            'enrollTraining': onRecordToTraining,
             'checkUserList': onShowClients,
             'addTraining': onAdd,
             'editTraining': onEdit,
@@ -241,9 +236,10 @@ function TrainingCalendarCell({
             </div>
             <div className={styles.freePlaces}>
                 {
-                    trainingData.type === 'grouped'
-                        ? getFreePlaces(hall.capacity, trainingData.clients.length)
-                        : 'Индивидуальное'
+                    getValueByCheckedKey(trainingData.type, {
+                        'grouped': 'Групповое',
+                        'individual': 'Индивидуальное',
+                    })
                 }
             </div>
             <div className={styles.trainerName}>

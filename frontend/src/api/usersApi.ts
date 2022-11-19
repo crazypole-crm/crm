@@ -117,11 +117,20 @@ function createUser(userData: Api_CreateUserData): Promise<{id: string}> {
         })
 }
 
+function deleteUser(userId: string): Promise<void> {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve()
+        }, 1000)
+    })
+}
+
 const UsersApi = {
     getUsersDataByIds,
     getAllUsersData,
     editUser,
     createUser,
+    deleteUser,
 }
 
 export type {
