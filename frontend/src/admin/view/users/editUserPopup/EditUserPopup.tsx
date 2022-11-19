@@ -19,13 +19,11 @@ const fieldStyle: React.CSSProperties = {
 }
 
 function UserLastNameInput() {
-    const userLastNameError = useAtomWithSelector(editUserPopupAtom, x => x.userLastNameError)
     const userLastName = useAtomWithSelector(editUserPopupAtom, x => x.userLastName)
     const handleSetUserLastName = useAction(editUserPopupActions.setUserLastName)
 
     return <Input
         value={userLastName || ''}
-        status={userLastNameError ? 'error' : ''}
         onChange={e => handleSetUserLastName(e.target.value)}
         style={fieldStyle}
     />
@@ -34,11 +32,9 @@ function UserLastNameInput() {
 function UserFirstNameInput() {
     const userFirstName = useAtomWithSelector(editUserPopupAtom, x => x.userFirstName)
     const handleSetUserFirstName = useAction(editUserPopupActions.setUserFirstName)
-    const userFirstNameError = useAtomWithSelector(editUserPopupAtom, x => x.userFirstNameError)
 
     return <Input
         value={userFirstName || ''}
-        status={userFirstNameError ? 'error' : ''}
         onChange={e => handleSetUserFirstName(e.target.value)}
         style={fieldStyle}
     />
@@ -77,6 +73,7 @@ function UserBirthDayPicker() {
         locale={ruRU} 
         allowClear={true}
         disabledDate={disabledDate}
+        format={'DD/MM/YY'}
         style={fieldStyle}
     />
 }
@@ -154,8 +151,6 @@ function UserPasswordCheckInput() {
 }
 
 function Content() {
-    const userLastNameError = useAtomWithSelector(editUserPopupAtom, x => x.userLastNameError)
-    const userFirstNameError = useAtomWithSelector(editUserPopupAtom, x => x.userFirstNameError)
     const userPhoneError = useAtomWithSelector(editUserPopupAtom, x => x.userPhoneError)
     const userEmptyEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userEmptyEmailError)
     const userIncorrectEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userIncorrectEmailError)
@@ -181,12 +176,10 @@ function Content() {
                 <EditUserPopupInputBlock
                     title={'Фамилия'}
                     content={<UserLastNameInput/>}
-                    errorEmpty={userLastNameError}
                 />
                 <EditUserPopupInputBlock
                     title={'Имя'}
                     content={<UserFirstNameInput/>}
-                    errorEmpty={userFirstNameError}
                 />
                 <EditUserPopupInputBlock
                     title={'Отчество'}
@@ -211,7 +204,7 @@ function Content() {
                     title={'Новый пароль'}
                     content={<UserPasswordInput/>}
                 />}
-                {currentUser.role === 'admin' && <EditUserPopupInputBlock
+                {currentUser.role === 'admin' && currentUser.id !== userId && <EditUserPopupInputBlock
                     title={'Роль'}
                     content={<UserRoleSelect/>}
                 />}

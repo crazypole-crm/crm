@@ -31,6 +31,7 @@ function TimeStepBlock() {
     }
 
     return <TimePicker
+        minuteStep={15}
         value={momentTimeStep}
         onSelect={onChange}
         format={'HH:mm'}
@@ -66,12 +67,14 @@ function PeriodTimeBlock() {
     return (
         <div className={styles.timePeriod}>
             <TimePicker
+                minuteStep={15}
                 value={momentStartTime}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, handleSetDayStartTime)}
             />
             -
             <TimePicker
+                minuteStep={15}
                 value={momentEndTime}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, handleSetDayEndTime)}

@@ -1,11 +1,11 @@
 import {TableUserNameType} from "../CollumnsData"
-import {joinName} from "../userTableDataConvert"
 import styles from './UserNameCell.module.css'
 import {useAction, useAtom} from "@reatom/react";
 import {editUserPopupActions} from "../../../../viewModel/editUserPopup/editUserPopup";
 import {usersAtom} from "../../../../viewModel/users/users";
 import {authorizedCurrentUser} from "../../../../../currentUser/currentUser";
 import {viewUserPopupActions} from "../../../../viewModel/users/viewUserPopup/viewUserPopup";
+import {getFullName} from "../../../../../common/name";
 
 type UserNameCellProps = {
     name: TableUserNameType,
@@ -31,7 +31,7 @@ function UserNameCell({
         }
     }
 
-    const fullName = joinName(name)
+    const fullName = getFullName(name)
     return (
         <span
             onClick={onClick}

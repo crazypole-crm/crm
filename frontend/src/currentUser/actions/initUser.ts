@@ -12,8 +12,8 @@ const initUserDataAction = declareAsyncAction<void>(
                 const modelUserData: UserModel = {
                     ...data,
                     isAuthUser: true,
-                    birthDay: data.birthDay ? new Date(data.birthDay) : undefined,
-                    lastVisit: data.lastVisit ? new Date(data.lastVisit) : undefined,
+                    birthDay: data.birthDay ? new Date(Number(data.birthDay)) : undefined,
+                    lastVisit: data.lastVisit ? new Date(Number(data.lastVisit)) : undefined,
                     role: 'admin'
                 }
                 store.dispatch(currentUserActions.setCurrentUserData(modelUserData));
