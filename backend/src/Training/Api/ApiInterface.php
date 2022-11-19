@@ -11,14 +11,6 @@ interface ApiInterface
 {
     public function createEvent(CreateEventInput $input): string;
 
-    public function getEventDataById(string $eventId): ?TrainingData;
-
-    /**
-     * @param string $userId
-     * @return TrainingData[]
-     */
-    public function getEventsDataByUserId(string $userId): array;
-
     /**
      * @param EditEventInput $input
      */
