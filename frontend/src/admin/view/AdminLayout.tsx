@@ -1,4 +1,4 @@
-import {useAction, useAtom} from "@reatom/react"
+import {useAtom} from "@reatom/react"
 import {Redirect, Route, Switch} from "react-router-dom"
 import {Router} from "../../core/router/router"
 import {currentUserAtom} from "../../currentUser/currentUser"
@@ -6,9 +6,6 @@ import styles from './AdminLayout.module.css'
 import {AdminHeader} from "./header/AdminHeader"
 import {Sidebar} from "./sidebar/Sidebar"
 import {UsersLayout} from "./users/UsersLayout"
-import {editUserPopupActions, editUserPopupAtom} from "../viewModel/editUserPopup/editUserPopup";
-import {useAtomWithSelector} from "../../core/reatom/useAtomWithSelector";
-import {PopupPortal} from "../../common/portal/PopupPortal";
 import {EditUserPopup} from "./users/editUserPopup/EditUserPopup";
 import {ScheduleLayoutWrapper} from "./schedule/ScheduleLayoutWrapper";
 import {EditTrainingPopup} from "./schedule/calendar/editTrainingPopup/EditTrainingPopup";
@@ -19,12 +16,10 @@ import {MoveTrainingPopup} from "./schedule/calendar/moveTrainingPopup/MoveTrain
 import {TrainingActionPopup} from "./schedule/calendar/trainingActionPopup/TrainingActionPopup";
 import {TrainingClientsPopup} from "./schedule/calendar/trainingClientsPopup/TrainingClientsPopup";
 import { DirectionsLayout } from "./directions/DirectionsLayout"
+import { EditDirectionPopup } from "./directions/directionsPopups/EditDirectionPopup"
+import { DeleteDirectionsPopup } from "./directions/directionsPopups/DeleteDirectionsPopup"
 
 function PopupsLayout() {
-    // const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
-
-    // const handleCloseEditUserPopup = useAction(editUserPopupActions.close)
-
     return (
         <>
             <EditUserPopup />
@@ -35,6 +30,8 @@ function PopupsLayout() {
             <MoveTrainingPopup />
             <TrainingActionPopup />
             <TrainingClientsPopup />
+            <EditDirectionPopup />
+            <DeleteDirectionsPopup />
         </>
     )
 }

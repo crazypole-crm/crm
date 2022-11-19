@@ -1,13 +1,15 @@
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons"
-import { useAtom } from "@reatom/react"
+import { useAction, useAtom } from "@reatom/react"
 import { Button } from "antd"
 import React, { useMemo } from "react"
 import { optionalArray } from "../../../core/array/array"
 import { checkNever } from "../../../core/checkNever"
 import { authorizedCurrentUser } from "../../../currentUser/currentUser"
 import { directionsAtom } from "../../viewModel/direction/directions"
+import { editDirectionPopupActions } from "../../viewModel/direction/popups/editDirectionPopup"
 import { directionsLoadingAtom } from "../../viewModel/direction/loadDirections"
 import styles from '../users/table/UsersTableCommandPanel.module.css'
+import { deleteDirectionPopupActions } from "../../viewModel/direction/popups/deleteDirectionsPopup"
 
 type DirectionsActionsButtonType = 'delete' | 'edit' | 'add' 
 
@@ -15,25 +17,34 @@ type DirectionsActionsButtonProps = {
     selectedRowKeys: React.Key[],
 }
 
+function remapKeyListToStringList(list: React.Key[]): string[] {
+    return list.map((key) => key.toString())
+}
+
 function DirectionsTableCommandPanel({
     selectedRowKeys,
 }: DirectionsActionsButtonProps) {
     const currentUser = useAtom(authorizedCurrentUser)
-    //const directions = useAtom(directionsAtom)
+    const directions = useAtom(directionsAtom)
     const directionsLoading = useAtom(directionsLoadingAtom)
-    // const handleOpenEditDirectiopnPopup = useAction(editDirectionPopupActions.open)
+    const handleOpenEditDirectionPopup = useAction(editDirectionPopupActions.open)
+    const handleOpenDeleteDirectionPopup = useAction(deleteDirectionPopupActions.open)
 
+    const handleOnAddClick = () => {
+        handleOpenEditDirectionPopup({
+            mode: 'create',
+        })
+    }
+    
     const handleOnEditClick = () => {
-        //handleOpenEditDirectionPopup(directions[selectedRowKeys[0]])
-        console.log(`edit dirs with ids`, selectedRowKeys)
+        handleOpenEditDirectionPopup({
+            directionData: directions[selectedRowKeys[0]],
+            mode: 'edit',
+        })
     }
 
     const handleOnDeleteClick = () => {
-        console.log(`delete dirs with ids`, selectedRowKeys)
-    }
-
-    const handleOnAddClick = () => {
-        console.log(`add dir`)
+        handleOpenDeleteDirectionPopup(remapKeyListToStringList(selectedRowKeys))
     }
 
     const buttons: DirectionsActionsButtonType[] = useMemo(() => {

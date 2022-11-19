@@ -6,7 +6,7 @@ const {
     atom: directionsAtom,
     updateItems: updateDirections,
     updateItem: updateDirection,
-    removeItems: removeDirection,
+    removeItems: removeDirections,
 } = declareMapAtom<DirectionData>(
     'directions',
     direction => direction.id,
@@ -15,7 +15,7 @@ const {
 const directionsActions = {
     updateDirection,
     updateDirections,
-    removeDirection,
+    removeDirections,
 }
 
 export {
