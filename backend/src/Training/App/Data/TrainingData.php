@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Event\App\Data;
 
+use App\Event\Domain\Model\TrainingType;
+
 class TrainingData implements \JsonSerializable
 {
 
@@ -74,7 +76,17 @@ class TrainingData implements \JsonSerializable
             'trainerId' => $this->trainerId,
             'hallId' => $this->hallId,
             'courseId' => $this->courseId,
-            'type' => $this->type,
+            'type' => $this->convertTrainingType($this->type),
         ];
+    }
+
+    private function convertTrainingType(int $type): string
+    {
+        return match ($type)
+        {
+            TrainingType::GROUP_TRAINING => 'group',
+            TrainingType::INDIVIDUAL_TRAINING => 'individual',
+            default => '',
+        };
     }
 }
