@@ -15,6 +15,8 @@ type LoadTrainingsForPeriodPayload = {
 function setTimeToDate(date: Date, time: Time) {
     date.setHours(time.hour)
     date.setMinutes(time.minutes)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
 }
 
 function remapApiTrainingDataToTrainingData(trainingsData: Api_TrainingData[]): TrainingData[] {
