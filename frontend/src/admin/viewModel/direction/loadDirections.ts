@@ -3,11 +3,12 @@ import {CalendarApi} from "../../../api/calendarApi";
 import {directionsActions} from "./directions";
 import {processStandardError} from "../../../core/error/processStandardError";
 import {declareAtom} from "@reatom/core";
+import {DirectionsApi} from "../../../api/directionsApi";
 
 
 const loadDirections = declareAsyncAction<void>('directions.load',
     (_, store) => {
-        return CalendarApi.getDirections()
+        return DirectionsApi.getDirections()
             .then(directions => {
                 store.dispatch(directionsActions.updateDirections(directions))
             })
