@@ -1,0 +1,16 @@
+.profileTool
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+.text
+{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: #FFFFFF;
+}
