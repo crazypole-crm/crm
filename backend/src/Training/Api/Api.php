@@ -8,12 +8,12 @@ use App\Training\Api\Input\EditEventInput;
 use App\Training\App\Query\ListTrainingInput;
 use App\Training\App\Query\ListTrainingSpecification;
 use App\Training\App\Query\TrainingQueryServiceInterface;
-use App\Training\App\Service\EventAppService;
+use App\Training\App\Service\TrainingAppService;
 
 class Api implements ApiInterface
 {
     public function __construct(
-        private EventAppService $trainingAppService,
+        private TrainingAppService $trainingAppService,
         private TrainingQueryServiceInterface $trainingQueryService,
     )
     {}
@@ -47,8 +47,18 @@ class Api implements ApiInterface
         );
     }
 
+    public function listCourses(): array
+    {
+        return $this->trainingQueryService->listCourses();
+    }
+
     public function createHall(string $name, int $capacity): string
     {
         return $this->trainingAppService->createHall($name, $capacity);
+    }
+
+    public function createCourse(string $name): string
+    {
+        return $this->trainingAppService->createCourse($name);
     }
 }

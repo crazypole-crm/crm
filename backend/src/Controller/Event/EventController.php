@@ -148,6 +148,23 @@ class EventController extends AbstractController
     }
 
     /**
+     * @Route("/list/courses")
+     */
+    public function listCourses(Request $request): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $courses = $this->eventApi->listCourses();
+            return new Response(json_encode($courses, JSON_THROW_ON_ERROR), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
      * @Route("/create/hall")
      */
     public function createHall(Request $request): Response
@@ -159,6 +176,25 @@ class EventController extends AbstractController
             $userId = $this->securityContext->getAuthenticatedUserId();
             $hallId = $this->eventApi->createHall($requestData['name'], $requestData['capacity']);
             return new Response(json_encode(['hallId' => $hallId]), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/create/course")
+     */
+    public function createCourse(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $courseId = $this->eventApi->createCourse($requestData['name']);
+            return new Response(json_encode(['courseId' => $courseId]), Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)
         {
