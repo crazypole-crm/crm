@@ -36,7 +36,7 @@ function DeleteDirectionsPopup() {
         title={'Удалить направления'}
         open={deleteDirectionPopupOpened}
         centered
-        okText={'Подтвердить'}
+        okText={'Удалить'}
         cancelText={'Отмена'}
         onOk={handleSubmitDelete}
         onCancel={handleCloseDeleteDirectionPopup}
