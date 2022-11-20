@@ -1,43 +1,42 @@
 import { DirectionData } from "../admin/viewModel/direction/DirectionData"
 import { generateUuid } from "../core/uuid/generateUuid"
-
-function getMockDirections(): DirectionData[] {
-    return [
-        {
-            id: 'direction1',
-            name: 'Pole dance начинающие'
-        },
-        {
-            id: 'direction2',
-            name: 'Pole exotic'
-        },
-        {
-            id: 'direction3',
-            name: 'Йога'
-        },
-        {
-            id: 'direction4',
-            name: 'Танцы'
-        }
-    ]
-}
+import {HttpStatus} from "../core/http/HttpStatus";
 
 function getDirections(): Promise<DirectionData[]> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(getMockDirections())
-        }, 1000)
+    return fetch('/list/courses', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
-function createDirection(trainingData: Omit<DirectionData, 'id'>): Promise<{id: string}> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve({
-                id: generateUuid()
-            })
-        }, 1000)
+function createDirection(directionData: Omit<DirectionData, 'id'>): Promise<{courseId: string}> {
+    return fetch('/create/course', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: directionData.name,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 function editDirection(directionData: DirectionData): Promise<void> {

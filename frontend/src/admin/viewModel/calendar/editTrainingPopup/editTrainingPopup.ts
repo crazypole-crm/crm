@@ -126,7 +126,7 @@ const [repeatableAtom, setRepeatable] = declareAtomWithSetter('editTraining.repe
 const submit = declareAction('editTraining.submit',
     (_, store) => {
         const mode = store.getState(modeAtom)
-        // const trainings = store.dispatch(trainings)
+        const type = store.getState(typeAtom)
         const trainingHall = store.getState(trainingHallAtom)
         const trainingId = store.getState(trainingIdAtom)
         const trainingDirection = store.getState(trainingDirectionAtom)
@@ -134,7 +134,7 @@ const submit = declareAction('editTraining.submit',
         const trainingDate = store.getState(trainingDateAtom)
         const trainingStartTime = store.getState(trainingStartTimeAtom)
         const trainingEndTime = store.getState(trainingEndTimeAtom)
-        const trainingDescription = store.getState(trainingDirectionAtom)
+        const trainingDescription = store.getState(trainingDescriptionAtom)
 
         const trainingHallError = !trainingHall
         const trainingDirectionError = !trainingDirection
@@ -150,7 +150,7 @@ const submit = declareAction('editTraining.submit',
 
         if (mode === 'create') {
             store.dispatch(createTraining({
-                type: 'individual',
+                type: type,
                 date: trainingDate,
                 directionId: verify(trainingDirection),
                 hallId: verify(trainingHall),
@@ -163,7 +163,7 @@ const submit = declareAction('editTraining.submit',
 
         if (mode === 'edit') {
             store.dispatch(saveTraining({
-                type: 'grouped',
+                type: type,
                 date: trainingDate,
                 directionId: verify(trainingDirection),
                 hallId: verify(trainingHall),

@@ -1,4 +1,5 @@
 import {HallData} from "../admin/viewModel/hall/HallData";
+import {generateUuid} from "../core/uuid/generateUuid";
 
 function getMockHalls(): HallData[] {
     return [
@@ -28,11 +29,11 @@ function getHalls(): Promise<HallData[]> {
     })
 }
 
-function createHall(hallDat: Omit<HallData, 'id'>): Promise<{ id: string }> {
+function createHall(hallData: Omit<HallData, 'id'>): Promise<{ hallId: string }> {
     return new Promise(resolve => {
         setTimeout(() => {
             resolve({
-                id: 'hall5'
+                hallId: generateUuid(),
             })
         }, 1000)
     })

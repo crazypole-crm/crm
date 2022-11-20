@@ -7,9 +7,9 @@ import {HallsApi} from "../../../api/hallsApi";
 const createHall = declareAsyncAction<Omit<HallData, 'id'>>('hall.create',
     (hall, store) => {
         return HallsApi.createHall(hall)
-            .then(({id}) => {
+            .then(({hallId}) => {
                 store.dispatch(hallsActions.updateHall({
-                    id,
+                    id: hallId,
                     ...hall
                 }))
             })

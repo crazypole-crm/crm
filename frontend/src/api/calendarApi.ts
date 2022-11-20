@@ -1,6 +1,3 @@
-import {DirectionData} from "../admin/viewModel/direction/DirectionData";
-import {HallData} from "../admin/viewModel/hall/HallData";
-import {generateUuid} from "../core/uuid/generateUuid";
 import {HttpStatus} from "../core/http/HttpStatus";
 
 type Api_TrainingData = {
@@ -36,14 +33,30 @@ function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_Trai
 
 }
 
-function createTraining(trainingData: Omit<Api_TrainingData, 'trainingId'>): Promise<{id: string}> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve({
-                id: generateUuid()
-            })
-        }, 1000)
+function createTraining(trainingData: Omit<Api_TrainingData, 'trainingId'>): Promise<{trainingId: string}> {
+    return fetch('/create/training', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            startDate: trainingData.startDate,
+            endDate: trainingData.endDate,
+            type: trainingData.type,
+            description: trainingData.description,
+            hallId: trainingData.hallId,
+            courseId: trainingData.courseId,
+            trainerId: trainingData.trainerId,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 function editTraining(trainingData: Api_TrainingData): Promise<void> {
@@ -112,11 +125,6 @@ const CalendarApi = {
     cancelTraining,
     moveTraining,
     replaceTrainingTrainer,
-
-    getHalls,
-    createHall,
-    saveHall,
-    deleteHall
 }
 
 export type {

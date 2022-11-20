@@ -17,7 +17,7 @@ function Content() {
                 <List className={styles.list}
                     dataSource={directionsIds}
                     renderItem={(id: string) => (
-                        <List.Item>
+                        <List.Item key={id}>
                             <span>{directions[id]?.name}</span>
                         </List.Item>
                     )}

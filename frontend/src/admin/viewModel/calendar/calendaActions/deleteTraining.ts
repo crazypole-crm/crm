@@ -1,6 +1,4 @@
 import {declareAsyncAction} from "../../../../core/reatom/declareAsyncAction";
-import {TrainingData} from "../TrainingData";
-import {remapTrainingDataToApiTrainingData} from "../remapTrainingDataToApiTrainingData";
 import {CalendarApi} from "../../../../api/calendarApi";
 import {trainingsActions} from "../trainings";
 import {processStandardError} from "../../../../core/error/processStandardError";

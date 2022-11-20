@@ -12,10 +12,10 @@ const createTraining = declareAsyncAction<Omit<TrainingData, 'id'>>(
         const remappedTraining = remapTrainingDataToApiTrainingData(trainingData)
 
         return CalendarApi.createTraining(remappedTraining)
-            .then(({id}) => {
+            .then(({trainingId}) => {
                 store.dispatch(trainingsActions.updateTraining({
                     ...trainingData,
-                    id
+                    id: trainingId
                 }))
             })
             .catch(processStandardError)

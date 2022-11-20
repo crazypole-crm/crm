@@ -4,7 +4,6 @@ import {HallData} from "./HallData";
 import {hallsActions} from "./halls";
 import {HallsApi} from "../../../api/hallsApi";
 
-
 const saveHall = declareAsyncAction<HallData>('hall.save',
     (direction, store) => {
         return HallsApi.saveHall(direction)
