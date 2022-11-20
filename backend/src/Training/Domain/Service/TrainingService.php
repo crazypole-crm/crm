@@ -21,7 +21,7 @@ class TrainingService
         private CourseRepositoryInterface $courseRepository,
     ){}
 
-    public function createTraining(string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $courseId, Uuid $trainerId, Uuid $hallId, int $type): Uuid
+    public function createTraining(string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $hallId, Uuid $courseId, Uuid $trainerId, int $type): Uuid
     {
         $event = new Training(new Uuid(UuidGenerator::generateUuid()), $title, $description, $startDate, $endDate, $hallId, $courseId, $trainerId, $type);
         $this->trainingRepository->add($event);
