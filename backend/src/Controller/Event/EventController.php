@@ -29,9 +29,9 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/create/event")
+     * @Route("/create/training")
      */
-    public function createEvent(Request $request): Response
+    public function createTraining(Request $request): Response
     {
         //TODO обработка исключений
         $requestData = json_decode($request->getContent(), true);
@@ -41,7 +41,7 @@ class EventController extends AbstractController
             $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
             $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
             $type = $this->convertTrainingType($requestData['type']);
-            $input = new CreateEventInput($requestData['title'], $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['courseId'], $type);
+            $input = new CreateEventInput("", $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['trainerId'], $type);
             $trainingId = $this->eventApi->createEvent($input);
             return new Response(json_encode(['trainingId' => $trainingId]), Response::HTTP_OK);
         }
@@ -140,6 +140,25 @@ class EventController extends AbstractController
                     $trainingIds)
             );
             return new Response(json_encode($trainings, JSON_THROW_ON_ERROR), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/create/hall")
+     */
+    public function createHall(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $hallId = $this->eventApi->createHall($requestData['name'], $requestData['capacity']);
+            return new Response(json_encode(['hallId' => $hallId]), Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)
         {

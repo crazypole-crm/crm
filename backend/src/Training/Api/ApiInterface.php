@@ -19,4 +19,6 @@ interface ApiInterface
     public function removeEvent(string $eventId): void;
 
     public function listTrainings(ListTrainingInput $input): array;
+
+    public function createHall(string $name, int $capacity): string;
 }
