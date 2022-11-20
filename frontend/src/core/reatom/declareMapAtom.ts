@@ -9,15 +9,17 @@ function declareMapAtom<T>(
     name: string,
     getItemKey: (item: T) => string,
     dependencyMatcher?: DependencyMatcher<MapItems<T>>,
+    initialState?: object
 ) {
 
     const updateItem = declareAction<T>()
     const removeItems = declareAction<Array<string>>()
     const updateItems = declareAction<Array<T>>()
     const setNewItems = declareAction<Array<T>>()
+    const removeAllItems = declareAction()
 
     return {
-        atom: declareAtom<MapItems<T>>(name, {}, on => [
+        atom: declareAtom<MapItems<T>>(name, {...initialState}, on => [
             on(updateItems, (state, items) => {
                 const itemsMap: MapItems<T> = {...state}
                 items.forEach(item => itemsMap[getItemKey(item)] = item)
@@ -43,12 +45,17 @@ function declareMapAtom<T>(
                 })
                 return newItems
             }),
+            on(removeAllItems, () => {
+                const emptyItems: MapItems<T> = {}
+                return emptyItems
+            }),
             dependencyMatcher && dependencyMatcher(on)
         ]),
         updateItem,
         removeItems,
         updateItems,
         setNewItems,
+        removeAllItems
     }
 }
 
