@@ -6,14 +6,14 @@ import { directionsActions } from "./directions"
 
 const updateDirection = declareAsyncAction<DirectionData>(
     'updateDirection',
-    (userData, store) => {
+    (directionData, store) => {
         return DirectionsApi.editDirection({
-            id: userData.id,
-            name: userData.name,
+            id: directionData.id,
+            name: directionData.name,
         })
             .then(() => {
                 store.dispatch(directionsActions.updateDirection({
-                    ...userData,
+                    ...directionData,
                 }))
             })
             .catch(processStandardError)

@@ -9,26 +9,22 @@ import { directionsAtom } from "../../viewModel/direction/directions"
 import { editDirectionPopupActions } from "../../viewModel/direction/popups/editDirectionPopup"
 import { directionsLoadingAtom } from "../../viewModel/direction/loadDirections"
 import styles from '../users/table/UsersTableCommandPanel.module.css'
-import { deleteDirectionPopupActions } from "../../viewModel/direction/popups/deleteDirectionsPopup"
+import { deleteDirectionsPopupActions } from "../../viewModel/direction/popups/deleteDirectionsPopup"
+import { selectedDirectionsRowKeysAtom } from "../../viewModel/direction/popups/selectedDirectionsRows"
 
 type DirectionsActionsButtonType = 'delete' | 'edit' | 'add' 
-
-type DirectionsActionsButtonProps = {
-    selectedRowKeys: React.Key[],
-}
 
 function remapKeyListToStringList(list: React.Key[]): string[] {
     return list.map((key) => key.toString())
 }
 
-function DirectionsTableCommandPanel({
-    selectedRowKeys,
-}: DirectionsActionsButtonProps) {
+function DirectionsTableCommandPanel() {
     const currentUser = useAtom(authorizedCurrentUser)
     const directions = useAtom(directionsAtom)
     const directionsLoading = useAtom(directionsLoadingAtom)
+    const selectedDirectionsRowKeys = useAtom(selectedDirectionsRowKeysAtom)
     const handleOpenEditDirectionPopup = useAction(editDirectionPopupActions.open)
-    const handleOpenDeleteDirectionPopup = useAction(deleteDirectionPopupActions.open)
+    const handleOpenDeleteDirectionPopup = useAction(deleteDirectionsPopupActions.open)
 
     const handleOnAddClick = () => {
         handleOpenEditDirectionPopup({
@@ -38,23 +34,23 @@ function DirectionsTableCommandPanel({
     
     const handleOnEditClick = () => {
         handleOpenEditDirectionPopup({
-            directionData: directions[selectedRowKeys[0]],
+            directionData: directions[selectedDirectionsRowKeys[0]],
             mode: 'edit',
         })
     }
 
     const handleOnDeleteClick = () => {
-        handleOpenDeleteDirectionPopup(remapKeyListToStringList(selectedRowKeys))
+        handleOpenDeleteDirectionPopup(remapKeyListToStringList(selectedDirectionsRowKeys))
     }
 
     const buttons: DirectionsActionsButtonType[] = useMemo(() => {
         const isAdmin = currentUser.role === 'admin'
         return optionalArray([
-            (isAdmin && !selectedRowKeys.length) && 'add',
-            (isAdmin && selectedRowKeys.length === 1) && 'edit',
-            (isAdmin && !!selectedRowKeys.length) && 'delete',
+            (isAdmin && !selectedDirectionsRowKeys.length) && 'add',
+            (isAdmin && selectedDirectionsRowKeys.length === 1) && 'edit',
+            (isAdmin && !!selectedDirectionsRowKeys.length) && 'delete',
         ])
-    }, [selectedRowKeys])
+    }, [selectedDirectionsRowKeys])
 
     return (
         <div className={styles.commandPanel}>
