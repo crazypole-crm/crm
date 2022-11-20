@@ -21,4 +21,6 @@ interface ApiInterface
     public function listTrainings(ListTrainingInput $input): array;
 
     public function createHall(string $name, int $capacity): string;
+
+    public function createCourse(string $name): string;
 }

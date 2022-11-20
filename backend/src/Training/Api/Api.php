@@ -51,4 +51,9 @@ class Api implements ApiInterface
     {
         return $this->trainingAppService->createHall($name, $capacity);
     }
+
+    public function createCourse(string $name): string
+    {
+        return $this->trainingAppService->createCourse($name);
+    }
 }

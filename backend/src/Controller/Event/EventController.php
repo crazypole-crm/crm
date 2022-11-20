@@ -166,6 +166,25 @@ class EventController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/create/course")
+     */
+    public function createCourse(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $courseId = $this->eventApi->createCourse($requestData['name']);
+            return new Response(json_encode(['courseId' => $courseId]), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
     private function convertTrainingType(string $type): int
     {
         return match ($type)
