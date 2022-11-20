@@ -26,7 +26,7 @@ class CourseData implements \JsonSerializable
     {
         return [
             'id' => $this->courseId,
-            'title' => $this->title,
+            'name' => $this->title,
         ];
     }
 }
