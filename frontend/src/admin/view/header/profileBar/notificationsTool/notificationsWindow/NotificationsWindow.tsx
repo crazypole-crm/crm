@@ -13,10 +13,9 @@ const NotificationsWindow : FC<NotificationWindowProps> = ({notificationList, on
     return (
         <div className={styles.window}>
             <NotificationList list={notificationList}/>
-            <div className={styles.footer}>
+            {!!notificationList.length && <div className={styles.footer}>
                 <Button onClick={onClearButtonClick} type="primary">Очистить уведомления</Button>
-            </div>
-
+            </div>}
         </div>
     );
 };

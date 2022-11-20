@@ -15,7 +15,8 @@ const {
 } = declareMapAtom<NotificationData>(
     'notifications',
     notification => notification.id,
-    undefined, dataExp
+    undefined,
+    dataExp,
 )
 
 const notificationsActions = {
