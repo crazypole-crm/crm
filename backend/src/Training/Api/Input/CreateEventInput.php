@@ -5,35 +5,16 @@ namespace App\Training\Api\Input;
 
 class CreateEventInput
 {
-    /** @var string */
-    private $title;
-    /** @var string */
-    private $description;
-    /** @var \DateTimeImmutable */
-    private $startDate;
-    /** @var \DateTimeImmutable */
-    private $endDate;
-    /** @var string */
-    private $organizerId;
-    /** @var string */
-    private $place;
-
     public function __construct(
-        string $title,
-        string $description,
-        \DateTimeImmutable $startDate,
-        \DateTimeImmutable $endDate,
-        string $organizerId,
-        string $place
-    )
-    {
-        $this->title = $title;
-        $this->description = $description;
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
-        $this->organizerId = $organizerId;
-        $this->place = $place;
-    }
+        private string $title,
+        private ?string $description,
+        private \DateTimeImmutable $startDate,
+        private \DateTimeImmutable $endDate,
+        private string $hallId,
+        private string $courseId,
+        private string $trainerId,
+        private int $type,
+    ){}
 
     /**
      * @return string
@@ -70,16 +51,32 @@ class CreateEventInput
     /**
      * @return string
      */
-    public function getOrganizerId(): string
+    public function getHallId(): string
     {
-        return $this->organizerId;
+        return $this->hallId;
     }
 
     /**
      * @return string
      */
-    public function getPlace(): string
+    public function getCourseId(): string
     {
-        return $this->place;
+        return $this->courseId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrainerId(): string
+    {
+        return $this->trainerId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
     }
 }

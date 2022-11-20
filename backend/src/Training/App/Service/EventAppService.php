@@ -10,11 +10,11 @@ use App\Training\App\Data\TrainingData;
 use App\Training\App\Lock\LockNames;
 use App\Training\App\Query\TrainingQueryServiceInterface;
 use App\Training\App\Query\UserInvitationQueryServiceInterface;
-use App\Training\Domain\Service\EventService;
+use App\Training\Domain\Service\TrainingService;
 
 class EventAppService
 {
-    /** @var EventService */
+    /** @var TrainingService */
     private $eventService;
     /** @var TransactionInterface */
     private $transaction;
@@ -22,7 +22,7 @@ class EventAppService
     private $blockingOperatorExecutor;
 
     public function __construct(
-        EventService $eventService,
+        TrainingService $eventService,
         TransactionInterface $transaction,
         MultiBlockingOperationExecutorInterface $blockingOperatorExecutor
     )
@@ -32,12 +32,12 @@ class EventAppService
         $this->blockingOperatorExecutor = $blockingOperatorExecutor;
     }
 
-    public function createEvent(string $title, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $organizerId, ?string $description, ?string $place): string
+    public function createTraining(string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $hallId, string $courseId, string $trainerId, int $type): string
     {
         return (string)$this->transaction->execute(
-            function () use ($title, $startDate, $endDate, $organizerId, $description, $place): Uuid
+            function () use ($title, $startDate, $endDate, $hallId, $description, $courseId, $trainerId, $type): Uuid
             {
-                return $this->eventService->createTraining($title, $startDate, $endDate, new Uuid($organizerId), $description, $place);
+                return $this->eventService->createTraining($title, $description, $startDate, $endDate, new Uuid($hallId), new Uuid($courseId), new Uuid($trainerId), $type);
             }
         );
     }
@@ -65,5 +65,25 @@ class EventAppService
             }
         );
         $this->transaction->execute($operation);
+    }
+
+    public function createHall(string $title, int $capacity): string
+    {
+        return (string)$this->transaction->execute(
+            function () use ($title, $capacity): Uuid
+            {
+                return $this->eventService->createHall($title, $capacity);
+            }
+        );
+    }
+
+    public function createCourse(string $title): string
+    {
+        return (string)$this->transaction->execute(
+            function () use ($title): Uuid
+            {
+                return $this->eventService->createCourse($title);
+            }
+        );
     }
 }

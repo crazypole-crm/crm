@@ -4,14 +4,15 @@ declare(strict_types=1);
 namespace App\Training\Infrastructure\Persistence;
 
 use App\Common\Domain\Uuid;
+use App\Training\Domain\Model\Hall;
+use App\Training\Domain\Model\HallRepositoryInterface;
 use App\Training\Domain\Model\Training;
-use App\Training\Domain\Model\TrainingRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 
-class TrainingRepository implements TrainingRepositoryInterface
+class HallRepository implements HallRepositoryInterface
 {
     private EntityRepository|ObjectRepository $repo;
     private EntityManager $em;
@@ -22,18 +23,18 @@ class TrainingRepository implements TrainingRepositoryInterface
         $this->repo = $em->getRepository(Training::class);
     }
 
-    public function findHallById(Uuid $hallId): ?Training
+    public function findHallById(Uuid $hallId): ?Hall
     {
         return $this->repo->findOneBy(['id' => $hallId]);
     }
 
-    public function add(Training $event): void
+    public function add(Hall $hall): void
     {
-        $this->em->persist($event);
+        $this->em->persist($hall);
     }
 
-    public function remove(Training $event): void
+    public function remove(Hall $hall): void
     {
-        $this->em->remove($event);
+        $this->em->remove($hall);
     }
 }

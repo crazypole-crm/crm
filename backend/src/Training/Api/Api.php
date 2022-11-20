@@ -13,35 +13,27 @@ use App\Training\App\Service\EventAppService;
 class Api implements ApiInterface
 {
     public function __construct(
-        private EventAppService $eventAppService,
-        private TrainingQueryServiceInterface $trainingQueryService)
+        private EventAppService $trainingAppService,
+        private TrainingQueryServiceInterface $trainingQueryService,
+    )
     {}
 
     public function createEvent(CreateEventInput $input): string
     {
         //TODO: обработка исключений
-        return $this->eventAppService->createEvent($input->getTitle(), $input->getStartDate(), $input->getEndDate(), $input->getOrganizerId(), $input->getDescription(), $input->getPlace());
+        return $this->trainingAppService->createTraining($input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType());
     }
 
     public function editEvent(EditEventInput $input): void
     {
         //TODO: обработка исключений
-        $this->eventAppService->editEvent($input->getEventId(), $input->getTitle(), $input->getStartDate(), $input->getEndDate(), $input->getOrganizerId(), $input->getDescription(), $input->getPlace());
-    }
-
-    /**
-     * @param string[] $userIds
-     * @param string $eventId
-     */
-    public function inviteUsers(array $userIds, string $eventId): void
-    {
-        $this->invitationService->createUsersInvitations($userIds, $eventId);
+        $this->trainingAppService->editEvent($input->getEventId(), $input->getTitle(), $input->getStartDate(), $input->getEndDate(), $input->getOrganizerId(), $input->getDescription(), $input->getPlace());
     }
 
     public function removeEvent(string $eventId): void
     {
         //TODO: обработка исключений
-        $this->eventAppService->removeEvent($eventId);
+        $this->trainingAppService->removeEvent($eventId);
     }
 
     public function listTrainings(ListTrainingInput $input): array
@@ -53,5 +45,10 @@ class Api implements ApiInterface
                 $input->getTrainingIds(),
             )
         );
+    }
+
+    public function createHall(string $name, int $capacity): string
+    {
+        return $this->trainingAppService->createHall($name, $capacity);
     }
 }
