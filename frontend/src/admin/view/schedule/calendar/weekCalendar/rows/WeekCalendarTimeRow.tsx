@@ -17,6 +17,7 @@ type WeekCalendarRowProps = {
     trainings: TrainingData[],
     time: Time,
     weekStartDate: Date,
+    isLastRow: boolean,
 }
 
 function isTrainingInThisDay(trainingDate: TrainingData, dayIndex: number) {
@@ -41,6 +42,7 @@ function WeekCalendarRow({
     trainings,
     time,
     weekStartDate,
+    isLastRow,
 }: WeekCalendarRowProps) {
     const items = getArrayWithNElements(weekLength).map(index => {
         const rowTraining = trainings.find(training => isTrainingInThisDay(training, index))
@@ -50,6 +52,7 @@ function WeekCalendarRow({
                    key={index}
                    trainingData={rowTraining}
                    time={time}
+                   showAdd={isLastRow}
                />
            )
         }
@@ -133,6 +136,7 @@ function WeekCalendarTimeRow({
                 time={time}
                 trainings={trainings || []}
                 weekStartDate={weekStartDate}
+                isLastRow={index === (rowsCount - 1)}
             />
         })
     }, [rowToTrainingsMap, rowsCount, weekLength, time, weekStartDate])

@@ -27,6 +27,7 @@ import {
 type TrainingCalendarCellProps = {
     trainingData: TrainingData,
     time: Time,
+    showAdd: boolean,
 }
 
 function getDurationString(timeStart: Time, timeEnd: Time) {
@@ -65,6 +66,7 @@ function AddPlusButton({
 function TrainingCalendarCell({
     trainingData,
     time,
+    showAdd,
 }: TrainingCalendarCellProps) {
     const currentUser = useAtom(authorizedCurrentUser)
     const directions = useAtom(directionsAtom)
@@ -272,7 +274,7 @@ function TrainingCalendarCell({
                         : trainingInfo
                 }
                 {
-                    currentUser.role === 'admin'
+                    currentUser.role === 'admin' && showAdd
                         ? <AddPlusButton onAdd={onAdd} />
                         : undefined
                 }
