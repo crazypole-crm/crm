@@ -4,14 +4,16 @@ import { declareAsyncAction } from "../../../core/reatom/declareAsyncAction"
 import { DirectionData } from "./DirectionData"
 import { directionsActions } from "./directions"
 
-const createDirection = declareAsyncAction<Omit<DirectionData, 'id'>>(
-    'createDirection',
+const updateDirection = declareAsyncAction<DirectionData>(
+    'updateDirection',
     (directionData, store) => {
-        return DirectionsApi.createDirection(directionData)
-            .then(({id}) => {
+        return DirectionsApi.editDirection({
+            id: directionData.id,
+            name: directionData.name,
+        })
+            .then(() => {
                 store.dispatch(directionsActions.updateDirection({
                     ...directionData,
-                    id
                 }))
             })
             .catch(processStandardError)
@@ -19,5 +21,5 @@ const createDirection = declareAsyncAction<Omit<DirectionData, 'id'>>(
 )
 
 export {
-    createDirection,
+    updateDirection,
 }

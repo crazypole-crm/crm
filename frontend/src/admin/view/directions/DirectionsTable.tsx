@@ -12,6 +12,8 @@ import {
 import { DirectionData } from "../../viewModel/direction/DirectionData";
 import { stringValuesCompare } from "../users/table/userTableDataSort";
 import { DirectionsTableNameCell } from "./DirectionsTableNameCell";
+import { selectedDirectionsRowKeysAtom, setSelectedDirectionsRowKeys } from "../../viewModel/direction/popups/selectedDirectionsRows";
+import { useAction, useAtom } from "@reatom/react";
 
 
 interface DataType {
@@ -47,14 +49,10 @@ function calcTableSize(windowHeight: number) {
 
 type DirectionsTableProps = {
     directionsData: DirectionData[] | null,
-    selectedRowKeys: React.Key[],
-    setSelectedRowKeys: (value: React.Key[]) => void,
 }
 
 function DirectionsTable({
     directionsData,
-    selectedRowKeys,
-    setSelectedRowKeys,
 }: DirectionsTableProps) {
     const windowRef = useRef(document.body)
 
@@ -81,9 +79,12 @@ function DirectionsTable({
 
     const tableHeight = useMemo(() => calcTableSize(windowHeight), [windowHeight])
 
+    const selectedDirectionsRowKeys = useAtom(selectedDirectionsRowKeysAtom)
+    const handleSetSelectedDirectionsRowKeys= useAction(setSelectedDirectionsRowKeys)
+
     const rowSelection: TableRowSelection<DataType> = {
-        selectedRowKeys,
-        onChange: setSelectedRowKeys,
+        selectedRowKeys: selectedDirectionsRowKeys,
+        onChange: handleSetSelectedDirectionsRowKeys,
         selections: [
             Table.SELECTION_ALL,
             Table.SELECTION_INVERT,
@@ -97,11 +98,11 @@ function DirectionsTable({
     const onRowClick = (record: DataType) => {
         return {
             onClick: () => {
-                if (selectedRowKeys.includes(record.key)) {
-                    setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.key))
+                if (selectedDirectionsRowKeys.includes(record.key)) {
+                    handleSetSelectedDirectionsRowKeys(selectedDirectionsRowKeys.filter(key => key !== record.key))
                 }
                 else {
-                    setSelectedRowKeys([...selectedRowKeys, record.key])
+                    handleSetSelectedDirectionsRowKeys([...selectedDirectionsRowKeys, record.key])
                 }
             }
         }

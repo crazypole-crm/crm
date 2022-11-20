@@ -7,10 +7,9 @@ import {DirectionsTable} from './DirectionsTable';
 import {DirectionsTableCommandPanel} from './DirectionsCommandPanel';
 
 function DirectionsLayout() {
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
     const directions = useAtom(directionsAtom)
     const directionsLoading = useAtom(directionsLoadingAtom)
-
+    
     const handleLoadDirections = useAction(loadDirections)
 
     useEffect(() => {
@@ -19,13 +18,9 @@ function DirectionsLayout() {
 
     return (
         <div className={styles.layout}>
-            <DirectionsTableCommandPanel
-                selectedRowKeys={selectedRowKeys}
-            />
+            <DirectionsTableCommandPanel/>
             <DirectionsTable
                 directionsData={directionsLoading ? null : Object.values(directions)}
-                selectedRowKeys={selectedRowKeys}
-                setSelectedRowKeys={setSelectedRowKeys}
             />
         </div>
     )

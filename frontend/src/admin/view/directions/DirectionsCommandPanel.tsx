@@ -1,50 +1,56 @@
-import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons"
-import {useAction, useAtom} from "@reatom/react"
-import {Button} from "antd"
-import React, {useMemo} from "react"
-import {optionalArray} from "../../../core/array/array"
-import {checkNever} from "../../../core/checkNever"
-import {authorizedCurrentUser} from "../../../currentUser/currentUser"
-import {directionsLoadingAtom} from "../../viewModel/direction/loadDirections"
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons"
+import { useAction, useAtom } from "@reatom/react"
+import { Button } from "antd"
+import React, { useMemo } from "react"
+import { optionalArray } from "../../../core/array/array"
+import { checkNever } from "../../../core/checkNever"
+import { authorizedCurrentUser } from "../../../currentUser/currentUser"
+import { directionsAtom } from "../../viewModel/direction/directions"
+import { editDirectionPopupActions } from "../../viewModel/direction/popups/editDirectionPopup"
+import { directionsLoadingAtom } from "../../viewModel/direction/loadDirections"
 import styles from '../users/table/UsersTableCommandPanel.module.css'
-import {deleteDirection} from "../../viewModel/direction/deleteDirection";
+import { deleteDirectionsPopupActions } from "../../viewModel/direction/popups/deleteDirectionsPopup"
+import { selectedDirectionsRowKeysAtom } from "../../viewModel/direction/popups/selectedDirectionsRows"
 
 type DirectionsActionsButtonType = 'delete' | 'edit' | 'add' 
 
-type DirectionsActionsButtonProps = {
-    selectedRowKeys: React.Key[],
+function remapKeyListToStringList(list: React.Key[]): string[] {
+    return list.map((key) => key.toString())
 }
 
-function DirectionsTableCommandPanel({
-    selectedRowKeys,
-}: DirectionsActionsButtonProps) {
+function DirectionsTableCommandPanel() {
     const currentUser = useAtom(authorizedCurrentUser)
-    //const directions = useAtom(directionsAtom)
+    const directions = useAtom(directionsAtom)
     const directionsLoading = useAtom(directionsLoadingAtom)
-    const handleDeleteDirection = useAction(deleteDirection)
-    // const handleOpenEditDirectiopnPopup = useAction(editDirectionPopupActions.open)
+    const selectedDirectionsRowKeys = useAtom(selectedDirectionsRowKeysAtom)
+    const handleOpenEditDirectionPopup = useAction(editDirectionPopupActions.open)
+    const handleOpenDeleteDirectionPopup = useAction(deleteDirectionsPopupActions.open)
+
+    const handleOnAddClick = () => {
+        handleOpenEditDirectionPopup({
+            mode: 'create',
+        })
+    }
 
     const handleOnEditClick = () => {
-        //handleOpenEditDirectionPopup(directions[selectedRowKeys[0]])
-        console.log(`edit dirs with ids`, selectedRowKeys)
+        handleOpenEditDirectionPopup({
+            directionData: directions[selectedDirectionsRowKeys[0]],
+            mode: 'edit',
+        })
     }
 
     const handleOnDeleteClick = () => {
-        handleDeleteDirection(String(selectedRowKeys[0]))
-    }
-
-    const handleOnAddClick = () => {
-        console.log(`add dir`)
+        handleOpenDeleteDirectionPopup(remapKeyListToStringList(selectedDirectionsRowKeys))
     }
 
     const buttons: DirectionsActionsButtonType[] = useMemo(() => {
         const isAdmin = currentUser.role === 'admin'
         return optionalArray([
-            (isAdmin && !selectedRowKeys.length) && 'add',
-            (isAdmin && selectedRowKeys.length === 1) && 'edit',
-            (isAdmin && !!selectedRowKeys.length) && 'delete',
+            (isAdmin && !selectedDirectionsRowKeys.length) && 'add',
+            (isAdmin && selectedDirectionsRowKeys.length === 1) && 'edit',
+            (isAdmin && !!selectedDirectionsRowKeys.length) && 'delete',
         ])
-    }, [selectedRowKeys])
+    }, [selectedDirectionsRowKeys])
 
     return (
         <div className={styles.commandPanel}>
