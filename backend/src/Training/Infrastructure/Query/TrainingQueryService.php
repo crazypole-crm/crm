@@ -6,7 +6,9 @@ namespace App\Training\Infrastructure\Query;
 use App\Training\App\Data\TrainingData;
 use App\Training\App\Query\ListTrainingSpecification;
 use App\Training\App\Query\TrainingQueryServiceInterface;
+use App\Training\Infrastructure\Query\Hydrator\CourseDataHydrator;
 use App\Training\Infrastructure\Query\Hydrator\TrainingDataHydrator;
+use App\Training\Infrastructure\Query\Table\CourseTable;
 use App\Training\Infrastructure\Query\Table\TrainingTable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -16,11 +18,17 @@ class TrainingQueryService implements TrainingQueryServiceInterface
 {
     private Connection $conn;
     private TrainingDataHydrator $hydrator;
+    private CourseDataHydrator $courseDataHydrator;
 
-    public function __construct(EntityManagerInterface $em, TrainingDataHydrator $hydrator)
+    public function __construct(
+        EntityManagerInterface $em,
+        TrainingDataHydrator $hydrator,
+        CourseDataHydrator $courseDataHydrator,
+    )
     {
         $this->conn = $em->getConnection();
         $this->hydrator = $hydrator;
+        $this->courseDataHydrator = $courseDataHydrator;
     }
 
     public function listTrainings(ListTrainingSpecification $spec): array
@@ -57,7 +65,7 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         $qb = $this->conn->createQueryBuilder();
         $qb->from('event', 'e');
         $this->addTrainingFieldSelect($qb);
-        $qb->where("{$const(TrainingTable::TRAINING_ID)} = :trainingId");
+        $qb->where("{$const(TrainingTable::COURSE_ID)} = :trainingId");
         $query = $qb->getSQL();
         $result = $this->conn->executeQuery($query, ['trainingId' => $eventId])->fetchAssociative();
 
@@ -83,6 +91,21 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         }
 
         return $data;
+    }
+
+    public function listCourses(): array
+    {
+        $qb = $this->conn->createQueryBuilder();
+        $qb->from('course', 'c');
+        $qb->addSelect('c.' . CourseTable::COURSE_ID);
+        $qb->addSelect('c.' . CourseTable::TITLE);
+        $stmt = $qb->executeQuery()->fetchAllAssociative();
+        $result = [];
+        foreach ($stmt as $row)
+        {
+            $result[] = $this->courseDataHydrator->hydrateRow($row);
+        }
+        return $result;
     }
 
     private function addTrainingFieldSelect(QueryBuilder $qb, string $alias = 't'): void

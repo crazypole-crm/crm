@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Training\App\Query;
 
+use App\Training\App\Data\CourseData;
 use App\Training\App\Data\TrainingData;
 
 interface TrainingQueryServiceInterface
@@ -20,4 +21,9 @@ interface TrainingQueryServiceInterface
      * @return TrainingData[]
      */
     public function listTrainings(ListTrainingSpecification $spec): array;
+
+    /**
+     * @return CourseData[]
+     */
+    public function listCourses(): array;
 }

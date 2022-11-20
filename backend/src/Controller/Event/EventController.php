@@ -148,6 +148,23 @@ class EventController extends AbstractController
     }
 
     /**
+     * @Route("/list/courses")
+     */
+    public function listCourses(Request $request): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $courses = $this->eventApi->listCourses();
+            return new Response(json_encode($courses, JSON_THROW_ON_ERROR), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
      * @Route("/create/hall")
      */
     public function createHall(Request $request): Response

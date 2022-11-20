@@ -12,7 +12,7 @@ use App\Training\App\Query\TrainingQueryServiceInterface;
 use App\Training\App\Query\UserInvitationQueryServiceInterface;
 use App\Training\Domain\Service\TrainingService;
 
-class EventAppService
+class TrainingAppService
 {
     /** @var TrainingService */
     private $eventService;
