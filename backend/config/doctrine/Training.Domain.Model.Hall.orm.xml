@@ -7,6 +7,6 @@
     <entity name="App\Training\Domain\Model\Hall" table="hall">
         <id name="id" type="string" column="id"/>
         <field name="name" column="name" type="string"/>
-        <field name="capacity" column="capability" type="integer"/>
+        <field name="capability" column="capability" type="integer"/>
     </entity>
 </doctrine-mapping>
