@@ -6,7 +6,6 @@ namespace App\Training\Infrastructure\Persistence;
 use App\Common\Domain\Uuid;
 use App\Training\Domain\Model\Hall;
 use App\Training\Domain\Model\HallRepositoryInterface;
-use App\Training\Domain\Model\Training;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -20,7 +19,7 @@ class HallRepository implements HallRepositoryInterface
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->repo = $em->getRepository(Training::class);
+        $this->repo = $em->getRepository(Hall::class);
     }
 
     public function findHallById(Uuid $hallId): ?Hall
