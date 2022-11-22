@@ -17,6 +17,7 @@ import {trainingsAtom} from "../../viewModel/calendar/trainings";
 import {loadTrainingsForPeriod, trainingsLoadingAtom} from "../../viewModel/calendar/calendaActions/loadTrainingsForPeriod";
 import {Time} from "../../viewModel/calendar/time";
 import {calendarSettingsAtom} from "../../viewModel/calendar/calendartSettings/calendarSettings";
+import {getValueByCheckedKey} from "../../../core/getValueByCheckedKey";
 
 type CalendarType = 'week' | 'work-week' | 'day'
 
@@ -75,7 +76,6 @@ function getFilteredTrainings(trainings: TrainingData[], filters: string[]) {
 }
 
 type CalendarConfig = {
-    weekLength: 5 | 7,
     dayStartTime: Time,
     dayEndTime: Time,
 }
@@ -90,12 +90,16 @@ function setTimeToDate(date: Date, time: Time) {
 function getPeriod(calendarType: CalendarType, periodStartDate: Date, calendarConfig: CalendarConfig): {startDate: Date, endDate: Date} {
     let startPeriod: Date
     let endPeriod: Date
-    if (calendarType === 'week') {
+    if (calendarType === 'week' || calendarType === 'work-week') {
+        const weekLength = getValueByCheckedKey(calendarType, {
+            'week': 7,
+            'work-week': 5,
+        })
         startPeriod = new Date(periodStartDate)
         setTimeToDate(startPeriod, calendarConfig.dayStartTime)
 
         endPeriod = new Date(periodStartDate)
-        endPeriod.setDate(endPeriod.getDate() + (calendarConfig.weekLength - 1))
+        endPeriod.setDate(endPeriod.getDate() + (weekLength - 1))
         setTimeToDate(endPeriod, calendarConfig.dayEndTime)
     }
     else {
@@ -116,7 +120,7 @@ function Calendar() {
     const [calendarType, setCalendarType] = useState<CalendarType>('week')
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
     const [selectedFilters, setSelectedFilters] = useState<string[]>([])
-    const [lastWeekDateStart, setLastWeekDateStart] = useState<Date>(calculateWeekStartDate(selectedDate))
+    const [lastPeriodDateStart, setLastPeriodStart] = useState<Date>(calculateWeekStartDate(selectedDate, calendarType))
     const calendarSettings = useAtom(calendarSettingsAtom)
     const halls = useAtom(hallsAtom)
     const directions = useAtom(directionsAtom)
@@ -126,22 +130,21 @@ function Calendar() {
     const handleLoadTrainings = useAction(loadTrainingsForPeriod)
 
     useEffect(() => {
-        const weekDateStart = calculateWeekStartDate(selectedDate)
-        if (lastWeekDateStart.getFullYear() !== weekDateStart.getFullYear()
-            || lastWeekDateStart.getMonth() !== weekDateStart.getMonth()
-            || lastWeekDateStart.getDate() !== weekDateStart.getDate()) {
-            setLastWeekDateStart(weekDateStart)
+        const weekDateStart = calculateWeekStartDate(selectedDate, calendarType)
+        if (lastPeriodDateStart.getFullYear() !== weekDateStart.getFullYear()
+            || lastPeriodDateStart.getMonth() !== weekDateStart.getMonth()
+            || lastPeriodDateStart.getDate() !== weekDateStart.getDate()) {
+            setLastPeriodStart(weekDateStart)
         }
-    }, [selectedDate, lastWeekDateStart, setLastWeekDateStart])
+    }, [selectedDate, lastPeriodDateStart, calendarType, setLastPeriodStart])
 
     useEffect(() => {
-        const period = getPeriod(calendarType, lastWeekDateStart, {
-            weekLength: WEEK_LENGTH,
+        const period = getPeriod(calendarType, lastPeriodDateStart, {
             dayEndTime: calendarSettings.dayStartTime,
             dayStartTime: calendarSettings.dayEndTime,
         })
         handleLoadTrainings(period)
-    }, [calendarType, lastWeekDateStart, handleLoadTrainings])
+    }, [calendarType, lastPeriodDateStart, handleLoadTrainings])
 
     const filtersList = useMemo(() => getFilterItems(
         Object.values(directions),
@@ -156,18 +159,19 @@ function Calendar() {
             <div className={styles.calendarWrapper}>
                 <CalendarSwitcher calendarType={calendarType} onCalendarTypeChanged={setCalendarType} />
                 {
-                    calendarType === 'week' || calendarType === 'work-week'
-                        ? <WeekCalendar
-                            weekStartDate={lastWeekDateStart}
-                            selectedDate={selectedDate}
-                            weekLength={calendarType === 'week' ? 7 : 5}
-                            startTime={calendarSettings.dayStartTime}
-                            endTime={calendarSettings.dayEndTime}
-                            timeStep={calendarSettings.stepTime}
-                            loading={trainingsLoading}
-                            trainings={filteredTrainings}
-                        />
-                        : <div>Day Calendar</div>
+                    <WeekCalendar
+                        weekStartDate={lastPeriodDateStart}
+                        weekLength={getValueByCheckedKey(calendarType, {
+                            'week': 7,
+                            'work-week': 5,
+                            'day': 1,
+                        })}
+                        startTime={calendarSettings.dayStartTime}
+                        endTime={calendarSettings.dayEndTime}
+                        timeStep={calendarSettings.stepTime}
+                        loading={trainingsLoading}
+                        trainings={filteredTrainings}
+                    />
                 }
             </div>
             <CalendarSidePanel

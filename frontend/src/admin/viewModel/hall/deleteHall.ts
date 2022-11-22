@@ -1,13 +1,13 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {CalendarApi} from "../../../api/calendarApi";
-import {directionsActions} from "../direction/directions";
 import {processStandardError} from "../../../core/error/processStandardError";
+import {hallsActions} from "./halls";
+import {HallsApi} from "../../../api/hallsApi";
 
 const deleteHall = declareAsyncAction<string>('hall.delete',
     (hallId, store) => {
-        return CalendarApi.deleteHall(hallId)
+        return HallsApi.deleteHall(hallId)
             .then(() => {
-                store.dispatch(directionsActions.removeDirection([hallId]))
+                store.dispatch(hallsActions.removeHall([hallId]))
             })
             .catch(() => {
                 processStandardError()

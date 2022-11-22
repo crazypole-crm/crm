@@ -8,7 +8,7 @@ import {getValueByCheckedKey} from "../../../../../core/getValueByCheckedKey";
 
 type WeekCalendarHeaderProps = {
     weekStartDate: Date,
-    weekLength: 5 | 7,
+    weekLength: 5 | 7 | 1,
     selectedDate: Date,
 }
 

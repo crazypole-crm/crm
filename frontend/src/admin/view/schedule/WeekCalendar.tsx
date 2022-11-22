@@ -7,8 +7,7 @@ import {TrainingData} from "../../viewModel/calendar/TrainingData";
 
 type WeekCalendarProps = {
     weekStartDate: Date,
-    selectedDate: Date,
-    weekLength: 7 | 5,
+    weekLength: 7 | 5 | 1,
     timeStep?: Time,
     startTime?: Time,
     endTime?: Time,
@@ -18,7 +17,6 @@ type WeekCalendarProps = {
 
 function WeekCalendar({
     weekStartDate,
-    selectedDate,
     weekLength,
     timeStep = {
         hour: 1,

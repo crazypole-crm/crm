@@ -1,25 +1,23 @@
-import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {CalendarApi} from "../../../api/calendarApi";
-import {directionsActions} from "./directions";
-import {processStandardError} from "../../../core/error/processStandardError";
-import {DirectionData} from "./DirectionData";
+import {DirectionsApi} from "../../../api/directionsApi"
+import {processStandardError} from "../../../core/error/processStandardError"
+import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction"
+import {DirectionData} from "./DirectionData"
+import {directionsActions} from "./directions"
 
-
-const createDirection = declareAsyncAction<Omit<DirectionData, 'id'>>('directions.create',
-    (direction, store) => {
-        return CalendarApi.createDirection(direction)
-            .then(({id}) => {
+const createDirection = declareAsyncAction<Omit<DirectionData, 'id'>>(
+    'createDirection',
+    (directionData, store) => {
+        return DirectionsApi.createDirection(directionData)
+            .then(({courseId}) => {
                 store.dispatch(directionsActions.updateDirection({
-                    id,
-                    ...direction
+                    ...directionData,
+                    id: courseId
                 }))
             })
-            .catch(() => {
-                processStandardError()
-            })
+            .catch(processStandardError)
     }
 )
 
 export {
-    createDirection
+    createDirection,
 }

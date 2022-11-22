@@ -3,6 +3,7 @@
     min-height: 100%;
     position: relative;
     background: #F0F2F5;
+    min-width: 1150px;
 }
 
 .calendarLayout {

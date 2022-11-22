@@ -1,15 +1,14 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {CalendarApi} from "../../../api/calendarApi";
-import {directionsActions} from "../direction/directions";
 import {processStandardError} from "../../../core/error/processStandardError";
 import {HallData} from "./HallData";
-
+import {hallsActions} from "./halls";
+import {HallsApi} from "../../../api/hallsApi";
 
 const saveHall = declareAsyncAction<HallData>('hall.save',
     (direction, store) => {
-        return CalendarApi.saveHall(direction)
+        return HallsApi.saveHall(direction)
             .then(() => {
-                store.dispatch(directionsActions.updateDirection(direction))
+                store.dispatch(hallsActions.updateHall(direction))
             })
             .catch(() => {
                 processStandardError()

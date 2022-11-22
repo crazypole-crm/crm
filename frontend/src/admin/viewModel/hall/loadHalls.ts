@@ -1,12 +1,12 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {CalendarApi} from "../../../api/calendarApi";
 import {processStandardError} from "../../../core/error/processStandardError";
 import {hallsActions} from "./halls";
 import {declareAtom} from "@reatom/core";
+import {HallsApi} from "../../../api/hallsApi";
 
 const loadHalls = declareAsyncAction<void>('directions.load',
     (_, store) => {
-        return CalendarApi.getHalls()
+        return HallsApi.getHalls()
             .then(halls => {
                 store.dispatch(hallsActions.updateHalls(halls))
             })
