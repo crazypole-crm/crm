@@ -5,7 +5,11 @@ namespace App\Training\Domain\Service;
 
 use App\Common\Domain\Uuid;
 use App\Common\Domain\UuidGenerator;
-use App\Training\Domain\Exception\EventNotFoundException;
+use App\Training\Domain\Exception\CourseNotFoundException;
+use App\Training\Domain\Exception\TrainingNotFoundException;
+use App\Training\Domain\Exception\HallNotFoundException;
+use App\Training\Domain\Model\BaseTraining;
+use App\Training\Domain\Model\BaseTrainingRepositoryInterface;
 use App\Training\Domain\Model\Course;
 use App\Training\Domain\Model\CourseRepositoryInterface;
 use App\Training\Domain\Model\Hall;
@@ -15,54 +19,145 @@ use App\Training\Domain\Model\TrainingRepositoryInterface;
 
 class TrainingService
 {
+    private const WEEKS_IN_YEAR = 54;
+
     public function __construct(
         private TrainingRepositoryInterface $trainingRepository,
         private HallRepositoryInterface $hallRepository,
         private CourseRepositoryInterface $courseRepository,
+        private BaseTrainingRepositoryInterface $baseTrainingRepository,
     ){}
 
-    public function createTraining(string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $hallId, Uuid $courseId, Uuid $trainerId, int $type): Uuid
-    {
-        $event = new Training(new Uuid(UuidGenerator::generateUuid()), $title, $description, $startDate, $endDate, $hallId, $courseId, $trainerId, $type);
-        $this->trainingRepository->add($event);
-        return $event->getId();
-    }
-
     /**
-     * @param string $eventId
      * @param string $title
+     * @param string|null $description
      * @param \DateTimeImmutable $startDate
      * @param \DateTimeImmutable $endDate
-     * @param Uuid $organizerId
-     * @param string|null $description
-     * @param string|null $place
-     * @throws EventNotFoundException
+     * @param Uuid $hallId
+     * @param Uuid $courseId
+     * @param Uuid $trainerId
+     * @param int $type
+     * @param bool $isRepeatable
+     * @return Uuid
+     * @throws CourseNotFoundException
+     * @throws HallNotFoundException
      */
-    public function editEvent(string $eventId, string $title, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $organizerId, ?string $description, ?string $place): void
+    public function createTraining(
+        string $title,
+        ?string $description,
+        \DateTimeImmutable $startDate,
+        \DateTimeImmutable $endDate,
+        Uuid $hallId,
+        Uuid $courseId,
+        Uuid $trainerId,
+        int $type,
+        bool $isRepeatable,
+    ): Uuid
     {
-        $event = $this->trainingRepository->findHallById(new Uuid($eventId));
-        if ($event === null)
+        $hall = $this->hallRepository->findHallById($hallId);
+        if ($hall === null)
         {
-            throw new EventNotFoundException($eventId);
+            throw new HallNotFoundException($hallId);
         }
-        $event->setName($title);
-        $event->setStartDate($startDate);
-        $event->setEndDate($endDate);
-        $event->setOrganizerId($organizerId);
-        $event->setDescription($description);
-        $event->setPlace($place);
+        $course = $this->courseRepository->findById($courseId);
+        if ($course === null)
+        {
+            throw new CourseNotFoundException($courseId);
+        }
+        $baseTraining = new BaseTraining(new Uuid(UuidGenerator::generateUuid()), $startDate, $endDate, $trainerId);
+        $this->baseTrainingRepository->add($baseTraining);
+        if ($isRepeatable)
+        {
+            for ($i = 0; $i < self::WEEKS_IN_YEAR; $i++)
+            {
+                $training = new Training($baseTraining->getId(),
+                    new Uuid(UuidGenerator::generateUuid()),
+                    $title,
+                    $description,
+                    $startDate->add(new \DateInterval($i . 'W')),
+                    $endDate->add(new \DateInterval($i . 'W')),
+                    $hallId,
+                    $courseId,
+                    $trainerId,
+                    $type,
+                );
+                $this->trainingRepository->add($training);
+            }
+        }
+
+        return $baseTraining->getId();
+    }
+
+    /**
+     * @param Uuid $baseTrainingId
+     * @param Uuid $trainingId
+     * @param string $title
+     * @param string|null $description
+     * @param \DateTimeImmutable $startDate
+     * @param \DateTimeImmutable $endDate
+     * @param Uuid $hallId
+     * @param Uuid $courseId
+     * @param Uuid $trainerId
+     * @param int $type
+     * @throws CourseNotFoundException
+     * @throws HallNotFoundException
+     * @throws TrainingNotFoundException
+     */
+    public function editTraining(
+        Uuid $baseTrainingId,
+        Uuid $trainingId,
+        string $title,
+        ?string $description,
+        \DateTimeImmutable $startDate,
+        \DateTimeImmutable $endDate,
+        Uuid $hallId,
+        Uuid $courseId,
+        Uuid $trainerId,
+        int $type,
+    ): void
+    {
+        $hall = $this->hallRepository->findHallById($hallId);
+        if ($hall === null)
+        {
+            throw new HallNotFoundException($hallId);
+        }
+        $course = $this->courseRepository->findById($courseId);
+        if ($course === null)
+        {
+            throw new CourseNotFoundException($courseId);
+        }
+        $trainings = $this->trainingRepository->findAllByBaseTraining($baseTrainingId);
+        $baseTraining = $this->baseTrainingRepository->findById($baseTrainingId);
+        if ($baseTraining === null)
+        {
+            throw new TrainingNotFoundException($baseTrainingId);
+        }
+        $baseTraining->setEndDate($endDate);
+        $baseTraining->setStartDate($startDate);
+        $baseTraining->setTrainerId($trainerId);
+        foreach ($trainings as $training)
+        {
+            $training->setName($title);
+            $training->setStartDate($startDate);
+            $training->setEndDate($endDate);
+            $training->setDescription($description);
+            $training->setCourseId($courseId);
+            $training->setHallId($hallId);
+            $training->setTrainerId($trainerId);
+            $training->setType($type);
+        }
     }
 
     /**
      * @param string $eventId
-     * @throws EventNotFoundException
+     * @throws TrainingNotFoundException
      */
-    public function removeEvent(string $eventId)
+    public function removeTraining(string $eventId): void
     {
-        $event = $this->trainingRepository->findHallById(new Uuid($eventId));
+        $event = $this->trainingRepository->findById(new Uuid($eventId));
         if ($event === null)
         {
-            throw new EventNotFoundException($eventId);
+            throw new TrainingNotFoundException(new Uuid($eventId));
         }
         $this->trainingRepository->remove($event);
     }

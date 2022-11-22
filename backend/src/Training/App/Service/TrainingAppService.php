@@ -32,36 +32,33 @@ class TrainingAppService
         $this->blockingOperatorExecutor = $blockingOperatorExecutor;
     }
 
-    public function createTraining(string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $hallId, string $courseId, string $trainerId, int $type): string
+    public function createTraining(string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $hallId, string $courseId, string $trainerId, int $type, bool $isRepeatable): string
     {
         return (string)$this->transaction->execute(
-            function () use ($title, $startDate, $endDate, $hallId, $description, $courseId, $trainerId, $type): Uuid
+            function () use ($title, $startDate, $endDate, $hallId, $description, $courseId, $trainerId, $type, $isRepeatable): Uuid
             {
-                return $this->eventService->createTraining($title, $description, $startDate, $endDate, new Uuid($hallId), new Uuid($courseId), new Uuid($trainerId), $type);
+                return $this->eventService->createTraining($title, $description, $startDate, $endDate, new Uuid($hallId), new Uuid($courseId), new Uuid($trainerId), $type, $isRepeatable);
             }
         );
     }
 
-    public function editEvent(string $eventId, string $title, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $organizerId, ?string $description, ?string $place): void
+    public function editTraining(string $baseTrainingId, string $trainingId, string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $hallId, string $courseId, string $trainerId, int $type): string
     {
-        //Добавить проверку $organizerId
-        $operation = $this->blockingOperatorExecutor->execute(
-            [LockNames::getEventLock($eventId)],
-            function () use ($eventId, $title, $startDate, $endDate, $organizerId, $description, $place)
+        return (string)$this->transaction->execute(
+            function () use ($baseTrainingId, $trainingId, $title, $startDate, $endDate, $hallId, $description, $courseId, $trainerId, $type): void
             {
-                $this->eventService->editEvent($eventId, $title, $startDate, $endDate, new Uuid($organizerId), $description, $place);
+                $this->eventService->editTraining(new Uuid($baseTrainingId), new Uuid($trainingId), $title, $description, $startDate, $endDate, new Uuid($hallId), new Uuid($courseId), new Uuid($trainerId), $type);
             }
         );
-        $this->transaction->execute($operation);
     }
 
-    public function removeEvent(string $eventId): void
+    public function removeTraining(string $trainingId): void
     {
         $operation = $this->blockingOperatorExecutor->execute(
-            [LockNames::getEventLock($eventId)],
-            function () use ($eventId)
+            [LockNames::getEventLock($trainingId)],
+            function () use ($trainingId)
             {
-                $this->eventService->removeEvent($eventId);
+                $this->eventService->removeTraining($trainingId);
             }
         );
         $this->transaction->execute($operation);

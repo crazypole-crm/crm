@@ -4,14 +4,15 @@ declare(strict_types=1);
 namespace App\Training\Infrastructure\Persistence;
 
 use App\Common\Domain\Uuid;
+use App\Training\Domain\Model\BaseTraining;
+use App\Training\Domain\Model\BaseTrainingRepositoryInterface;
 use App\Training\Domain\Model\Training;
-use App\Training\Domain\Model\TrainingRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 
-class TrainingRepository implements TrainingRepositoryInterface
+class BaseTrainingRepository implements BaseTrainingRepositoryInterface
 {
     private EntityRepository|ObjectRepository $repo;
     private EntityManager $em;
@@ -22,26 +23,17 @@ class TrainingRepository implements TrainingRepositoryInterface
         $this->repo = $em->getRepository(Training::class);
     }
 
-    public function findById(Uuid $id): ?Training
+    public function findById(Uuid $id): ?BaseTraining
     {
         return $this->repo->findOneBy(['id' => $id]);
     }
 
-    /**
-     * @param Uuid $id
-     * @return Training[]
-     */
-    public function findAllByBaseTraining(Uuid $id): array
-    {
-        return $this->repo->findBy(['baseTrainingId' => $id]);
-    }
-
-    public function add(Training $event): void
+    public function add(BaseTraining $event): void
     {
         $this->em->persist($event);
     }
 
-    public function remove(Training $event): void
+    public function remove(BaseTraining $event): void
     {
         $this->em->remove($event);
     }

@@ -4,17 +4,10 @@
                   xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Training\Domain\Model\Training" table="training">
+    <entity name="App\Training\Domain\Model\BaseTraining" table="base_training">
         <id name="id" type="string" column="id"/>
-        <field name="baseId" type="string" column="base_training_id"/>
-        <field name="name" column="name" type="string"/>
-        <field name="description" column="description" type="string" nullable="true"/>
         <field name="startDate" column="start_date" type="datetime"/>
         <field name="endDate" column="end_date" type="datetime"/>
-        <field name="hallId" column="hall_id" type="string"/>
         <field name="trainerId" column="trainer_id" type="string"/>
-        <field name="courseId" column="course_id" type="string"/>
-        <field name="type" column="type" type="integer"/>
-        <field name="isCanceled" column="type" type="boolean"/>
     </entity>
 </doctrine-mapping>

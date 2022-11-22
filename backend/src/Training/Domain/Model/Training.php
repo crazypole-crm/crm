@@ -7,6 +7,7 @@ use App\Common\Domain\Uuid;
 
 class Training
 {
+    private Uuid $baseTrainingId;
     private Uuid $id;
     private string $name;
     private ?string $description;
@@ -16,8 +17,10 @@ class Training
     private Uuid $courseId;
     private Uuid $trainerId;
     private int $type;
+    private boolean $isCanceled = false;
 
     public function __construct(
+        Uuid $baseTrainingId,
         Uuid $id,
         string $name,
         ?string $description,
@@ -29,6 +32,7 @@ class Training
         int $type,
     )
     {
+        $this->baseTrainingId = $baseTrainingId;
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
@@ -39,6 +43,16 @@ class Training
         $this->courseId = $courseId;
         $this->trainerId = $trainerId;
         $this->type = $type;
+    }
+
+    public function getBaseTrainingId(): Uuid
+    {
+        return $this->baseTrainingId;
+    }
+
+    public function setBaseTrainingId(Uuid $baseTrainingId): void
+    {
+        $this->baseTrainingId = $baseTrainingId;
     }
 
     public function getId(): Uuid
@@ -106,19 +120,39 @@ class Training
         $this->endDate = $endDate;
     }
 
-    public function setPlace(string $place): void
-    {
-        $this->place = $place;
-    }
-
-    public function setOrganizerId(Uuid $organizerId): void
-    {
-        $this->organizerId = $organizerId;
-    }
-
     public function getType(): int
     {
         return $this->type;
+    }
+
+    public function setHallId(Uuid $hallId): void
+    {
+        $this->hallId = $hallId;
+    }
+
+    public function setCourseId(Uuid $courseId): void
+    {
+        $this->courseId = $courseId;
+    }
+
+    public function setTrainerId(Uuid $trainerId): void
+    {
+        $this->trainerId = $trainerId;
+    }
+
+    public function setType(int $type): void
+    {
+        $this->type = $type;
+    }
+
+    public function isCanceled(): bool
+    {
+        return $this->isCanceled;
+    }
+
+    public function setIsCanceled(bool $isCanceled): void
+    {
+        $this->isCanceled = $isCanceled;
     }
 
     private function assertEndDateValid(\DateTimeImmutable $endDate, \DateTimeImmutable $startDate): void

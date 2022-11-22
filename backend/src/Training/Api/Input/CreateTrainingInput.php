@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Training\Api\Input;
 
-class CreateEventInput
+class CreateTrainingInput
 {
     public function __construct(
         private string $title,
@@ -14,6 +14,7 @@ class CreateEventInput
         private string $courseId,
         private string $trainerId,
         private int $type,
+        private bool $isRepeatable,
     ){}
 
     /**
@@ -78,5 +79,13 @@ class CreateEventInput
     public function getType(): int
     {
         return $this->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRepeatable(): bool
+    {
+        return $this->isRepeatable;
     }
 }

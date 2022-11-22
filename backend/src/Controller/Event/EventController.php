@@ -6,8 +6,8 @@ namespace App\Controller\Event;
 use App\Common\Exception\UserNotAuthenticated;
 use App\Common\Security\SecurityContextInterface;
 use App\Training\Api\ApiInterface;
-use App\Training\Api\Input\CreateEventInput;
-use App\Training\Api\Input\EditEventInput;
+use App\Training\Api\Input\CreateTrainingInput;
+use App\Training\Api\Input\EditTrainingInput;
 use App\Training\App\Query\ListTrainingInput;
 use App\Training\Domain\Model\TrainingType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,8 +41,8 @@ class EventController extends AbstractController
             $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
             $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
             $type = $this->convertTrainingType($requestData['type']);
-            $input = new CreateEventInput("", $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['trainerId'], $type);
-            $trainingId = $this->eventApi->createEvent($input);
+            $input = new CreateTrainingInput("", $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['trainerId'], $type, $requestData['isRepeatable']);
+            $trainingId = $this->eventApi->createTraining($input);
             return new Response(json_encode(['trainingId' => $trainingId]), Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)
@@ -52,29 +52,9 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/events")
+     * @Route("/edit/training")
      */
-    public function getCurrentUserEventData(Request $request): Response
-    {
-        //TODO обработка исключений
-        //TODO добавить права и проверку
-        try
-        {
-            $userId = $this->securityContext->getAuthenticatedUserId();
-            $events = $this->eventApi->getEventsDataByUserId($userId);
-
-            return new Response(json_encode($events), Response::HTTP_OK);
-        }
-        catch (UserNotAuthenticated $e)
-        {
-            return new Response(null, Response::HTTP_UNAUTHORIZED);
-        }
-    }
-
-    /**
-     * @Route("/edit/event")
-     */
-    public function editEvent(Request $request): Response
+    public function editTraining(Request $request): Response
     {
         //TODO обработка исключений
         $requestData = json_decode($request->getContent(), true);
@@ -84,9 +64,9 @@ class EventController extends AbstractController
             $userId = $this->securityContext->getAuthenticatedUserId();
             $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
             $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
-            $input = new EditEventInput($requestData['eventId'], $requestData['title'], $requestData['description'], $startDate, $endDate, $userId, $requestData['place']);
-            $this->eventApi->editEvent($input);
-            $this->eventApi->inviteUsers($requestData['userIds'], $requestData['eventId']);
+            $type = $this->convertTrainingType($requestData['type']);
+            $input = new EditTrainingInput($requestData['baseId'], $requestData['trainingId'],"", $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['trainerId'], $type);
+            $this->eventApi->editTraining($input);
 
             return new Response(null, Response::HTTP_OK);
         }
@@ -97,7 +77,7 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/remove/event")
+     * @Route("/remove/training")
      */
     public function removeEvent(Request $request): Response
     {
@@ -107,13 +87,8 @@ class EventController extends AbstractController
         try
         {
             $userId = $this->securityContext->getAuthenticatedUserId();
-            $eventId = $requestData['eventId'];
-            $event = $this->eventApi->getEventDataById($eventId);
-            if ($event->getTrainerId() !== $userId)
-            {
-                return new Response(null, Response::HTTP_FORBIDDEN);
-            }
-            $this->eventApi->removeEvent($eventId);
+            $trainingId = $requestData['trainingId'];
+            $this->eventApi->removeTraining($trainingId);
             return new Response(null, Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)

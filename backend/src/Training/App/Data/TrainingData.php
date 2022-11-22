@@ -7,8 +7,8 @@ use App\Training\Domain\Model\TrainingType;
 
 class TrainingData implements \JsonSerializable
 {
-
     public function __construct(
+        private string $baseTrainingId,
         private string $trainingId,
         private string $title,
         private ?string $description,
@@ -19,6 +19,11 @@ class TrainingData implements \JsonSerializable
         private string $courseId,
         private int $type,
     ){}
+
+    public function getBaseTrainingId(): string
+    {
+        return $this->baseTrainingId;
+    }
 
     public function getTrainingId(): string
     {
@@ -68,6 +73,7 @@ class TrainingData implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'baseTrainingId' => $this->baseTrainingId,
             'trainingId' => $this->trainingId,
             'title' => $this->title,
             'description' => $this->description,

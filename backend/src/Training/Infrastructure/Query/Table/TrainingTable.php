@@ -7,6 +7,7 @@ use App\Common\Infrastructure\Query\TypeConverter;
 
 class TrainingTable
 {
+    public const BASE_TRAINING_ID = 'base_id';
     public const TRAINING_ID = 'id';
     public const TITLE = 'name';
     public const DESCRIPTION = 'description';
@@ -18,6 +19,7 @@ class TrainingTable
     public const TRAINING_TYPE = 'type';
 
     public const EVENT_FIELDS = [
+        self::BASE_TRAINING_ID => TypeConverter::STRING,
         self::TRAINING_ID => TypeConverter::STRING,
         self::TITLE => TypeConverter::STRING,
         self::DESCRIPTION => TypeConverter::STRING,

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Training\Api;
 
-use App\Training\Api\Input\CreateEventInput;
-use App\Training\Api\Input\EditEventInput;
+use App\Training\Api\Input\CreateTrainingInput;
+use App\Training\Api\Input\EditTrainingInput;
 use App\Training\App\Query\ListTrainingInput;
 use App\Training\App\Query\ListTrainingSpecification;
 use App\Training\App\Query\TrainingQueryServiceInterface;
@@ -18,22 +18,22 @@ class Api implements ApiInterface
     )
     {}
 
-    public function createEvent(CreateEventInput $input): string
+    public function createTraining(CreateTrainingInput $input): string
     {
         //TODO: обработка исключений
-        return $this->trainingAppService->createTraining($input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType());
+        return $this->trainingAppService->createTraining($input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType(), $input->isRepeatable());
     }
 
-    public function editEvent(EditEventInput $input): void
+    public function editTraining(EditTrainingInput $input): void
     {
         //TODO: обработка исключений
-        $this->trainingAppService->editEvent($input->getEventId(), $input->getTitle(), $input->getStartDate(), $input->getEndDate(), $input->getOrganizerId(), $input->getDescription(), $input->getPlace());
+        $this->trainingAppService->editTraining($input->getBaseId(), $input->getTrainerId(), $input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType());
     }
 
-    public function removeEvent(string $eventId): void
+    public function removeTraining(string $trainingId): void
     {
         //TODO: обработка исключений
-        $this->trainingAppService->removeEvent($eventId);
+        $this->trainingAppService->removeTraining($trainingId);
     }
 
     public function listTrainings(ListTrainingInput $input): array

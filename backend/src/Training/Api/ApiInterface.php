@@ -2,21 +2,21 @@
 
 namespace App\Training\Api;
 
-use App\Training\Api\Input\CreateEventInput;
-use App\Training\Api\Input\EditEventInput;
+use App\Training\Api\Input\CreateTrainingInput;
+use App\Training\Api\Input\EditTrainingInput;
 use App\Training\App\Data\TrainingData;
 use App\Training\App\Query\ListTrainingInput;
 
 interface ApiInterface
 {
-    public function createEvent(CreateEventInput $input): string;
+    public function createTraining(CreateTrainingInput $input): string;
 
     /**
-     * @param EditEventInput $input
+     * @param EditTrainingInput $input
      */
-    public function editEvent(EditEventInput $input): void;
+    public function editTraining(EditTrainingInput $input): void;
 
-    public function removeEvent(string $eventId): void;
+    public function removeTraining(string $trainingId): void;
 
     public function listTrainings(ListTrainingInput $input): array;
 
