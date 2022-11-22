@@ -7,11 +7,16 @@ use App\Common\Domain\Uuid;
 
 class BaseTraining
 {
+    private string $id;
+    private \DateTimeImmutable $startDate;
+    private \DateTimeImmutable $endDate;
+    private string $trainerId;
+
     public function __construct(
-        private Uuid $id,
-        private \DateTimeImmutable $startDate,
-        private \DateTimeImmutable $endDate,
-        private Uuid $trainerId,
+        Uuid $id,
+        \DateTimeImmutable $startDate,
+        \DateTimeImmutable $endDate,
+        Uuid $trainerId,
     ) {}
 
     /**
@@ -19,7 +24,7 @@ class BaseTraining
      */
     public function getId(): Uuid
     {
-        return $this->id;
+        return New Uuid($this->id);
     }
 
     /**
@@ -27,7 +32,7 @@ class BaseTraining
      */
     public function setId(Uuid $id): void
     {
-        $this->id = $id;
+        $this->id = (string)$id;
     }
 
     /**
@@ -67,7 +72,7 @@ class BaseTraining
      */
     public function getTrainerId(): Uuid
     {
-        return $this->trainerId;
+        return New Uuid($this->trainerId);
     }
 
     /**
@@ -75,6 +80,6 @@ class BaseTraining
      */
     public function setTrainerId(Uuid $trainerId): void
     {
-        $this->trainerId = $trainerId;
+        $this->trainerId = (string)$trainerId;
     }
 }
