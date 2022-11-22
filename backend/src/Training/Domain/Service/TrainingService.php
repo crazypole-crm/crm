@@ -152,8 +152,11 @@ class TrainingService
         $baseTraining->setEndDate($endDate);
         $baseTraining->setStartDate($startDate);
         $baseTraining->setTrainerId($trainerId);
+        $i = 0;
         foreach ($trainings as $training)
         {
+            $startDate = $i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate;
+            $endDate = $i !== 0 ? $endDate->add(new \DateInterval('P' . $i . 'W')) : $endDate;
             $training->setName($title);
             $training->setStartDate($startDate);
             $training->setEndDate($endDate);
@@ -162,6 +165,7 @@ class TrainingService
             $training->setHallId($hallId);
             $training->setTrainerId($trainerId);
             $training->setType($type);
+            $i++;
         }
     }
 
