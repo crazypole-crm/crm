@@ -15,6 +15,6 @@
         <field name="trainerId" column="trainer_id" type="string"/>
         <field name="courseId" column="course_id" type="string"/>
         <field name="type" column="type" type="integer"/>
-        <field name="isCanceled" column="type" type="boolean"/>
+        <field name="isCanceled" column="is_canceled" type="boolean"/>
     </entity>
 </doctrine-mapping>
