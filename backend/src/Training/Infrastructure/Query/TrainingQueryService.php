@@ -120,5 +120,6 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         $qb->addSelect($alias . '.' . TrainingTable::HALL_ID);
         $qb->addSelect($alias . '.' . TrainingTable::COURSE_ID);
         $qb->addSelect($alias . '.' . TrainingTable::TRAINING_TYPE);
+        $qb->addSelect($alias . '.' . TrainingTable::IS_CANCELED);
     }
 }

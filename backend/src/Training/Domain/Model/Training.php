@@ -17,7 +17,7 @@ class Training
     private Uuid $courseId;
     private Uuid $trainerId;
     private int $type;
-    private boolean $isCanceled = false;
+    private bool $isCanceled = false;
 
     public function __construct(
         Uuid $baseTrainingId,
