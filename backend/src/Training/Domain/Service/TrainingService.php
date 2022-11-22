@@ -70,8 +70,8 @@ class TrainingService
         {
             for ($i = 0; $i < self::WEEKS_IN_YEAR; $i++)
             {
-                $startDate = $i !== 0 ? $startDate->add(new \DateInterval($i . 'W')) : $startDate;
-                $endDate = $i !== 0 ? $endDate->add(new \DateInterval($i . 'W')) : $endDate;
+                $startDate = $i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate;
+                $endDate = $i !== 0 ? $endDate->add(new \DateInterval('P' . $i . 'W')) : $endDate;
                 $training = new Training($baseTraining->getId(),
                     new Uuid(UuidGenerator::generateUuid()),
                     $title,
