@@ -7,7 +7,7 @@ use App\Common\Domain\Uuid;
 
 class Training
 {
-    private Uuid $baseTrainingId;
+    private Uuid $baseId;
     private Uuid $id;
     private string $name;
     private ?string $description;
@@ -32,7 +32,7 @@ class Training
         int $type,
     )
     {
-        $this->baseTrainingId = $baseTrainingId;
+        $this->baseId = $baseTrainingId;
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
@@ -45,14 +45,14 @@ class Training
         $this->type = $type;
     }
 
-    public function getBaseTrainingId(): Uuid
+    public function getBaseId(): Uuid
     {
-        return $this->baseTrainingId;
+        return $this->baseId;
     }
 
-    public function setBaseTrainingId(Uuid $baseTrainingId): void
+    public function setBaseId(Uuid $baseId): void
     {
-        $this->baseTrainingId = $baseTrainingId;
+        $this->baseId = $baseId;
     }
 
     public function getId(): Uuid
