@@ -9,8 +9,8 @@
         <field name="baseId" type="string" column="base_id"/>
         <field name="name" column="name" type="string"/>
         <field name="description" column="description" type="string" nullable="true"/>
-        <field name="startDate" column="start_date" type="datetime"/>
-        <field name="endDate" column="end_date" type="datetime"/>
+        <field name="startDate" column="start_date" type="date_immutable"/>
+        <field name="endDate" column="end_date" type="date_immutable"/>
         <field name="hallId" column="hall_id" type="string"/>
         <field name="trainerId" column="trainer_id" type="string"/>
         <field name="courseId" column="course_id" type="string"/>
