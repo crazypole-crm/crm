@@ -17,7 +17,13 @@ class BaseTraining
         \DateTimeImmutable $startDate,
         \DateTimeImmutable $endDate,
         Uuid $trainerId,
-    ) {}
+    )
+    {
+        $this->id = (string)$id;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->trainerId = (string)$trainerId;
+    }
 
     /**
      * @return Uuid
