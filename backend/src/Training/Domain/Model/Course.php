@@ -7,10 +7,17 @@ use App\Common\Domain\Uuid;
 
 class Course
 {
+    private Uuid $id;
+    private string $name;
+
     public function __construct(
-        private Uuid $id,
-        private string $name,
-    ){}
+        Uuid $id,
+        string $name,
+    )
+    {
+        $this->id = $id;
+        $this->name = $name;
+    }
 
     /**
      * @return Uuid
