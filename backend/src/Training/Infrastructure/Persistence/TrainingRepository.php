@@ -35,7 +35,7 @@ class TrainingRepository implements TrainingRepositoryInterface
      */
     public function findAllByBaseTraining(Uuid $id): array
     {
-        return $this->repo->findBy(['baseTrainingId' => (string)$id]);
+        return $this->repo->findBy(['baseId' => (string)$id]);
     }
 
     public function add(Training $event): void
