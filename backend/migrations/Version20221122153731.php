@@ -25,7 +25,7 @@ final class Version20221122153731 extends AbstractMigration
                 id VARCHAR(64) PRIMARY KEY,
                 start_date DATETIME NOT NULL,
                 end_date DATETIME NOT NULL
-                trainer_id VARCHAR(64) NOT NULL,
+                trainer_id VARCHAR(64) NOT NULL
             );
 SQL
         );

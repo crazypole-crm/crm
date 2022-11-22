@@ -22,7 +22,7 @@ final class Version20221122152347 extends AbstractMigration
         $this->addSql(<<<SQL
             ALTER TABLE training
                 ADD COLUMN base_id VARCHAR(64) NOT NULL,
-                ADD COLUMN is_canceled TINYINT DEFAULT = 0
+                ADD COLUMN is_canceled TINYINT DEFAULT 0
 SQL
         );
     }
