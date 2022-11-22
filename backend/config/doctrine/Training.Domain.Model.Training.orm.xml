@@ -6,7 +6,7 @@
 
     <entity name="App\Training\Domain\Model\Training" table="training">
         <id name="id" type="string" column="id"/>
-        <field name="baseId" type="string" column="base_training_id"/>
+        <field name="baseId" type="string" column="base_id"/>
         <field name="name" column="name" type="string"/>
         <field name="description" column="description" type="string" nullable="true"/>
         <field name="startDate" column="start_date" type="datetime"/>
