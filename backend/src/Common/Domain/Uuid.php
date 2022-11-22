@@ -5,15 +5,15 @@ namespace App\Common\Domain;
 class Uuid
 {
     /** @var string */
-    private $uuid;
+    private $id;
 
-    public function __construct(string $uuid)
+    public function __construct(string $id)
     {
-        $this->uuid = $uuid;
+        $this->id = $id;
     }
 
     public function __toString(): string
     {
-        return $this->uuid;
+        return $this->id;
     }
 }

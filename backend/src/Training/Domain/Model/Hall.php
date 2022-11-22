@@ -60,5 +60,4 @@ class Hall
     {
         $this->capability = $capability;
     }
-
 }
