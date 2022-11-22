@@ -6,8 +6,8 @@
 
     <entity name="App\Training\Domain\Model\BaseTraining" table="base_training">
         <id name="id" type="string" column="id"/>
-        <field name="startDate" column="start_date" type="date_immutable"/>
-        <field name="endDate" column="end_date" type="date_immutable"/>
+        <field name="startDate" column="start_date" type="datetime_immutable"/>
+        <field name="endDate" column="end_date" type="datetime_immutable"/>
         <field name="trainerId" column="trainer_id" type="string"/>
     </entity>
 </doctrine-mapping>
