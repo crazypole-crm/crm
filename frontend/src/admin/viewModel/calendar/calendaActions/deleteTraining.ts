@@ -6,8 +6,8 @@ import {lastLoadedPeriodAtom, loadTrainingsForPeriod} from "./loadTrainingsForPe
 
 const deleteTraining = declareAsyncAction<string>(
     'deleteTraining',
-    (trainingId, store) => {
-        return CalendarApi.deleteTraining(trainingId)
+    (baseId, store) => {
+        return CalendarApi.deleteTraining(baseId)
             .then(() => {
                 const lastLoadedPeriod = store.getState(lastLoadedPeriodAtom)
                 store.dispatch(loadTrainingsForPeriod({
