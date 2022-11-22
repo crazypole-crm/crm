@@ -4,7 +4,7 @@ import {getValueByCheckedKey} from "../../../core/getValueByCheckedKey";
 import {convertTrainingDataToDate} from "./DataConverting";
 
 
-function remapTrainingDataToApiTrainingData(trainingData: Omit<TrainingData, 'id' | 'baseId' | 'isCanceled'>): Omit<Api_TrainingData, 'trainingId' | 'baseId' | 'isCanceled'> {
+function remapTrainingDataToApiTrainingData(trainingData: Omit<TrainingData, 'id' | 'baseId' | 'isCanceled'>): Omit<Api_TrainingData, 'trainingId' | 'baseTrainingId' | 'isCanceled'> {
     return {
         type: getValueByCheckedKey(trainingData.type, {
             'grouped': 'group',

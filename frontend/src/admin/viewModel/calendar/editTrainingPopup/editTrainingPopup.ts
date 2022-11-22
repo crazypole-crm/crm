@@ -52,7 +52,7 @@ const trainingIdAtom = declareAtom<string | null>('editTraining.trainingId', nul
 ])
 
 const baseIdAtom = declareAtom<string | null>('editTraining.baseId', null, on => [
-    on(open, (_, value) => value.mode === 'edit' ? value.trainingData.id : null)
+    on(open, (_, value) => value.mode === 'edit' ? value.trainingData.baseId : null)
 ])
 
 function getDefaultTrainingDate(): TrainingDate {
@@ -181,7 +181,6 @@ const submit = declareAction('editTraining.submit',
                 description: trainingDescription || undefined,
                 id: verify(trainingId),
                 baseId: verify(baseId),
-                isCanceled: false,
             }))
         }
     }

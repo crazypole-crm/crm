@@ -26,7 +26,7 @@ function remapApiTrainingDataToTrainingData(trainingsData: Api_TrainingData[]): 
         const remappedEndDate = new Date(trainingData.endDate * 1000)
 
         return {
-            baseId: trainingData.baseId,
+            baseId: trainingData.baseTrainingId,
             id: trainingData.trainingId,
             date: {
                 date: remappedStartDate.getDate(),

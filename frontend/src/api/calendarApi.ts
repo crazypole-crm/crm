@@ -1,7 +1,7 @@
 import {HttpStatus} from "../core/http/HttpStatus";
 
 type Api_TrainingData = {
-    baseId: string,
+    baseTrainingId: string,
     trainingId: string,
     description?: string,
     startDate: number,
@@ -35,7 +35,7 @@ function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_Trai
 
 }
 
-type Api_CreateTrainingData = Omit<Api_TrainingData, 'trainingId' | 'baseId' | 'isCanceled'> & {
+type Api_CreateTrainingData = Omit<Api_TrainingData, 'trainingId' | 'baseTrainingId' | 'isCanceled'> & {
     isRepeatable: boolean,
 }
 
@@ -59,7 +59,7 @@ function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
         .then(response => {
             switch (response.status) {
                 case HttpStatus.OK:
-                    return Promise.resolve(response.json())
+                    return Promise.resolve()
                 default:
                     return Promise.reject(response)
             }
@@ -73,7 +73,7 @@ function editTraining(trainingData: Omit<Api_TrainingData, 'isCanceled'>): Promi
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            baseId: trainingData.baseId,
+            baseId: trainingData.baseTrainingId,
             trainingId: trainingData.trainingId,
             startDate: trainingData.startDate,
             endDate: trainingData.endDate,
@@ -87,7 +87,7 @@ function editTraining(trainingData: Omit<Api_TrainingData, 'isCanceled'>): Promi
         .then(response => {
             switch (response.status) {
                 case HttpStatus.OK:
-                    return Promise.resolve(response.json())
+                    return Promise.resolve()
                 default:
                     return Promise.reject(response)
             }
@@ -107,7 +107,7 @@ function deleteTraining(trainingId: string): Promise<void> {
         .then(response => {
             switch (response.status) {
                 case HttpStatus.OK:
-                    return Promise.resolve(response.json())
+                    return Promise.resolve()
                 default:
                     return Promise.reject(response)
             }

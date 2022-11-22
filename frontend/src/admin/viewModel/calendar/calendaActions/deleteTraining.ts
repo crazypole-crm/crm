@@ -1,7 +1,7 @@
 import {declareAsyncAction} from "../../../../core/reatom/declareAsyncAction";
 import {CalendarApi} from "../../../../api/calendarApi";
-import {trainingsActions} from "../trainings";
 import {processStandardError} from "../../../../core/error/processStandardError";
+import {lastLoadedPeriodAtom, loadTrainingsForPeriod} from "./loadTrainingsForPeriod";
 
 
 const deleteTraining = declareAsyncAction<string>(
@@ -9,8 +9,11 @@ const deleteTraining = declareAsyncAction<string>(
     (trainingId, store) => {
         return CalendarApi.deleteTraining(trainingId)
             .then(() => {
-                console.log('deleteTraining', trainingId)
-                store.dispatch(trainingsActions.removeTrainings([trainingId]))
+                const lastLoadedPeriod = store.getState(lastLoadedPeriodAtom)
+                store.dispatch(loadTrainingsForPeriod({
+                    startDate: lastLoadedPeriod.startDate,
+                    endDate: lastLoadedPeriod.endDate,
+                }))
             })
             .catch(processStandardError)
     }
