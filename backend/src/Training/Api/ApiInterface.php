@@ -16,7 +16,7 @@ interface ApiInterface
      */
     public function editTraining(EditTrainingInput $input): void;
 
-    public function removeTraining(string $trainingId): void;
+    public function removeTraining(string $baseId): void;
 
     public function listTrainings(ListTrainingInput $input): array;
 

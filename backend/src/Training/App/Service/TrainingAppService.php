@@ -52,13 +52,13 @@ class TrainingAppService
         );
     }
 
-    public function removeTraining(string $trainingId): void
+    public function removeTraining(string $baseId): void
     {
         $operation = $this->blockingOperatorExecutor->execute(
-            [LockNames::getEventLock($trainingId)],
-            function () use ($trainingId)
+            [LockNames::getEventLock($baseId)],
+            function () use ($baseId)
             {
-                $this->eventService->removeTraining($trainingId);
+                $this->eventService->removeTraining($baseId);
             }
         );
         $this->transaction->execute($operation);

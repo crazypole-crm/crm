@@ -170,17 +170,15 @@ class TrainingService
     }
 
     /**
-     * @param string $eventId
-     * @throws TrainingNotFoundException
+     * @param string $baseId
      */
-    public function removeTraining(string $eventId): void
+    public function removeTraining(string $baseId): void
     {
-        $event = $this->trainingRepository->findById(new Uuid($eventId));
-        if ($event === null)
+        $trainings = $this->trainingRepository->findAllByBaseTraining(new Uuid($baseId));
+        foreach ($trainings as $training)
         {
-            throw new TrainingNotFoundException(new Uuid($eventId));
+            $this->trainingRepository->remove($training);
         }
-        $this->trainingRepository->remove($event);
     }
 
     public function createHall(string $name, int $capacity): Uuid

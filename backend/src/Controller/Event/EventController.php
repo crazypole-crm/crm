@@ -87,8 +87,8 @@ class EventController extends AbstractController
         try
         {
             $userId = $this->securityContext->getAuthenticatedUserId();
-            $trainingId = $requestData['trainingId'];
-            $this->eventApi->removeTraining($trainingId);
+            $baseId = $requestData['baseId'];
+            $this->eventApi->removeTraining($baseId);
             return new Response(null, Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)

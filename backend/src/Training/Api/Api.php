@@ -30,10 +30,10 @@ class Api implements ApiInterface
         $this->trainingAppService->editTraining($input->getBaseId(), $input->getTrainerId(), $input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType());
     }
 
-    public function removeTraining(string $trainingId): void
+    public function removeTraining(string $baseId): void
     {
         //TODO: обработка исключений
-        $this->trainingAppService->removeTraining($trainingId);
+        $this->trainingAppService->removeTraining($baseId);
     }
 
     public function listTrainings(ListTrainingInput $input): array
