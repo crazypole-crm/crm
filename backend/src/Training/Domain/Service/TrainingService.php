@@ -54,11 +54,11 @@ class TrainingService
         bool $isRepeatable,
     ): Uuid
     {
-        $hall = $this->hallRepository->findHallById($hallId);
-        if ($hall === null)
-        {
-            throw new HallNotFoundException($hallId);
-        }
+//        $hall = $this->hallRepository->findHallById($hallId);
+//        if ($hall === null)
+//        {
+//            throw new HallNotFoundException($hallId);
+//        }
         $course = $this->courseRepository->findById($courseId);
         if ($course === null)
         {
@@ -116,11 +116,11 @@ class TrainingService
         int $type,
     ): void
     {
-        $hall = $this->hallRepository->findHallById($hallId);
-        if ($hall === null)
-        {
-            throw new HallNotFoundException($hallId);
-        }
+//        $hall = $this->hallRepository->findHallById($hallId);
+//        if ($hall === null)
+//        {
+//            throw new HallNotFoundException($hallId);
+//        }
         $course = $this->courseRepository->findById($courseId);
         if ($course === null)
         {
