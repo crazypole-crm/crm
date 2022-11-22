@@ -7,11 +7,20 @@ use App\Common\Domain\Uuid;
 
 class Hall
 {
+    private Uuid $id;
+    private string $name;
+    private int $capability;
+
     public function __construct(
-        private Uuid $id,
-        private string $name,
-        private int $capability,
-    ){}
+        Uuid $id,
+        string $name,
+        int $capability,
+    )
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->capability = $capability;
+    }
 
     /**
      * @return Uuid

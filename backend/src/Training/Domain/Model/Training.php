@@ -7,15 +7,15 @@ use App\Common\Domain\Uuid;
 
 class Training
 {
-    private Uuid $baseId;
-    private Uuid $id;
+    private string $baseId;
+    private string $id;
     private string $name;
     private ?string $description;
     private \DateTimeImmutable $startDate;
     private \DateTimeImmutable $endDate;
-    private Uuid $hallId;
-    private Uuid $courseId;
-    private Uuid $trainerId;
+    private string $hallId;
+    private string $courseId;
+    private string $trainerId;
     private int $type;
     private bool $isCanceled = false;
 
@@ -32,32 +32,32 @@ class Training
         int $type,
     )
     {
-        $this->baseId = $baseTrainingId;
-        $this->id = $id;
+        $this->baseId = (string)$baseTrainingId;
+        $this->id = (string)$id;
         $this->name = $name;
         $this->description = $description;
         $this->assertEndDateValid($endDate, $startDate);
         $this->startDate = $startDate;
         $this->endDate = $endDate;
-        $this->hallId = $hallId;
-        $this->courseId = $courseId;
-        $this->trainerId = $trainerId;
+        $this->hallId = (string)$hallId;
+        $this->courseId = (string)$courseId;
+        $this->trainerId = (string)$trainerId;
         $this->type = $type;
     }
 
     public function getBaseId(): Uuid
     {
-        return $this->baseId;
+        return New Uuid($this->baseId);
     }
 
     public function setBaseId(Uuid $baseId): void
     {
-        $this->baseId = $baseId;
+        $this->baseId = (string)$baseId;
     }
 
     public function getId(): Uuid
     {
-        return $this->id;
+        return New Uuid($this->id);
     }
 
     public function getName(): string
@@ -82,22 +82,22 @@ class Training
 
     public function getHallId(): Uuid
     {
-        return $this->hallId;
+        return New Uuid($this->hallId);
     }
 
     public function getCourseId(): Uuid
     {
-        return $this->courseId;
+        return New Uuid($this->courseId);
     }
 
     public function getTrainerId(): Uuid
     {
-        return $this->trainerId;
+        return New Uuid($this->trainerId);
     }
 
     public function setId(Uuid $id): void
     {
-        $this->id = $id;
+        $this->id = (string)$id;
     }
 
     public function setName(string $name): void
@@ -127,17 +127,17 @@ class Training
 
     public function setHallId(Uuid $hallId): void
     {
-        $this->hallId = $hallId;
+        $this->hallId = (string)$hallId;
     }
 
     public function setCourseId(Uuid $courseId): void
     {
-        $this->courseId = $courseId;
+        $this->courseId = (string)$courseId;
     }
 
     public function setTrainerId(Uuid $trainerId): void
     {
-        $this->trainerId = $trainerId;
+        $this->trainerId = (string)$trainerId;
     }
 
     public function setType(int $type): void

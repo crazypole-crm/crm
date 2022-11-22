@@ -13,8 +13,10 @@ use Doctrine\Persistence\ObjectRepository;
 
 class HallRepository implements HallRepositoryInterface
 {
-    private EntityRepository|ObjectRepository $repo;
-    private EntityManager $em;
+    /** @var EntityRepository|ObjectRepository */
+    private $repo;
+    /** @var EntityManager */
+    private $em;
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -24,7 +26,7 @@ class HallRepository implements HallRepositoryInterface
 
     public function findHallById(Uuid $hallId): ?Hall
     {
-        return $this->repo->findOneBy(['id' => $hallId]);
+        return $this->repo->findOneBy(['id' => (string)$hallId]);
     }
 
     public function add(Hall $hall): void

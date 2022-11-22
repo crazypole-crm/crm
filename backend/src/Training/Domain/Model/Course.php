@@ -7,7 +7,7 @@ use App\Common\Domain\Uuid;
 
 class Course
 {
-    private Uuid $id;
+    private string $id;
     private string $name;
 
     public function __construct(
@@ -15,7 +15,7 @@ class Course
         string $name,
     )
     {
-        $this->id = $id;
+        $this->id = (string)$id;
         $this->name = $name;
     }
 
@@ -24,7 +24,7 @@ class Course
      */
     public function getId(): Uuid
     {
-        return $this->id;
+        return New Uuid($this->id);
     }
 
     /**
@@ -32,7 +32,7 @@ class Course
      */
     public function setId(Uuid $id): void
     {
-        $this->id = $id;
+        $this->id = (string)$id;
     }
 
     /**

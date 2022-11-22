@@ -13,8 +13,10 @@ use Doctrine\Persistence\ObjectRepository;
 
 class CourseRepository implements CourseRepositoryInterface
 {
-    private EntityRepository|ObjectRepository $repo;
-    private EntityManager $em;
+    /** @var EntityRepository|ObjectRepository */
+    private $repo;
+    /** @var EntityManager */
+    private $em;
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -22,9 +24,9 @@ class CourseRepository implements CourseRepositoryInterface
         $this->repo = $em->getRepository(Course::class);
     }
 
-    public function findById(Uuid $courseId): ?Course
+    public function findById(Uuid $id): ?Course
     {
-        return $this->repo->findOneBy(['id' => $courseId]);
+        return $this->repo->findOneBy(['id' => (string)$id]);
     }
 
     public function add(Course $course): void
