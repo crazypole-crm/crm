@@ -6,6 +6,7 @@ import {Time} from "../time";
 import {TrainingData} from "../TrainingData";
 import {getValueByCheckedKey} from "../../../../core/getValueByCheckedKey";
 import {processStandardError} from "../../../../core/error/processStandardError";
+import { DatePeriod } from "../DatePeriod";
 
 type LoadTrainingsForPeriodPayload = {
     startDate: Date,
@@ -25,6 +26,7 @@ function remapApiTrainingDataToTrainingData(trainingsData: Api_TrainingData[]): 
         const remappedEndDate = new Date(trainingData.endDate * 1000)
 
         return {
+            baseId: trainingData.baseId,
             id: trainingData.trainingId,
             date: {
                 date: remappedStartDate.getDate(),
@@ -47,11 +49,12 @@ function remapApiTrainingDataToTrainingData(trainingsData: Api_TrainingData[]): 
             directionId: trainingData.courseId,
             hallId: trainingData.hallId,
             description: trainingData.description,
+            isCanceled: trainingData.isCanceled,
         }
     })
 }
 
-const loadTrainingsForPeriod = declareAsyncAction<LoadTrainingsForPeriodPayload>(
+const loadTrainingsForPeriod = declareAsyncAction<LoadTrainingsForPeriodPayload, DatePeriod>(
     'loadTrainingsForPeriod',
     ({endDate, startDate}, store) => {
         return CalendarApi.getTrainingsForPeriod(startDate, endDate)
@@ -68,10 +71,19 @@ const loadTrainingsForPeriod = declareAsyncAction<LoadTrainingsForPeriodPayload>
                     return trainingTime >= startDate.getTime() && trainingTime <= endDate.getTime()
                 })
                 store.dispatch(trainingsActions.setNewTrainings(filteredTrainings))
+
+                return Promise.resolve({
+                    startDate,
+                    endDate,
+                })
             })
             .catch(processStandardError)
     }
 )
+
+const lastLoadedPeriodAtom = declareAtom<DatePeriod>('lastLoadedPeriod', {} as DatePeriod, on => [
+    on(loadTrainingsForPeriod.done, (_, value) => value)
+])
 
 const trainingsLoadingAtom = declareAtom('trainingsLoading', false, on => [
     on(loadTrainingsForPeriod, () => true),
@@ -81,4 +93,5 @@ const trainingsLoadingAtom = declareAtom('trainingsLoading', false, on => [
 export {
     loadTrainingsForPeriod,
     trainingsLoadingAtom,
+    lastLoadedPeriodAtom,
 }

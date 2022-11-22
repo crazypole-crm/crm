@@ -1,6 +1,7 @@
 import {HttpStatus} from "../core/http/HttpStatus";
 
 type Api_TrainingData = {
+    baseId: string,
     trainingId: string,
     description?: string,
     startDate: number,
@@ -8,7 +9,8 @@ type Api_TrainingData = {
     trainerId: string,
     hallId: string,
     courseId: string,
-    type: 'group' | 'individual'
+    type: 'group' | 'individual',
+    isCanceled: boolean,
 }
 
 function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_TrainingData[]> {
@@ -33,13 +35,46 @@ function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_Trai
 
 }
 
-function createTraining(trainingData: Omit<Api_TrainingData, 'trainingId'>): Promise<{trainingId: string}> {
+type Api_CreateTrainingData = Omit<Api_TrainingData, 'trainingId' | 'baseId' | 'isCanceled'> & {
+    isRepeatable: boolean,
+}
+
+function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
     return fetch('/create/training', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+            startDate: trainingData.startDate,
+            endDate: trainingData.endDate,
+            type: trainingData.type,
+            description: trainingData.description,
+            hallId: trainingData.hallId,
+            courseId: trainingData.courseId,
+            trainerId: trainingData.trainerId,
+            isRepeatable: trainingData.isRepeatable,
+        }),
+    })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
+}
+
+function editTraining(trainingData: Omit<Api_TrainingData, 'isCanceled'>): Promise<void> {
+    return fetch('/edit/training', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            baseId: trainingData.baseId,
+            trainingId: trainingData.trainingId,
             startDate: trainingData.startDate,
             endDate: trainingData.endDate,
             type: trainingData.type,
@@ -59,20 +94,24 @@ function createTraining(trainingData: Omit<Api_TrainingData, 'trainingId'>): Pro
         })
 }
 
-function editTraining(trainingData: Api_TrainingData): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
-    })
-}
-
 function deleteTraining(trainingId: string): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
+    return fetch('/remove/training', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            trainingId,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 type Api_TrainingClients = {

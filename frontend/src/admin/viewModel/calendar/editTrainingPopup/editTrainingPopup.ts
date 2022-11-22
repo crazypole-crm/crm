@@ -5,6 +5,7 @@ import {Time} from "../time";
 import {createTraining} from "../calendaActions/createTraining";
 import {verify} from "../../../../core/verify";
 import {saveTraining} from "../calendaActions/saveTraining";
+import {useAtomWithSelector} from "../../../../core/reatom/useAtomWithSelector";
 
 type EditTrainingPopupMode = 'edit' | 'create'
 
@@ -47,6 +48,10 @@ const [individualClientAtom, setIndividualClient] = declareAtomWithSetter<string
 ])
 
 const trainingIdAtom = declareAtom<string | null>('editTraining.trainingId', null, on => [
+    on(open, (_, value) => value.mode === 'edit' ? value.trainingData.id : null)
+])
+
+const baseIdAtom = declareAtom<string | null>('editTraining.baseId', null, on => [
     on(open, (_, value) => value.mode === 'edit' ? value.trainingData.id : null)
 ])
 
@@ -129,12 +134,14 @@ const submit = declareAction('editTraining.submit',
         const type = store.getState(typeAtom)
         const trainingHall = store.getState(trainingHallAtom)
         const trainingId = store.getState(trainingIdAtom)
+        const baseId = store.getState(baseIdAtom)
         const trainingDirection = store.getState(trainingDirectionAtom)
         const trainingTrainer = store.getState(trainingTrainerAtom)
         const trainingDate = store.getState(trainingDateAtom)
         const trainingStartTime = store.getState(trainingStartTimeAtom)
         const trainingEndTime = store.getState(trainingEndTimeAtom)
         const trainingDescription = store.getState(trainingDescriptionAtom)
+        const repeatable = store.getState(repeatableAtom)
 
         const trainingHallError = !trainingHall
         const trainingDirectionError = !trainingDirection
@@ -158,6 +165,7 @@ const submit = declareAction('editTraining.submit',
                 timeStart: trainingStartTime,
                 timeEnd: trainingEndTime,
                 description: trainingDescription || undefined,
+                isRepeatable: repeatable,
             }))
         }
 
@@ -170,8 +178,10 @@ const submit = declareAction('editTraining.submit',
                 trainerId: verify(trainingTrainer),
                 timeStart: trainingStartTime,
                 timeEnd: trainingEndTime,
-                description: trainingDescription || '',
+                description: trainingDescription || undefined,
                 id: verify(trainingId),
+                baseId: verify(baseId),
+                isCanceled: false,
             }))
         }
     }
@@ -194,6 +204,7 @@ const editTrainingPopupAtom = combine({
     individualClient: individualClientAtom,
     repeatable: repeatableAtom,
     trainingId: trainingIdAtom,
+    baseId: baseIdAtom,
 })
 
 const editTrainingPopupActions = {

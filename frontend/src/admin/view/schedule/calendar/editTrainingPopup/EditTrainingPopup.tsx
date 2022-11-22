@@ -147,6 +147,7 @@ function Content() {
     const trainingTrainer = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingTrainer)
     const repeatable = useAtomWithSelector(editTrainingPopupAtom, x => x.repeatable)
     const type = useAtomWithSelector(editTrainingPopupAtom, x => x.type)
+    const mode = useAtomWithSelector(editTrainingPopupAtom, x => x.mode)
     const trainingDate = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingDate)
     const trainingStartTime = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingStartTime)
     const trainingEndTime = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingEndTime)
@@ -199,7 +200,7 @@ function Content() {
                 title={'О занятии:'}
                 content={<TrainingDescription/>}
             />
-            {type === 'grouped' && <RepeatableBlock
+            {type === 'grouped' && mode === 'create' && <RepeatableBlock
                 repeatable={repeatable}
                 setRepeatable={handleSetRepeatable}
             />}

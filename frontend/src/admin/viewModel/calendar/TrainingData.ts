@@ -9,6 +9,7 @@ type TrainingDate = {
 type TrainingType = 'grouped' | 'individual'
 
 type TrainingData = {
+    baseId: string,
     id: string,
     type: TrainingType,
     directionId: string,
@@ -17,6 +18,7 @@ type TrainingData = {
     date: TrainingDate,
     timeStart: Time,
     timeEnd: Time,
+    isCanceled: boolean,
     description?: string,
 }
 

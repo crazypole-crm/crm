@@ -6,10 +6,11 @@ import {trainingsActions} from "../trainings";
 import {remapTrainingDataToApiTrainingData} from "../remapTrainingDataToApiTrainingData";
 
 const saveTraining = declareAsyncAction<TrainingData>(
-    'createTraining',
+    'saveTraining',
     (trainingData, store) => {
         const remappedTraining = {
             trainingId: trainingData.id,
+            baseId: trainingData.baseId,
             ...remapTrainingDataToApiTrainingData(trainingData)
         }
         return CalendarApi.editTraining(remappedTraining)
