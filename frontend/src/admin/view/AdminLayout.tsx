@@ -19,6 +19,9 @@ import { DirectionsLayout } from "./directions/DirectionsLayout"
 import {RecordToTrainingPopup} from "./schedule/calendar/recordToTrainingPopup/RecordToTrainingPopup";
 import { EditDirectionPopup } from "./directions/directionsPopups/EditDirectionPopup"
 import { DeleteDirectionsPopup } from "./directions/directionsPopups/DeleteDirectionsPopup"
+import { HallsLayout } from "./halls/HallsLayout"
+import { EditHallPopup } from "./halls/hallsPopups/EditHallPopup"
+import { DeleteHallsPopup } from "./halls/hallsPopups/DeleteHallsPopup"
 
 function PopupsLayout() {
     return (
@@ -34,6 +37,8 @@ function PopupsLayout() {
             <RecordToTrainingPopup />
             <EditDirectionPopup />
             <DeleteDirectionsPopup />
+            <EditHallPopup />
+            <DeleteHallsPopup />
         </>
     )
 }
@@ -61,6 +66,9 @@ function AdminLayout() {
                         </Route>
                         <Route exact path={[Router.Directions.url()]} >
                             <DirectionsLayout />
+                        </Route>
+                        <Route exact path={[Router.Halls.url()]} >
+                            <HallsLayout />
                         </Route>
                         <Redirect to={Router.Schedule.url()}/>
                     </Switch>

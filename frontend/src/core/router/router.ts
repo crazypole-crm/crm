@@ -5,6 +5,7 @@ const ADMIN = '/admin'
 const USERS_LIST = '/users-list'
 const SCHEDULE = '/schedule'
 const DIRECTIONS = '/courses'
+const HALLS = '/halls'
 
 let RouterHistory: History|null = null
 
@@ -51,6 +52,12 @@ function generateDirectionsUrl() {
 function openDirections(push: boolean = false) {
     replaceUrl(generateDirectionsUrl(), push)
 }
+function generateHallsUrl() {
+    return `${ADMIN}${HALLS}`
+}
+function openHalls(push: boolean = false) {
+    replaceUrl(generateHallsUrl(), push)
+}
 
 const Router = {
     Auth: {
@@ -72,6 +79,10 @@ const Router = {
     Directions: {
         open: openDirections,
         url: generateDirectionsUrl,
+    },
+    Halls: {
+        open: openHalls,
+        url: generateHallsUrl,
     }
 }
 

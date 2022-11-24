@@ -1,10 +1,8 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {CalendarApi} from "../../../api/calendarApi";
-import {directionsActions, directionsAtom} from "./directions";
+import {directionsActions} from "./directions";
 import {processStandardError} from "../../../core/error/processStandardError";
 import {declareAtom} from "@reatom/core";
 import {DirectionsApi} from "../../../api/directionsApi";
-import {DirectionData} from "./DirectionData";
 
 const loadDirections = declareAsyncAction<void>('directions.load',
     (_, store) => {

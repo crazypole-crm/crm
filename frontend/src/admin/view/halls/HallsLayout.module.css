@@ -1,0 +1,16 @@
+.layout {
+    margin: 10px;
+    overflow: hidden;
+}
+
+.button {
+    margin-bottom: 10px;
+}
+
+.name {
+    cursor: pointer;
+}
+
+.name:hover {
+    text-decoration: underline;
+}

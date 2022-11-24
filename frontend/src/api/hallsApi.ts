@@ -47,7 +47,7 @@ function saveHall(hallData: HallData): Promise<void> {
     })
 }
 
-function deleteHall(hallId: string): Promise<void> {
+function deleteHalls(hallIds: string[]): Promise<void> {
     return new Promise(resolve => {
         setTimeout(() => {
             resolve()
@@ -59,7 +59,7 @@ const HallsApi = {
     getHalls,
     createHall,
     saveHall,
-    deleteHall,
+    deleteHalls,
 }
 
 export {

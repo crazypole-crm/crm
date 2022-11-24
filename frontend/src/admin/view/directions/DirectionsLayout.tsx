@@ -1,5 +1,5 @@
 import styles from './DirectionsLayout.module.css'
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useAction, useAtom} from "@reatom/react";
 import {directionsLoadingAtom, loadDirections} from "../../viewModel/direction/loadDirections";
 import {directionsAtom} from "../../viewModel/direction/directions";
