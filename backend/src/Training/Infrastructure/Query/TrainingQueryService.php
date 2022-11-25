@@ -9,6 +9,8 @@ use App\Training\App\Query\TrainingQueryServiceInterface;
 use App\Training\Infrastructure\Query\Hydrator\CourseDataHydrator;
 use App\Training\Infrastructure\Query\Hydrator\TrainingDataHydrator;
 use App\Training\Infrastructure\Query\Table\CourseTable;
+use App\Training\Infrastructure\Query\Hydrator\HallDataHydrator;
+use App\Training\Infrastructure\Query\Table\HallTable;
 use App\Training\Infrastructure\Query\Table\TrainingTable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -19,16 +21,19 @@ class TrainingQueryService implements TrainingQueryServiceInterface
     private Connection $conn;
     private TrainingDataHydrator $hydrator;
     private CourseDataHydrator $courseDataHydrator;
+    private HallDataHydrator $hallDataHydrator;
 
     public function __construct(
         EntityManagerInterface $em,
         TrainingDataHydrator $hydrator,
         CourseDataHydrator $courseDataHydrator,
+        HallDataHydrator $hallDataHydrator,
     )
     {
         $this->conn = $em->getConnection();
         $this->hydrator = $hydrator;
         $this->courseDataHydrator = $courseDataHydrator;
+        $this->hallDataHydrator = $hallDataHydrator;
     }
 
     public function listTrainings(ListTrainingSpecification $spec): array
@@ -104,6 +109,22 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         foreach ($stmt as $row)
         {
             $result[] = $this->courseDataHydrator->hydrateRow($row);
+        }
+        return $result;
+    }
+
+    public function listHalls(): array
+    {
+        $qb = $this->conn->createQueryBuilder();
+        $qb->from('hall', 'h');
+        $qb->addSelect('h.' . HallTable::HALL_ID);
+        $qb->addSelect('h.' . HallTable::TITLE);
+        $qb->addSelect('h.' . HallTable::CAPACITY);
+        $stmt = $qb->executeQuery()->fetchAllAssociative();
+        $result = [];
+        foreach ($stmt as $row)
+        {
+            $result[] = $this->hallDataHydrator->hydrateRow($row);
         }
         return $result;
     }

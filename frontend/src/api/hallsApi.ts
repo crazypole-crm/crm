@@ -1,42 +1,42 @@
 import {HallData} from "../admin/viewModel/hall/HallData";
-import {generateUuid} from "../core/uuid/generateUuid";
-
-function getMockHalls(): HallData[] {
-    return [
-        {
-            id: 'hall1',
-            name: 'Пилонный зал',
-            capacity: 10,
-        },
-        {
-            id: 'hall2',
-            name: 'Воздушный зал',
-            capacity: 6,
-        },
-        {
-            id: 'hall3',
-            name: 'Малый зал',
-            capacity: 5,
-        }
-    ]
-}
+import {HttpStatus} from "../core/http/HttpStatus";
 
 function getHalls(): Promise<HallData[]> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(getMockHalls())
-        }, 1000)
+    return fetch('/list/halls', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 function createHall(hallData: Omit<HallData, 'id'>): Promise<{ hallId: string }> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve({
-                hallId: generateUuid(),
-            })
-        }, 1000)
+    return fetch('/create/hall', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: hallData.name,
+            capacity: hallData.capacity
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 function saveHall(hallData: HallData): Promise<void> {

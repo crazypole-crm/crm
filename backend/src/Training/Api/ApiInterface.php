@@ -24,5 +24,7 @@ interface ApiInterface
 
     public function createHall(string $name, int $capacity): string;
 
+    public function listHalls(): array;
+
     public function createCourse(string $name): string;
 }
