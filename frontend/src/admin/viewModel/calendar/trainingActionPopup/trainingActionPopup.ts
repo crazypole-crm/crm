@@ -14,6 +14,7 @@ const close = declareAction('trainingActionPopup.close')
 const openedAtom = declareAtom('trainingActionPopup.opened', false, on => [
     on(open, () => true),
     on(close, () => false),
+    on(deleteTraining.done, () => false),
 ])
 
 const modeAtom = declareAtom<ModeType>('trainingActionPopup.modeAtom', 'record', on => [
@@ -27,7 +28,7 @@ const trainingDataAtom = declareAtom<TrainingData>('trainingActionPopup.training
 const submit = declareAction('trainingActionPopup.submit',
     (_, store) => {
         const mode = store.getState(modeAtom)
-        const trainingId = store.getState(trainingDataAtom).id
+        const baseId = store.getState(trainingDataAtom).baseId
 
         if (mode === 'record') {
             console.log('record to training')
@@ -36,7 +37,7 @@ const submit = declareAction('trainingActionPopup.submit',
             console.log('cancel training')
         }
         else if (mode === 'delete') {
-            store.dispatch(deleteTraining(trainingId))
+            store.dispatch(deleteTraining(baseId))
         }
     }
 )

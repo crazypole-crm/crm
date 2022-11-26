@@ -3,11 +3,11 @@ import {processStandardError} from "../../../core/error/processStandardError";
 import {hallsActions} from "./halls";
 import {HallsApi} from "../../../api/hallsApi";
 
-const deleteHall = declareAsyncAction<string>('hall.delete',
-    (hallId, store) => {
-        return HallsApi.deleteHall(hallId)
+const deleteHalls = declareAsyncAction<string[]>('hall.delete',
+    (hallIds, store) => {
+        return HallsApi.deleteHalls(hallIds)
             .then(() => {
-                store.dispatch(hallsActions.removeHall([hallId]))
+                store.dispatch(hallsActions.removeHall(hallIds))
             })
             .catch(() => {
                 processStandardError()
@@ -16,5 +16,5 @@ const deleteHall = declareAsyncAction<string>('hall.delete',
 )
 
 export {
-    deleteHall
+    deleteHalls
 }

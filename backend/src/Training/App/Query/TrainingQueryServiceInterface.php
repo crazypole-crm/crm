@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Training\App\Query;
 
 use App\Training\App\Data\CourseData;
+use App\Training\App\Data\HallData;
 use App\Training\App\Data\TrainingData;
 
 interface TrainingQueryServiceInterface
@@ -26,4 +27,9 @@ interface TrainingQueryServiceInterface
      * @return CourseData[]
      */
     public function listCourses(): array;
+
+    /**
+     * @return HallData[]
+     */
+    public function listHalls(): array;
 }

@@ -5,52 +5,52 @@ import React, { useMemo } from "react"
 import { optionalArray } from "../../../core/array/array"
 import { checkNever } from "../../../core/checkNever"
 import { authorizedCurrentUser } from "../../../currentUser/currentUser"
-import { directionsAtom } from "../../viewModel/direction/directions"
-import { editDirectionPopupActions } from "../../viewModel/direction/popups/editDirectionPopup"
-import { directionsLoadingAtom } from "../../viewModel/direction/loadDirections"
+import { hallsAtom } from "../../viewModel/hall/halls"
+import { hallsLoadingAtom } from "../../viewModel/hall/loadHalls"
 import styles from '../users/table/UsersTableCommandPanel.module.css'
-import { deleteDirectionsPopupActions } from "../../viewModel/direction/popups/deleteDirectionsPopup"
-import { selectedDirectionsRowKeysAtom } from "../../viewModel/direction/popups/selectedDirectionsRows"
+import { selectedHallsRowKeysAtom } from "../../viewModel/hall/popups/selectedHallsRows"
+import { editHallPopupActions } from "../../viewModel/hall/popups/editHallPopup"
+import { deleteHallsPopupActions } from "../../viewModel/hall/popups/deleteHallsPopup"
 
-type DirectionsActionsButtonType = 'delete' | 'edit' | 'add' 
+type HallsActionsButtonType = 'delete' | 'edit' | 'add' 
 
 function remapKeyListToStringList(list: React.Key[]): string[] {
     return list.map((key) => key.toString())
 }
 
-function DirectionsTableCommandPanel() {
+function HallsTableCommandPanel() {
     const currentUser = useAtom(authorizedCurrentUser)
-    const directions = useAtom(directionsAtom)
-    const directionsLoading = useAtom(directionsLoadingAtom)
-    const selectedDirectionsRowKeys = useAtom(selectedDirectionsRowKeysAtom)
-    const handleOpenEditDirectionPopup = useAction(editDirectionPopupActions.open)
-    const handleOpenDeleteDirectionPopup = useAction(deleteDirectionsPopupActions.open)
+    const halls = useAtom(hallsAtom)
+    const hallsLoading = useAtom(hallsLoadingAtom)
+    const selectedHallsRowKeys = useAtom(selectedHallsRowKeysAtom)
+    const handleOpenEditHallPopup = useAction(editHallPopupActions.open)
+    const handleOpenDeleteHallPopup = useAction(deleteHallsPopupActions.open)
 
     const handleOnAddClick = () => {
-        handleOpenEditDirectionPopup({
+        handleOpenEditHallPopup({
             mode: 'create',
         })
     }
 
     const handleOnEditClick = () => {
-        handleOpenEditDirectionPopup({
-            directionData: directions[selectedDirectionsRowKeys[0]],
+        handleOpenEditHallPopup({
+            hallData: halls[selectedHallsRowKeys[0]],
             mode: 'edit',
         })
     }
 
     const handleOnDeleteClick = () => {
-        handleOpenDeleteDirectionPopup(remapKeyListToStringList(selectedDirectionsRowKeys))
+        handleOpenDeleteHallPopup(remapKeyListToStringList(selectedHallsRowKeys))
     }
 
-    const buttons: DirectionsActionsButtonType[] = useMemo(() => {
+    const buttons: HallsActionsButtonType[] = useMemo(() => {
         const isAdmin = currentUser.role === 'admin'
         return optionalArray([
-            (isAdmin && !selectedDirectionsRowKeys.length) && 'add',
-            (isAdmin && selectedDirectionsRowKeys.length === 1) && 'edit',
-            (isAdmin && !!selectedDirectionsRowKeys.length) && 'delete',
+            (isAdmin && !selectedHallsRowKeys.length) && 'add',
+            (isAdmin && selectedHallsRowKeys.length === 1) && 'edit',
+            (isAdmin && !!selectedHallsRowKeys.length) && 'delete',
         ])
-    }, [selectedDirectionsRowKeys])
+    }, [selectedHallsRowKeys])
 
     return (
         <div className={styles.commandPanel}>
@@ -66,7 +66,7 @@ function DirectionsTableCommandPanel() {
                                 onClick={handleOnEditClick}
                                 className={styles.submitButton}
                                 icon={<EditOutlined />}
-                                disabled={directionsLoading}
+                                disabled={hallsLoading}
                             >
                                 Редактировать
                             </Button>
@@ -79,7 +79,7 @@ function DirectionsTableCommandPanel() {
                                 onClick={handleOnDeleteClick}
                                 className={styles.submitButton}
                                 icon={<DeleteOutlined />}
-                                disabled={directionsLoading}
+                                disabled={hallsLoading}
                             >
                                 Удалить
                             </Button>
@@ -92,7 +92,7 @@ function DirectionsTableCommandPanel() {
                                 onClick={handleOnAddClick}
                                 className={styles.submitButton}
                                 icon={<PlusOutlined />}
-                                disabled={directionsLoading}
+                                disabled={hallsLoading}
                             >
                                 Добавить
                             </Button>
@@ -107,5 +107,5 @@ function DirectionsTableCommandPanel() {
 }
 
 export {
-    DirectionsTableCommandPanel,
+    HallsTableCommandPanel,
 }

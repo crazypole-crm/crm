@@ -13,12 +13,12 @@ const fieldStyle: React.CSSProperties = {
 function DirectionNameInput() {
     const directionNameError = useAtomWithSelector(editDirectionPopupAtom, x => x.directionNameError)
     const directionName = useAtomWithSelector(editDirectionPopupAtom, x => x.directionName)
-    const handleSetUserLastName = useAction(editDirectionPopupActions.setDirectionName)
+    const handleSetDirectionName = useAction(editDirectionPopupActions.setDirectionName)
 
     return <Input
         value={directionName || ''}
         status={directionNameError ? 'error' : ''}
-        onChange={e => handleSetUserLastName(e.target.value)}
+        onChange={e => handleSetDirectionName(e.target.value)}
         style={fieldStyle}
     />
 }

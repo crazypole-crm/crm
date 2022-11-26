@@ -94,14 +94,14 @@ function editTraining(trainingData: Omit<Api_TrainingData, 'isCanceled'>): Promi
         })
 }
 
-function deleteTraining(trainingId: string): Promise<void> {
+function deleteTraining(baseId: string): Promise<void> {
     return fetch('/remove/training', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            trainingId,
+            baseId,
         }),
     })
         .then(response => {
