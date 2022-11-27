@@ -14,10 +14,15 @@ import {Time} from "../../../../viewModel/calendar/time";
 function TimeStepBlock() {
     const timeStep = useAtomWithSelector(calendarSettingsPopupAtom, x => x.stepTime)
     const setTimeStepCallback = useAction(calendarSettingsPopupActions.setStepTime)
+    const isZeroTime = (date: Date) => {
+        return date.getHours() === 0 && date.getMinutes() === 0
+    }
     const handleSetTimeStep = (value: Date) => {
             const date = value;
 
-            if (date.getHours() === 0 && date.getMinutes() === 0) {return}
+            if (isZeroTime(date)) {
+                return
+            }
 
             setTimeStepCallback({
                 hour: date.getHours(),
