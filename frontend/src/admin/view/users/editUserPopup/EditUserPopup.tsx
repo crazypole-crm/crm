@@ -126,12 +126,23 @@ function UserRoleSelect() {
     />
 }
 
-function UserPasswordInput() {
-    const userPassword = useAtomWithSelector(editUserPopupAtom, x => x.userPassword)
-    const handleSetUserPassword = useAction(editUserPopupActions.setUserPassword)
+function UserOldPasswordInput() {
+    const userOldPassword = useAtomWithSelector(editUserPopupAtom, x => x.userOldPassword)
+    const handleSetUserPassword = useAction(editUserPopupActions.setUserOldPassword)
 
     return <Input.Password
-        value={userPassword || ''}
+        value={userOldPassword || ''}
+        onChange={e => handleSetUserPassword(e.target.value)}
+        style={fieldStyle}
+    />
+}
+
+function UserPasswordInput() {
+    const userNewPassword = useAtomWithSelector(editUserPopupAtom, x => x.userNewPassword)
+    const handleSetUserPassword = useAction(editUserPopupActions.setUserNewPassword)
+
+    return <Input.Password
+        value={userNewPassword || ''}
         onChange={e => handleSetUserPassword(e.target.value)}
         style={fieldStyle}
     />
@@ -200,6 +211,10 @@ function Content() {
                     errorEmpty={userEmptyEmailError}
                     errorIncorrect={userIncorrectEmailError}
                 />
+                {(popupMode === 'create' || currentUser.id === userId) && <EditUserPopupInputBlock
+                    title={'Старый пароль'}
+                    content={<UserOldPasswordInput/>}
+                />}
                 {(popupMode === 'create' || currentUser.id === userId) && <EditUserPopupInputBlock
                     title={'Новый пароль'}
                     content={<UserPasswordInput/>}
