@@ -5,10 +5,44 @@ namespace App\Training\App\Lock;
 
 class LockNames
 {
-    private const EVENT_ID_LOCK_NAME = 'event_lock_';
+    private const TRAINING_ID_LOCK_NAME = 'training_lock_';
+    private const HALL_ID_LOCK_NAME = 'hall_lock_';
+    private const COURSE_ID_LOCK_NAME = 'course_lock_';
 
-    public static function getEventLock(string $eventId): string
+    public static function getTrainingLock(string $trainingId): string
     {
-        return self::EVENT_ID_LOCK_NAME . $eventId;
+        return self::TRAINING_ID_LOCK_NAME . $trainingId;
+    }
+
+    public static function getHallLock(string $hallId): string
+    {
+        return self::HALL_ID_LOCK_NAME . $hallId;
+    }
+
+    public static function getCourseLock(string $courseId): string
+    {
+        return self::COURSE_ID_LOCK_NAME . $courseId;
+    }
+
+    public static function getHallLocks(array $hallIds): array
+    {
+        $result = [];
+        foreach ($hallIds as $hallId)
+        {
+            $result[] = self::getHallLock($hallId);
+        }
+
+        return $result;
+    }
+
+    public static function getCourseLocks(array $courseIds): array
+    {
+        $result = [];
+        foreach ($courseIds as $courseId)
+        {
+            $result[] = self::getCourseLock($courseId);
+        }
+
+        return $result;
     }
 }

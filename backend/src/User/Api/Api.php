@@ -111,6 +111,22 @@ class Api implements ApiInterface
         }
     }
 
+    /**
+     * @param string[] $userIds
+     * @throws \Exception
+     */
+    public function removeUsers(array $userIds): void
+    {
+        try
+        {
+            $this->userService->removeUsers($userIds);
+        }
+        catch (\Exception $e)
+        {
+            $this->convertException($e);
+        }
+    }
+
     private function convertException(\Exception $e)
     {
         // TODO: сделать обработку исключений

@@ -29,6 +29,16 @@ class BaseTrainingRepository implements BaseTrainingRepositoryInterface
         return $this->repo->findOneBy(['id' => (string)$id]);
     }
 
+    public function findAllByHallIds(array $hallIds): array
+    {
+        return $this->repo->findBy(['hallId' => $this->convertUuidsToStrings($hallIds)]);
+    }
+
+    public function findAllByCourseIds(array $courseIds): array
+    {
+        return $this->repo->findBy(['courseId' => $this->convertUuidsToStrings($courseIds)]);
+    }
+
     public function add(BaseTraining $event): void
     {
         $this->em->persist($event);
@@ -37,5 +47,14 @@ class BaseTrainingRepository implements BaseTrainingRepositoryInterface
     public function remove(BaseTraining $event): void
     {
         $this->em->remove($event);
+    }
+
+    private function convertUuidsToStrings(array $uuids): array
+    {
+        return array_map(
+            static function (Uuid $uuid): string {
+                return (string)$uuid;
+            }, $uuids
+        );
     }
 }

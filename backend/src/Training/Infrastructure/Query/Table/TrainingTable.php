@@ -18,6 +18,8 @@ class TrainingTable
     public const COURSE_ID = 'course_id';
     public const TRAINING_TYPE = 'type';
     public const IS_CANCELED = 'is_canceled';
+    public const IS_TRAINER_REPLACE = 'is_trainer_replaced';
+    public const BASE_TRAINING_START_DATE = 'base_training_start_date';
 
     public const EVENT_FIELDS = [
         self::BASE_TRAINING_ID => TypeConverter::STRING,
@@ -31,5 +33,7 @@ class TrainingTable
         self::COURSE_ID => TypeConverter::STRING,
         self::TRAINING_TYPE => TypeConverter::INTEGER,
         self::IS_CANCELED => TypeConverter::BOOL,
+        self::BASE_TRAINING_START_DATE => TypeConverter::DATE_TIME,
+        self::IS_TRAINER_REPLACE => TypeConverter::BOOL,
     ];
 }

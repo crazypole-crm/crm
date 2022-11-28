@@ -11,6 +11,10 @@ interface TrainingRepositoryInterface
 
     public function findAllByBaseTraining(Uuid $id): array;
 
+    public function findAllByHallIds(array $hallIds): array;
+
+    public function findAllByCourseIds(array $courseIds): array;
+
     public function add(Training $event): void;
 
     public function remove(Training $event): void;

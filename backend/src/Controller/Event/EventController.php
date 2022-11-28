@@ -54,7 +54,7 @@ class EventController extends AbstractController
     /**
      * @Route("/edit/training")
      */
-    public function editTraining(Request $request): Response
+    public function editBaseTraining(Request $request): Response
     {
         //TODO обработка исключений
         $requestData = json_decode($request->getContent(), true);
@@ -77,9 +77,74 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/remove/training")
+     * @Route("/edit/training/trainer")
      */
-    public function removeEvent(Request $request): Response
+    public function changeTrainingTrainer(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        //TODO добавить права и проверку
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $this->eventApi->changeTrainingTrainer($requestData['trainingId'], $requestData['trainerId']);
+
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/edit/training/time")
+     */
+    public function changeTrainingTime(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        //TODO добавить права и проверку
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
+            $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
+            $this->eventApi->changeTrainingTime($requestData['trainingId'], $startDate, $endDate);
+
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/edit/training/time")
+     */
+    public function changeTrainingStatus(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        //TODO добавить права и проверку
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $this->eventApi->changeTrainingStatus($requestData['trainingId'], $requestData['isCanceled']);
+
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/remove/base_training")
+     */
+    public function removeBaseTraining(Request $request): Response
     {
         //TODO обработка исключений
         $requestData = json_decode($request->getContent(), true);
@@ -88,7 +153,70 @@ class EventController extends AbstractController
         {
             $userId = $this->securityContext->getAuthenticatedUserId();
             $baseId = $requestData['baseId'];
-            $this->eventApi->removeTraining($baseId);
+            $this->eventApi->removeTrainingsByBase($baseId);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/remove/training")
+     */
+    public function removeTraining(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        //TODO добавить права и проверку
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $trainingId = $requestData['trainingId'];
+            $this->eventApi->removeTraining($trainingId);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/remove/courses")
+     */
+    public function removeCourses(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        //TODO добавить права и проверку
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $courseIds = $requestData['courseIds'];
+            $this->eventApi->removeCourses($courseIds);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/remove/halls")
+     */
+    public function removeHalls(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        //TODO добавить права и проверку
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $hallsIds = $requestData['hallsIds'];
+            $this->eventApi->removeHalls($hallsIds);
             return new Response(null, Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)

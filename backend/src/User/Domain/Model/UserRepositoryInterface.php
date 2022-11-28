@@ -26,4 +26,6 @@ interface UserRepositoryInterface
      * @return UserId
      */
     public function nextId(): UserId;
+
+    public function remove(User $user): void;
 }

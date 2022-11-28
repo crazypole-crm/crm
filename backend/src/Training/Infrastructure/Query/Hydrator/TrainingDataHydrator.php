@@ -22,6 +22,11 @@ class TrainingDataHydrator
         $courseId = TypeConverter::hydrateValue($data[TrainingTable::COURSE_ID], TrainingTable::EVENT_FIELDS[TrainingTable::COURSE_ID]);
         $type = TypeConverter::hydrateValue($data[TrainingTable::TRAINING_TYPE], TrainingTable::EVENT_FIELDS[TrainingTable::TRAINING_TYPE]);
         $isCanceled = TypeConverter::hydrateValue($data[TrainingTable::IS_CANCELED], TrainingTable::EVENT_FIELDS[TrainingTable::IS_CANCELED]);
-        return new TrainingData($baseTrainingId, $trainingId, $title, $description, $startDate, $endDate, $trainerId, $hallId, $courseId, $type, $isCanceled);
+        $isTrainerChanged = TypeConverter::hydrateValue($data[TrainingTable::IS_TRAINER_REPLACE], TrainingTable::EVENT_FIELDS[TrainingTable::IS_TRAINER_REPLACE]);
+        $baseTrainingStartDate = TypeConverter::hydrateValue($data[TrainingTable::BASE_TRAINING_START_DATE], TrainingTable::EVENT_FIELDS[TrainingTable::BASE_TRAINING_START_DATE]);
+
+        $interval = $startDate->diff($baseTrainingStartDate);
+        $isMoved = $interval->days === 0 && $interval->i === 0 && $interval->h === 0;
+        return new TrainingData($baseTrainingId, $trainingId, $title, $description, $startDate, $endDate, $trainerId, $hallId, $courseId, $type, $isCanceled, $isTrainerChanged, $isMoved);
     }
 }

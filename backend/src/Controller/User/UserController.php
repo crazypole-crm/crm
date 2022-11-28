@@ -177,6 +177,17 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/users/remove")
+     */
+    public function removeUsers(Request $request): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        $userIds = $requestData['ids'] ?? null;
+        $this->userApi->removeUsers($userIds);
+        return new Response(null);
+    }
+
+    /**
      * @Route("/update/password")
      */
     public function updatePassword(Request $request): Response

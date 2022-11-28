@@ -19,6 +19,8 @@ class TrainingData implements \JsonSerializable
         private string $courseId,
         private int $type,
         private bool $isCanceled,
+        private bool $isTrainerChanged,
+        private bool $isMoved,
     ){}
 
     public function getBaseTrainingId(): string
@@ -90,6 +92,8 @@ class TrainingData implements \JsonSerializable
             'courseId' => $this->courseId,
             'type' => $this->convertTrainingType($this->type),
             'isCanceled' => $this->isCanceled,
+            'isMoved' => $this->isMoved,
+            'isTrainerChanged' => $this->isTrainerChanged,
         ];
     }
 

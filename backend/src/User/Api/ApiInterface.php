@@ -44,4 +44,9 @@ interface ApiInterface
      * @param UserData $userData
      */
     public function updateUserData(UserData $userData): void;
+
+    /**
+     * @param string[] $userIds
+     */
+    public function removeUsers(array $userIds): void;
 }

@@ -135,4 +135,14 @@ class UserService
         $user->setLastVisit($lastVisit);
     }
 
+    public function removeUser(UserId $userId): void
+    {
+        $user = $this->repository->findUserById($userId);
+        if ($user === null)
+        {
+            throw new InvalidUserIdException($userId);
+        }
+        $this->repository->remove($user);
+    }
+
 }

@@ -29,6 +29,11 @@ class HallRepository implements HallRepositoryInterface
         return $this->repo->findOneBy(['id' => (string)$hallId]);
     }
 
+    public function findHallsByIds(array $hallIds): array
+    {
+        return $this->repo->findOneBy(['id' => $this->convertUuidsToStrings($hallIds)]);
+    }
+
     public function add(Hall $hall): void
     {
         $this->em->persist($hall);
@@ -37,5 +42,14 @@ class HallRepository implements HallRepositoryInterface
     public function remove(Hall $hall): void
     {
         $this->em->remove($hall);
+    }
+
+    private function convertUuidsToStrings(array $uuids): array
+    {
+        return array_map(
+            static function (Uuid $uuid): string {
+                return (string)$uuid;
+            }, $uuids
+        );
     }
 }

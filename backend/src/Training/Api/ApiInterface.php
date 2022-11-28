@@ -16,7 +16,19 @@ interface ApiInterface
      */
     public function editTraining(EditTrainingInput $input): void;
 
-    public function removeTraining(string $baseId): void;
+    public function changeTrainingTrainer(string $trainingId, string $trainerId): void;
+
+    public function changeTrainingTime(string $trainingId, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate): void;
+
+    public function changeTrainingStatus(string $trainingId, bool $isCanceled): void;
+
+    public function removeTrainingsByBase(string $baseId): void;
+
+    public function removeTraining(string $trainingId): void;
+
+    public function removeHalls(array $hallIds): void;
+
+    public function removeCourses(array $courseIds): void;
 
     public function listTrainings(ListTrainingInput $input): array;
 

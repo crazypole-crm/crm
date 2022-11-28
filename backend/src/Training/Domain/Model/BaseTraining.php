@@ -10,19 +10,28 @@ class BaseTraining
     private string $id;
     private \DateTimeImmutable $startDate;
     private \DateTimeImmutable $endDate;
+    private string $hallId;
+    private string $courseId;
     private string $trainerId;
+    private int $type;
 
     public function __construct(
         Uuid $id,
         \DateTimeImmutable $startDate,
         \DateTimeImmutable $endDate,
+        Uuid $hallId,
+        Uuid $courseId,
         Uuid $trainerId,
+        int $type,
     )
     {
         $this->id = (string)$id;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->hallId = (string)$hallId;
+        $this->courseId = (string)$courseId;
         $this->trainerId = (string)$trainerId;
+        $this->type = $type;
     }
 
     /**
@@ -30,7 +39,7 @@ class BaseTraining
      */
     public function getId(): Uuid
     {
-        return New Uuid($this->id);
+        return new Uuid($this->id);
     }
 
     /**
@@ -78,7 +87,7 @@ class BaseTraining
      */
     public function getTrainerId(): Uuid
     {
-        return New Uuid($this->trainerId);
+        return new Uuid($this->trainerId);
     }
 
     /**
@@ -87,5 +96,53 @@ class BaseTraining
     public function setTrainerId(Uuid $trainerId): void
     {
         $this->trainerId = (string)$trainerId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHallId(): string
+    {
+        return $this->hallId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCourseId(): string
+    {
+        return $this->courseId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param Uuid $hallId
+     */
+    public function setHallId(Uuid $hallId): void
+    {
+        $this->hallId = (string)$hallId;
+    }
+
+    /**
+     * @param Uuid $courseId
+     */
+    public function setCourseId(Uuid $courseId): void
+    {
+        $this->courseId = (string)$courseId;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType(int $type): void
+    {
+        $this->type = $type;
     }
 }

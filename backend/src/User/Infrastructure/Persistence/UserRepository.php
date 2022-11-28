@@ -44,4 +44,9 @@ class UserRepository implements UserRepositoryInterface
     {
         return new UserId(UuidGenerator::generateUuid());
     }
+
+    public function remove(User $user): void
+    {
+        $this->em->remove($user);
+    }
 }

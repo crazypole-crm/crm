@@ -29,6 +29,11 @@ class CourseRepository implements CourseRepositoryInterface
         return $this->repo->findOneBy(['id' => (string)$id]);
     }
 
+    public function findByIds(array $ids): array
+    {
+        return $this->repo->findOneBy(['id' => $this->convertUuidsToStrings($ids)]);
+    }
+
     public function add(Course $course): void
     {
         $this->em->persist($course);
@@ -37,5 +42,14 @@ class CourseRepository implements CourseRepositoryInterface
     public function remove(Course $course): void
     {
         $this->em->remove($course);
+    }
+
+    private function convertUuidsToStrings(array $uuids): array
+    {
+        return array_map(
+            static function (Uuid $uuid): string {
+                return (string)$uuid;
+            }, $uuids
+        );
     }
 }

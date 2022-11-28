@@ -146,4 +146,19 @@ class UserAppService
         );
         $this->transaction->execute($operation);
     }
+
+    public function removeUsers(array $userIds): void
+    {
+        foreach ($userIds as $userId)
+        {
+            $operation = $this->blockingOperatorExecutor->execute(
+                [LockNames::getUserId($userId)],
+                function () use ($userId): void
+                {
+                    $this->userService->removeUser(new UserId($userId));
+                }
+            );
+            $this->transaction->execute($operation);
+        }
+    }
 }
