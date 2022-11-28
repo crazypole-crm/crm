@@ -13,7 +13,22 @@ import {Time} from "../../../../viewModel/calendar/time";
 
 function TimeStepBlock() {
     const timeStep = useAtomWithSelector(calendarSettingsPopupAtom, x => x.stepTime)
-    const handleSetTimeStep = useAction(calendarSettingsPopupActions.setStepTime)
+    const setTimeStepCallback = useAction(calendarSettingsPopupActions.setStepTime)
+    const isZeroTime = (date: Date) => {
+        return date.getHours() === 0 && date.getMinutes() === 0
+    }
+    const handleSetTimeStep = (value: Date) => {
+            const date = value;
+
+            if (isZeroTime(date)) {
+                return
+            }
+
+            setTimeStepCallback({
+                hour: date.getHours(),
+                minutes: date.getMinutes(),
+            })
+    }
 
     const momentTimeStep = useMemo(() => moment({
         hour: timeStep.hour,
@@ -23,10 +38,7 @@ function TimeStepBlock() {
     const onChange = (value: Moment | null) => {
         if (value) {
             const date = value.toDate()
-            handleSetTimeStep({
-                hour: date.getHours(),
-                minutes: date.getMinutes(),
-            })
+            handleSetTimeStep(date)
         }
     }
 
