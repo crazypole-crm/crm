@@ -34,7 +34,7 @@ function SelectListItem<T>({
                 disabled={data.disabled}
             />
             <div
-                className={styles.text}
+                className={data.disabled ? styles.is_disabled : styles.text}
                 onClick={() => onClick(!data.checked)}
             >
                 {data.text}
