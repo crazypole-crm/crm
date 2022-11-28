@@ -63,7 +63,9 @@ const [userRoleAtom, setUserRole] = declareAtomWithSetter<UserRole>('editUser.us
     on(open, (_, value) => value.mode === 'edit' ? value.userData.role : 'client')
 ])
 
-const [userPasswordAtom, setUserPassword] = declareAtomWithSetter<string|null>('editUser.userPassword', null)
+const [userOldPasswordAtom, setUserOldPassword] = declareAtomWithSetter<string|null>('editUser.userOldPassword', null)
+
+const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string|null>('editUser.userNewPassword', null)
 
 const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<string|null>('editUser.userPasswordCheck', null)
 
@@ -79,9 +81,9 @@ const [userIncorrectEmailErrorAtom, setUserIncorrectEmailError] = declareAtomWit
     on(setUserEmail, () => false)
 ])
 
-const [userPasswordCheckErrorAtom, setUserPasswordCheckError] = declareAtomWithSetter('editUser.userPasswordCheckError', false, on => [
+const [userNewPasswordCheckErrorAtom, setUserPasswordCheckError] = declareAtomWithSetter('editUser.userPasswordCheckError', false, on => [
     on(setUserPasswordCheck, () => false),
-    on(setUserPassword, () => false)
+    on(setUserNewPassword, () => false)
 ])
 
 const submit = declareAction('editUser.submit',
@@ -94,7 +96,8 @@ const submit = declareAction('editUser.submit',
         const userPhone = store.getState(userPhoneAtom)
         const userEmail = store.getState(userEmailAtom)
         const userRole = store.getState(userRoleAtom)
-        const userPassword = store.getState(userPasswordAtom)
+        const userOldPassword = store.getState(userOldPasswordAtom)
+        const userNewPassword = store.getState(userNewPasswordAtom)
         const userPasswordCheck = store.getState(userPasswordCheckAtom)
         const userBirthDay = store.getState(userBirthDayAtom)
 
@@ -103,7 +106,7 @@ const submit = declareAction('editUser.submit',
         const userPhoneError = userPhone ? !RegExp(/^\d{11}$/).test(userPhone) : false
         const userEmptyEmailError = !userEmail
         const userIncorrectEmailError = userEmptyEmailError ? false : !RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(userEmail)
-        const userPasswordCheckError = (userPassword !== userPasswordCheck)
+        const userPasswordCheckError = (userNewPassword !== userPasswordCheck)
 
         store.dispatch(setUserPhoneError(userPhoneError))
         store.dispatch(setUserEmptyEmailError(userEmptyEmailError))
@@ -149,7 +152,7 @@ const submit = declareAction('editUser.submit',
                 lastName: userLastName || undefined,
                 middleName: userMiddleName || undefined,
                 birthDay: userBirthDay || undefined,
-                password: verify(userPassword),
+                password: verify(userOldPassword),
             }))
         }
     }
@@ -165,13 +168,14 @@ const editUserPopupAtom = combine({
     userPhone: userPhoneAtom,
     userEmail: userEmailAtom,
     userRole: userRoleAtom,
-    userPassword: userPasswordAtom,
+    userOldPassword: userOldPasswordAtom,
+    userNewPassword: userNewPasswordAtom,
     userPasswordCheck: userPasswordCheckAtom,
     userBirthDay: userBirthDayAtom,
     userPhoneError: userPhoneErrorAtom,
     userEmptyEmailError: userEmptyEmailErrorAtom,
     userIncorrectEmailError: userIncorrectEmailErrorAtom,
-    userPasswordCheckError: userPasswordCheckErrorAtom
+    userPasswordCheckError: userNewPasswordCheckErrorAtom
 })
 
 const editUserPopupActions = {
@@ -185,7 +189,8 @@ const editUserPopupActions = {
     setUserPhone,
     setUserEmail,
     setUserRole,
-    setUserPassword,
+    setUserOldPassword,
+    setUserNewPassword,
     setUserPasswordCheck,
     setUserPhoneError,
     setUserEmptyEmailError,
