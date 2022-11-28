@@ -1,7 +1,7 @@
 import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelector";
 import {useAction} from "@reatom/react";
-import {Modal, TimePicker} from "antd";
-import React, {useMemo} from "react";
+import { Modal, TimePicker} from "antd";
+import {useMemo, useState} from "react";
 import {
     calendarSettingsPopupActions,
     calendarSettingsPopupAtom
@@ -10,10 +10,12 @@ import moment, {Moment} from "moment/moment";
 import {FieldBlock} from "../common/FieldBlock";
 import styles from './CalendarSettingsPopup.module.css'
 import {Time} from "../../../../viewModel/calendar/time";
+import { dateCompare } from "../../../users/table/userTableDataSort";
+import { DisabledTime } from "../../../../viewModel/calendar/calendartSettings/calendarSettings";
 
 function TimeStepBlock() {
     const timeStep = useAtomWithSelector(calendarSettingsPopupAtom, x => x.stepTime)
-    const handleSetTimeStep = useAction(calendarSettingsPopupActions.setStepTime)
+    const handleSetTimeStep = useAction(calendarSettingsPopupActions.setStepTime) 
 
     const momentTimeStep = useMemo(() => moment({
         hour: timeStep.hour,
@@ -40,9 +42,26 @@ function TimeStepBlock() {
 
 function PeriodTimeBlock() {
     const dayStartTime = useAtomWithSelector(calendarSettingsPopupAtom, x => x.dayStartTime)
-    const dayEndTime = useAtomWithSelector(calendarSettingsPopupAtom, x => x.dayEndTime)
     const handleSetDayStartTime = useAction(calendarSettingsPopupActions.setDayStartTime)
     const handleSetDayEndTime = useAction(calendarSettingsPopupActions.setDayEndTime)
+    const minuteStep = 15;
+
+    const getDisbledTime = (hour: number, minute: number, minuteStep: number):DisabledTime =>{
+        const times: DisabledTime = {disabledHours: [], disabledMinutes: []}
+        if(minute + minuteStep >= 60){
+            for(let i = 0; i <= hour;  i++){
+                times.disabledHours.push(i)
+            }
+        } else {
+            for(let i = 0; i < hour;  i++){
+                times.disabledHours.push(i)
+            }
+            for(let i = 0; i <= minute;  i += minuteStep){
+                times.disabledMinutes.push(i);
+            }
+        }
+        return times
+    }
 
     const momentStartTime = useMemo(() => moment({
         hour: dayStartTime.hour,
@@ -50,9 +69,13 @@ function PeriodTimeBlock() {
     }), [dayStartTime])
 
     const momentEndTime = useMemo(() => moment({
-        hour: dayEndTime.hour,
-        minute: dayEndTime.minutes,
-    }), [dayEndTime])
+        hour: dayStartTime.hour + 1,
+        minute: dayStartTime.minutes,
+    }), [dayStartTime])
+
+    const [disabledTime, setDisabletTime] = useState<DisabledTime>(getDisbledTime(dayStartTime.hour, dayStartTime.minutes, minuteStep))
+    const [disabledMinutes, setDisabletMinutes] = useState<number[]>(getDisbledTime(dayStartTime.hour, dayStartTime.minutes, minuteStep).disabledMinutes)
+    
 
     const onChange = (value: Moment | null, setter: (value: Time) => void) => {
         if (value) {
@@ -64,20 +87,42 @@ function PeriodTimeBlock() {
         }
     }
 
+    const onChangeForDisadledTime = (value: Moment | null) => {
+        if (value) {
+            const date = value.toDate()
+            setDisabletTime(getDisbledTime(date.getHours(), date.getMinutes(), minuteStep));
+            setDisabletMinutes(disabledTime.disabledMinutes);
+        }
+    }
+
+    const onChangeForDisadledMinutes = (value: Moment | null, thisHour: number) => {
+        if (value) {
+            const date = value.toDate()
+            if(date.getHours() === disabledTime.disabledHours[disabledTime.disabledHours.length - 1] + 1){
+                setDisabletMinutes(disabledTime.disabledMinutes)
+            } else {
+                setDisabletMinutes([]);
+            }
+        }
+    }
+
     return (
         <div className={styles.timePeriod}>
             <TimePicker
-                minuteStep={15}
+                minuteStep={minuteStep}
                 value={momentStartTime}
                 format={'HH:mm'}
-                onSelect={value => onChange(value, handleSetDayStartTime)}
+                onSelect={value => {onChange(value, handleSetDayStartTime); onChangeForDisadledTime(value)}}
             />
             -
             <TimePicker
-                minuteStep={15}
+                autoFocus = {false}
+                disabledHours={()=>disabledTime.disabledHours}
+                disabledMinutes={()=>disabledMinutes}
+                minuteStep={minuteStep}
                 value={momentEndTime}
                 format={'HH:mm'}
-                onSelect={value => onChange(value, handleSetDayEndTime)}
+                onSelect={value => {onChange(value, handleSetDayEndTime); onChangeForDisadledMinutes(value, value.toDate().getHours())}}
             />
         </div>
     )

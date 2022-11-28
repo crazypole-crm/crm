@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@reatom/core": "^1.1.5",
+    "@reatom/react": "^1.1.4",
+    "react": "^16.14.0",
+    "react-css-modules": "^4.7.11",
+    "react-scripts": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25"
+  }
+}

@@ -77,7 +77,16 @@ const calendarSettingsAction = {
     setStepTime,
 }
 
+type DisabledTime = {
+    disabledHours:  number[],
+    disabledMinutes: number[],
+};
+
 export {
     calendarSettingsAction,
     calendarSettingsAtom,
+}
+
+export type {
+    DisabledTime,
 }
