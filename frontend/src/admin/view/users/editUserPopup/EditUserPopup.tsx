@@ -92,14 +92,13 @@ function UserPhoneInput() {
 }
 
 function UserEmailInput() {
-    const userEmptyEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userEmptyEmailError)
-    const userIncorrectEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userIncorrectEmailError)
+    const userEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userEmailError)
     const userEmail = useAtomWithSelector(editUserPopupAtom, x => x.userEmail)
     const handleSetUserEmail = useAction(editUserPopupActions.setUserEmail)
 
     return <Input
         value={userEmail || ''}
-        status={(userEmptyEmailError || userIncorrectEmailError) ? 'error' : ''}
+        status={userEmailError ? 'error' : ''}
         onChange={e => handleSetUserEmail(e.target.value)}
         style={fieldStyle}
     />
@@ -163,9 +162,9 @@ function UserPasswordCheckInput() {
 
 function Content() {
     const userPhoneError = useAtomWithSelector(editUserPopupAtom, x => x.userPhoneError)
-    const userEmptyEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userEmptyEmailError)
-    const userIncorrectEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userIncorrectEmailError)
+    const userEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userEmailError)
     const userPasswordCheckError = useAtomWithSelector(editUserPopupAtom, x => x.userPasswordCheckError)
+    const userOldPasswordError = useAtomWithSelector(editUserPopupAtom, x => x.userOldPasswordError)
 
     const userLastName = useAtomWithSelector(editUserPopupAtom, x => x.userLastName)
     const userFirstName = useAtomWithSelector(editUserPopupAtom, x => x.userFirstName)
@@ -203,17 +202,17 @@ function Content() {
                 <EditUserPopupInputBlock
                     title={'Номер Телефона'}
                     content={<UserPhoneInput/>}
-                    errorIncorrect={userPhoneError}
+                    error={userPhoneError}
                 />
                 <EditUserPopupInputBlock
                     title={'Email'}
                     content={<UserEmailInput/>}
-                    errorEmpty={userEmptyEmailError}
-                    errorIncorrect={userIncorrectEmailError}
+                    error={userEmailError}
                 />
                 {(popupMode === 'create' || currentUser.id === userId) && <EditUserPopupInputBlock
                     title={'Старый пароль'}
                     content={<UserOldPasswordInput/>}
+                    error={userOldPasswordError}
                 />}
                 {(popupMode === 'create' || currentUser.id === userId) && <EditUserPopupInputBlock
                     title={'Новый пароль'}
@@ -226,7 +225,7 @@ function Content() {
                 {(popupMode === 'create' || currentUser.id === userId) &&<EditUserPopupInputBlock
                     title={'Повторите пароль'}
                     content={<UserPasswordCheckInput/>}
-                    errorIncorrect={userPasswordCheckError}
+                    error={userPasswordCheckError}
                 />}
             </div>
         </div>

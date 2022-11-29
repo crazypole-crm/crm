@@ -4,25 +4,20 @@ import styles from './EditUserPopupInputBlock.module.css'
 type EditUserPopupInputBlockProps = {
     title: string,
     content: JSX.Element,
-    errorEmpty?: boolean,
-    errorIncorrect?: boolean,
+    error?: string,
 }
 
 function EditUserPopupInputBlock({
     title,
     content,
-    errorEmpty = false,
-    errorIncorrect = false,
+    error,
 }: EditUserPopupInputBlockProps) {
     return (
         <div className={styles.blockContainer}>
             <span className={styles.blockTitle}>{title}</span>
             <div className={styles.blockContent}>{content}</div>
-            {errorEmpty && <div className={styles.errorMessage}>
-                {'Поле обязательное'}
-            </div>}
-            {errorIncorrect && <div className={styles.errorMessage}>
-                {'Неправильные данные'}
+            {!!error && <div className={styles.errorMessage}>
+                {error}
             </div>}
         </div>
     )
