@@ -16,28 +16,23 @@ type Api_UsersData = {
 }
 
 function getUsersDataByIds(userIds: Array<string>): Promise<Array<Api_UsersData>> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve([])
-        }, 1000)
+    return fetch('/get/users_data', {
+        method: 'POST',
+        body: JSON.stringify({
+            ids: userIds,
+        })
     })
-    // return fetch('/get/users_data', {
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //         ids: userIds,
-    //     })
-    // })
-    //     .then(response => {
-    //         switch (response.status) {
-    //             case HttpStatus.OK:
-    //                 return response.json()
-    //             case HttpStatus.UNAUTHORIZED:
-    //                 // goToUrl('/auth')
-    //                 return Promise.reject(response)
-    //             default:
-    //                 return Promise.reject(response.status)
-    //         }
-    //     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return response.json()
+                case HttpStatus.UNAUTHORIZED:
+                    // goToUrl('/auth')
+                    return Promise.reject(response)
+                default:
+                    return Promise.reject(response.status)
+            }
+        })
 }
 
 function getAllUsersData(): Promise<Array<Api_UsersData>> {
@@ -117,12 +112,24 @@ function createUser(userData: Api_CreateUserData): Promise<{id: string}> {
         })
 }
 
-function deleteUser(userId: string): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
+function deleteUsers(usersId: Array<string>): Promise<void> {
+    return fetch('/users/remove', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ids: usersId,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 const UsersApi = {
@@ -130,7 +137,7 @@ const UsersApi = {
     getAllUsersData,
     editUser,
     createUser,
-    deleteUser,
+    deleteUsers,
 }
 
 export type {

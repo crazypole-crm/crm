@@ -1,16 +1,27 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
 import {UsersApi} from "../../../api/usersApi";
-import {usersActions} from "./users";
-import {processStandardError} from "../../../core/error/processStandardError";
+import {usersActions, usersAtom} from "./users";
+import {authorizedCurrentUser} from "../../../currentUser/currentUser";
+import {Toasts} from "../../../common/notification/notifications";
 
-const deleteUser = declareAsyncAction<string>(
+const deleteUser = declareAsyncAction<Array<string>>(
     'user.createUser',
-    (userId, store) => {
-        return UsersApi.deleteUser(userId)
+    (userIds, store) => {
+        const currentUserId = store.getState(authorizedCurrentUser).id
+        const users = store.getState(usersAtom)
+
+        const removedUsersIds = userIds.filter(userId => userId !== currentUserId)
+        const removedUsers = removedUsersIds.map(id => users[id])
+
+        store.dispatch(usersActions.removeUsers(removedUsersIds))
+        return UsersApi.deleteUsers(removedUsersIds)
             .then(() => {
-                store.dispatch(usersActions.removeUsers([userId]))
+                Toasts.success('Пользователи успешно удалены')
             })
-            .catch(processStandardError)
+            .catch(() => {
+                Toasts.error('При удалении пользователей произошла ошибка')
+                store.dispatch(usersActions.updateUsers(removedUsers))
+            })
     }
 )
 

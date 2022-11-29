@@ -13,6 +13,21 @@ function convertTrainingDataToDate(trainingDate: TrainingDate, time: Time) {
     return date
 }
 
+function convertDateToTrainingData(date: Date): {trainingDate: TrainingDate, time: Time} {
+    return {
+        trainingDate: {
+            date: date.getDate(),
+            year: date.getFullYear(),
+            month: date.getMonth(),
+        },
+        time: {
+            minutes: date.getMinutes(),
+            hour: date.getHours(),
+        }
+    }
+}
+
 export {
     convertTrainingDataToDate,
+    convertDateToTrainingData,
 }

@@ -7,7 +7,7 @@ use App\Common\Domain\Uuid;
 
 class Hall
 {
-    private Uuid $id;
+    private string $id;
     private string $name;
     private int $capability;
 
@@ -17,7 +17,7 @@ class Hall
         int $capability,
     )
     {
-        $this->id = $id;
+        $this->id = (string)$id;
         $this->name = $name;
         $this->capability = $capability;
     }
@@ -27,15 +27,7 @@ class Hall
      */
     public function getId(): Uuid
     {
-        return $this->id;
-    }
-
-    /**
-     * @param Uuid $id
-     */
-    public function setId(Uuid $id): void
-    {
-        $this->id = $id;
+        return new Uuid($this->id);
     }
 
     /**

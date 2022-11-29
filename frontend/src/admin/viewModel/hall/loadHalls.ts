@@ -1,8 +1,8 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {processStandardError} from "../../../core/error/processStandardError";
 import {hallsActions} from "./halls";
 import {declareAtom} from "@reatom/core";
 import {HallsApi} from "../../../api/hallsApi";
+import {Toasts} from "../../../common/notification/notifications";
 
 const loadHalls = declareAsyncAction<void>('directions.load',
     (_, store) => {
@@ -11,7 +11,7 @@ const loadHalls = declareAsyncAction<void>('directions.load',
                 store.dispatch(hallsActions.updateHalls(halls))
             })
             .catch(() => {
-                processStandardError()
+                Toasts.error('При получении списка залов произошла ошибка')
             })
     }
 )

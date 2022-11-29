@@ -3,23 +3,22 @@ import {CalendarApi} from "../../../../api/calendarApi";
 import {lastLoadedPeriodAtom, loadTrainingsForPeriod} from "./loadTrainingsForPeriod";
 import {Toasts} from "../../../../common/notification/notifications";
 
-
-const deleteTraining = declareAsyncAction<string>(
-    'deleteTraining',
-    (baseId, store) => {
-        return CalendarApi.deleteTraining(baseId)
+const cancelTraining = declareAsyncAction<string>(
+    'cancelTraining',
+    (trainingId, store) => {
+        return CalendarApi.cancelTraining(trainingId)
             .then(() => {
-                Toasts.success('Занятие успешно удалено')
+                Toasts.success('Занятие успешно отменено')
                 const lastLoadedPeriod = store.getState(lastLoadedPeriodAtom)
                 store.dispatch(loadTrainingsForPeriod({
                     startDate: lastLoadedPeriod.startDate,
                     endDate: lastLoadedPeriod.endDate,
                 }))
             })
-            .catch(() => Toasts.error('При удалении занятия произошла ошибка'))
+            .catch(() => Toasts.error('При отмене занятия произошла ошибка'))
     }
 )
 
 export {
-    deleteTraining,
+    cancelTraining
 }

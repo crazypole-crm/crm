@@ -132,17 +132,17 @@ class TrainingQueryService implements TrainingQueryServiceInterface
 
     private function addTrainingFieldSelect(QueryBuilder $qb, string $alias = 't'): void
     {
-        $qb->addSelect($alias . '.' . TrainingTable::TRAINING_ID . 'AS' . TrainingTable::TRAINING_ID );
-        $qb->addSelect($alias . '.' . TrainingTable::BASE_TRAINING_ID . 'AS' . TrainingTable::BASE_TRAINING_ID);
-        $qb->addSelect($alias . '.' . TrainingTable::TITLE . 'AS' . TrainingTable::TITLE);
-        $qb->addSelect($alias . '.' . TrainingTable::DESCRIPTION . 'AS' . TrainingTable::DESCRIPTION);
-        $qb->addSelect($alias . '.' . TrainingTable::START_DATE . 'AS' . TrainingTable::START_DATE);
-        $qb->addSelect($alias . '.' . TrainingTable::END_DATE . 'AS' . TrainingTable::END_DATE);
-        $qb->addSelect($alias . '.' . TrainingTable::TRAINER_ID . 'AS' . TrainingTable::TRAINER_ID);
-        $qb->addSelect($alias . '.' . TrainingTable::HALL_ID . 'AS' . TrainingTable::HALL_ID);
-        $qb->addSelect($alias . '.' . TrainingTable::COURSE_ID . 'AS' . TrainingTable::COURSE_ID);
-        $qb->addSelect($alias . '.' . TrainingTable::TRAINING_TYPE . 'AS' . TrainingTable::TRAINING_TYPE);
-        $qb->addSelect($alias . '.' . TrainingTable::IS_CANCELED . 'AS' . TrainingTable::IS_CANCELED);
+        $qb->addSelect($alias . '.' . TrainingTable::TRAINING_ID . ' AS ' . TrainingTable::TRAINING_ID );
+        $qb->addSelect($alias . '.' . TrainingTable::BASE_TRAINING_ID . ' AS ' . TrainingTable::BASE_TRAINING_ID);
+        $qb->addSelect($alias . '.' . TrainingTable::TITLE . ' AS ' . TrainingTable::TITLE);
+        $qb->addSelect($alias . '.' . TrainingTable::DESCRIPTION . ' AS ' . TrainingTable::DESCRIPTION);
+        $qb->addSelect($alias . '.' . TrainingTable::START_DATE . ' AS ' . TrainingTable::START_DATE);
+        $qb->addSelect($alias . '.' . TrainingTable::END_DATE . ' AS ' . TrainingTable::END_DATE);
+        $qb->addSelect($alias . '.' . TrainingTable::TRAINER_ID . ' AS ' . TrainingTable::TRAINER_ID);
+        $qb->addSelect($alias . '.' . TrainingTable::HALL_ID . ' AS ' . TrainingTable::HALL_ID);
+        $qb->addSelect($alias . '.' . TrainingTable::COURSE_ID . ' AS ' . TrainingTable::COURSE_ID);
+        $qb->addSelect($alias . '.' . TrainingTable::TRAINING_TYPE . ' AS ' . TrainingTable::TRAINING_TYPE);
+        $qb->addSelect($alias . '.' . TrainingTable::IS_CANCELED . ' AS ' . TrainingTable::IS_CANCELED);
         $qb->addSelect("bt.start_date AS " . TrainingTable::BASE_TRAINING_START_DATE);
         $qb->addSelect("IF(t.base_id = bt.id, 1, 0) AS " . TrainingTable::IS_TRAINER_REPLACE);
     }

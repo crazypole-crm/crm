@@ -1,6 +1,7 @@
 import {combine, declareAction, declareAtom} from "@reatom/core";
 import { deleteTraining } from "../calendaActions/deleteTraining";
 import {TrainingData} from "../TrainingData";
+import {cancelTraining} from "../calendaActions/cancelTraining";
 
 type ModeType = 'record' | 'cancel' | 'delete'
 
@@ -28,13 +29,13 @@ const trainingDataAtom = declareAtom<TrainingData>('trainingActionPopup.training
 const submit = declareAction('trainingActionPopup.submit',
     (_, store) => {
         const mode = store.getState(modeAtom)
-        const baseId = store.getState(trainingDataAtom).baseId
+        const {baseId, id} = store.getState(trainingDataAtom)
 
         if (mode === 'record') {
             console.log('record to training')
         }
         else if (mode === 'cancel') {
-            console.log('cancel training')
+            store.dispatch(cancelTraining(id))
         }
         else if (mode === 'delete') {
             store.dispatch(deleteTraining(baseId))

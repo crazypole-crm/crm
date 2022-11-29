@@ -31,7 +31,7 @@ class CourseRepository implements CourseRepositoryInterface
 
     public function findByIds(array $ids): array
     {
-        return $this->repo->findOneBy(['id' => $this->convertUuidsToStrings($ids)]);
+        return $this->repo->findBy(['id' => $this->convertUuidsToStrings($ids)]);
     }
 
     public function add(Course $course): void

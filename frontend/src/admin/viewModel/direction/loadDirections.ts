@@ -1,8 +1,8 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
 import {directionsActions} from "./directions";
-import {processStandardError} from "../../../core/error/processStandardError";
 import {declareAtom} from "@reatom/core";
 import {DirectionsApi} from "../../../api/directionsApi";
+import {Toasts} from "../../../common/notification/notifications";
 
 const loadDirections = declareAsyncAction<void>('directions.load',
     (_, store) => {
@@ -11,7 +11,7 @@ const loadDirections = declareAsyncAction<void>('directions.load',
                 store.dispatch(directionsActions.updateDirections(directions))
             })
             .catch(() => {
-                processStandardError()
+                Toasts.error('При загрузке направлений произощла ошибка')
             })
     }
 )

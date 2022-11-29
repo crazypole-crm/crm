@@ -2,6 +2,8 @@ import {combine, declareAction, declareAtom} from "@reatom/core";
 import {TrainingDate} from "../TrainingData";
 import {declareAtomWithSetter} from "../../../../core/reatom/declareAtomWithSetter";
 import {Time} from "../time";
+import {moveTraining} from "../calendaActions/moveTraining";
+import {trainingsAtom} from "../trainings";
 
 type OpenPayload = {
     id: string
@@ -16,6 +18,7 @@ const close = declareAction('moveTrainingPopup.close')
 const openedAtom = declareAtom('moveTrainingPopup.opened', false, on => [
     on(open, () => true),
     on(close, () => false),
+    on(moveTraining.done, () => false),
 ])
 
 const trainingIdAtom = declareAtom('moveTrainingPopup.trainingId', '', on => [
@@ -47,11 +50,31 @@ const [repeatAtom, setRepeat] = declareAtomWithSetter('moveTrainingPopup.repeat'
 
 const submit = declareAction('moveTrainingPopup.submit',
     (_, store) => {
+        const trainings = store.getState(trainingsAtom)
+        const trainingId = store.getState(trainingIdAtom)
         const trainingDate = store.getState(trainingDateAtom)
         const trainingStartTime = store.getState(trainingStartTimeAtom)
         const trainingEndTime = store.getState(trainingEndTimeAtom)
 
-        console.log('submit move training')
+        const training = trainings[trainingId]
+        if (training.date.date === trainingDate.date
+            && training.date.month === trainingDate.month
+            && training.date.year === trainingDate.year
+            && training.timeStart.hour === trainingStartTime.hour
+            && training.timeStart.minutes === trainingStartTime.minutes
+            && training.timeEnd.hour === trainingEndTime.hour
+            && training.timeEnd.minutes === trainingEndTime.minutes
+        ) {
+            store.dispatch(close())
+        }
+        else {
+            store.dispatch(moveTraining({
+                trainingId,
+                trainingEndTime,
+                trainingStartTime,
+                trainingDate,
+            }))
+        }
     }
 )
 

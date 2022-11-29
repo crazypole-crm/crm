@@ -5,8 +5,8 @@ import {trainingsActions} from "../trainings";
 import {Time} from "../time";
 import {TrainingData} from "../TrainingData";
 import {getValueByCheckedKey} from "../../../../core/getValueByCheckedKey";
-import {processStandardError} from "../../../../core/error/processStandardError";
-import { DatePeriod } from "../DatePeriod";
+import {DatePeriod} from "../DatePeriod";
+import {Toasts} from "../../../../common/notification/notifications";
 
 type LoadTrainingsForPeriodPayload = {
     startDate: Date,
@@ -77,7 +77,7 @@ const loadTrainingsForPeriod = declareAsyncAction<LoadTrainingsForPeriodPayload,
                     endDate,
                 })
             })
-            .catch(processStandardError)
+            .catch(() => Toasts.error('При загрузке занятий произошла ошибка'))
     }
 )
 
