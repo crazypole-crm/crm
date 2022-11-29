@@ -144,6 +144,6 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         $qb->addSelect($alias . '.' . TrainingTable::TRAINING_TYPE . ' AS ' . TrainingTable::TRAINING_TYPE);
         $qb->addSelect($alias . '.' . TrainingTable::IS_CANCELED . ' AS ' . TrainingTable::IS_CANCELED);
         $qb->addSelect("bt.start_date AS " . TrainingTable::BASE_TRAINING_START_DATE);
-        $qb->addSelect("IF(t.base_id = bt.id, 1, 0) AS " . TrainingTable::IS_TRAINER_REPLACE);
+        $qb->addSelect("IF(t.trainer_id = bt.trainer_id, 1, 0) AS " . TrainingTable::IS_TRAINER_REPLACE);
     }
 }

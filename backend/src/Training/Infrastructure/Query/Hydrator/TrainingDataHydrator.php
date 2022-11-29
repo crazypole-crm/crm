@@ -26,7 +26,7 @@ class TrainingDataHydrator
         $baseTrainingStartDate = TypeConverter::hydrateValue($data[TrainingTable::BASE_TRAINING_START_DATE], TrainingTable::EVENT_FIELDS[TrainingTable::BASE_TRAINING_START_DATE]);
 
         $interval = $startDate->diff($baseTrainingStartDate);
-        $isMoved = $interval->days === 0 && $interval->i === 0 && $interval->h === 0;
+        $isMoved = $interval->d === 0 && $interval->i === 0 && $interval->h === 0;
         return new TrainingData($baseTrainingId, $trainingId, $title, $description, $startDate, $endDate, $trainerId, $hallId, $courseId, $type, $isCanceled, $isTrainerChanged, $isMoved);
     }
 }
