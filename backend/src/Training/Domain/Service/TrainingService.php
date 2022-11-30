@@ -166,9 +166,11 @@ class TrainingService
         $i = 0;
         foreach ($trainings as $training)
         {
+            $startDateExample = $startDate;
+            $endDateExample = $endDate;
             $training->setName($title);
-            $training->setStartDate($i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate);
-            $training->setEndDate($i !== 0 ? $endDate->add(new \DateInterval('P' . $i . 'W')) : $endDate);
+            $training->setStartDate($i !== 0 ? $startDateExample->add(new \DateInterval('P' . $i . 'W')) : $startDateExample);
+            $training->setEndDate($i !== 0 ? $endDateExample->add(new \DateInterval('P' . $i . 'W')) : $endDateExample);
             $training->setDescription($description);
             $training->setCourseId($courseId);
             $training->setHallId($hallId);
