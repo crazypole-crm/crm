@@ -1,7 +1,6 @@
-import { AuthenticationApi } from "../../api/authenticationApi";
-import { Toasts } from "../../common/notification/notifications";
-import { processStandardError } from "../../core/error/processStandardError";
-import { declareAsyncAction } from "../../core/reatom/declareAsyncAction";
+import {AuthenticationApi} from "../../api/authenticationApi";
+import {Toasts} from "../../common/notification/notifications";
+import {declareAsyncAction} from "../../core/reatom/declareAsyncAction";
 
 
 type RegistrationActionPayload = {
@@ -19,7 +18,7 @@ const registrationAction = declareAsyncAction<RegistrationActionPayload>(
                 return Promise.resolve()
             })
             .catch(err => {
-                processStandardError()
+                Toasts.error('При регистрации произошла ошибка')
                 return Promise.reject()
             })
     }

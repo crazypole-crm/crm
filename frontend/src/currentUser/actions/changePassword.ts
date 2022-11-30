@@ -1,6 +1,5 @@
 import {declareAsyncAction} from "../../core/reatom/declareAsyncAction";
 import {CurrentUserApi} from "../../api/currentUserApi";
-import {processStandardError} from "../../core/error/processStandardError";
 
 type ChangePasswordPayload = {
     userId: string,

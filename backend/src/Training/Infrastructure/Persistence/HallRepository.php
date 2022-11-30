@@ -31,7 +31,7 @@ class HallRepository implements HallRepositoryInterface
 
     public function findHallsByIds(array $hallIds): array
     {
-        return $this->repo->findOneBy(['id' => $this->convertUuidsToStrings($hallIds)]);
+        return $this->repo->findBy(['id' => $this->convertUuidsToStrings($hallIds)]);
     }
 
     public function add(Hall $hall): void

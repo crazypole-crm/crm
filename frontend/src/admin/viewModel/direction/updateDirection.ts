@@ -1,8 +1,8 @@
-import { DirectionsApi } from "../../../api/directionsApi"
-import { processStandardError } from "../../../core/error/processStandardError"
-import { declareAsyncAction } from "../../../core/reatom/declareAsyncAction"
-import { DirectionData } from "./DirectionData"
-import { directionsActions } from "./directions"
+import {DirectionsApi} from "../../../api/directionsApi"
+import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction"
+import {DirectionData} from "./DirectionData"
+import {directionsActions} from "./directions"
+import {Toasts} from "../../../common/notification/notifications";
 
 const updateDirection = declareAsyncAction<DirectionData>(
     'updateDirection',
@@ -16,7 +16,9 @@ const updateDirection = declareAsyncAction<DirectionData>(
                     ...directionData,
                 }))
             })
-            .catch(processStandardError)
+            .catch(() => {
+                Toasts.error('При изменении направления произошла ошибка')
+            })
     }
 )
 

@@ -98,7 +98,7 @@ function UsersTableCommandPanel({
     }
 
     const handleOnDeleteClick = () => {
-        handleDeleteUser(String(selectedRowKeys[0]))
+        handleDeleteUser(selectedRowKeys as string[])
     }
 
     const handleOnAddClick = () => {

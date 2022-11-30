@@ -48,11 +48,23 @@ function editDirection(directionData: DirectionData): Promise<void> {
 }
 
 function deleteDirections(directionsIds: string[]): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
+    return fetch('/remove/courses', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            courseIds: directionsIds,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 const DirectionsApi = {

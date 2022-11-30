@@ -1,8 +1,8 @@
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {processStandardError} from "../../../core/error/processStandardError";
 import {usersActions} from "./users";
 import {UsersApi} from "../../../api/usersApi";
 import {UserData} from "./UserData";
+import {Toasts} from "../../../common/notification/notifications";
 
 const updateUser = declareAsyncAction<Omit<UserData, 'lastVisit'>>(
     'updateUser',
@@ -19,11 +19,14 @@ const updateUser = declareAsyncAction<Omit<UserData, 'lastVisit'>>(
             birthday: userData.birthDay ? String(userData.birthDay.getTime()) : undefined,
         })
             .then(() => {
+                Toasts.success('Пользователь успешно изменен')
                 store.dispatch(usersActions.updateUser({
                     ...userData,
                 }))
             })
-            .catch(processStandardError)
+            .catch(() => {
+                Toasts.error('При изменении пользователя произошла ошибка')
+            })
     }
 )
 

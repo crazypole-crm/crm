@@ -48,11 +48,23 @@ function saveHall(hallData: HallData): Promise<void> {
 }
 
 function deleteHalls(hallIds: string[]): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
+    return fetch('/remove/halls', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            hallsIds: hallIds,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 const HallsApi = {

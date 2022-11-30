@@ -131,28 +131,68 @@ function getTrainingClients(trainingId: string): Promise<Api_TrainingClients> {
 }
 
 function cancelTraining(trainingId: string): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
+    return fetch('/edit/training/status', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            trainingId,
+            isCanceled: true,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 function moveTraining(trainingId: string, startDate: number, endDate: number): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
+    return fetch('/edit/training/time', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            trainingId,
+            startDate,
+            endDate,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 
 function replaceTrainingTrainer(trainingId: string, trainerId: string): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
+    return fetch('/edit/training/trainer', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            trainingId,
+            trainerId,
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 const CalendarApi = {

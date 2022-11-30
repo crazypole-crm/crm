@@ -1,12 +1,12 @@
 import {declareAtomWithSetter} from "../../../core/reatom/declareAtomWithSetter";
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
-import {processStandardError} from "../../../core/error/processStandardError";
 import {UserData, UserRole} from "./UserData";
 import {usersActions, usersAtom} from "./users";
 import {Store} from "@reatom/core";
 import {dispatchAsyncAction} from "../../../core/reatom/dispatchAsyncAction";
 import {Api_UsersData, UsersApi} from "../../../api/usersApi";
 import {generateUuid} from "../../../core/uuid/generateUuid";
+import {Toasts} from "../../../common/notification/notifications";
 
 function randomInteger(min: number, max: number) {
     let rand = min + Math.random() * (max + 1 - min);
@@ -43,12 +43,6 @@ function handleUsersData(store: Store, users: Array<Api_UsersData>, updateFn: (u
     users.push(getRandomUserData('trainer1', 'trainer'))
     users.push(getRandomUserData('trainer2', 'trainer'))
     users.push(getRandomUserData('trainer3', 'trainer'))
-    users.push(getRandomUserData('client1', 'client'))
-    users.push(getRandomUserData('client2', 'client'))
-    users.push(getRandomUserData('client3', 'client'))
-    for (let i = 0; i < 100; i++) {
-        users.push(getRandomUserData())
-    }
     const remappedUsers = users.map(user => ({
         ...user,
         birthDay: user.birthday ? new Date(Number(user.birthday)) : undefined,
@@ -65,7 +59,6 @@ function loadUsersResponseCall(store: Store, userIds: Array<string>) {
             return Promise.resolve(usersData)
         })
         .catch(() => {
-            processStandardError()
             return Promise.reject()
         })
 }
@@ -95,7 +88,7 @@ const loadAllUsersData = declareAsyncAction<void, Array<UserData>>('loadAllUsers
                 return Promise.resolve(usersData)
             })
             .catch(() => {
-                processStandardError()
+                Toasts.error('При загрузке пользователей произошла ошибка')
                 return Promise.reject()
             })
     }

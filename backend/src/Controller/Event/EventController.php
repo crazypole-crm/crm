@@ -121,7 +121,7 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/edit/training/time")
+     * @Route("/edit/training/status")
      */
     public function changeTrainingStatus(Request $request): Response
     {

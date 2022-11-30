@@ -1,5 +1,7 @@
 import {combine, declareAction, declareAtom} from "@reatom/core";
 import {declareAtomWithSetter} from "../../../../core/reatom/declareAtomWithSetter";
+import {replaceTrainer} from "../calendaActions/replaceTrainer";
+import {trainingsAtom} from "../trainings";
 
 type OpenPayload = {
     id: string
@@ -12,6 +14,7 @@ const close = declareAction('replaceTrainerPopup.close')
 const openedAtom = declareAtom('replaceTrainerPopup.opened', false, on => [
     on(open, () => true),
     on(close, () => false),
+    on(replaceTrainer.done, () => false)
 ])
 
 const trainingIdAtom = declareAtom('replaceTrainerPopup.trainingId', '', on => [
@@ -26,11 +29,19 @@ const [repeatAtom, setRepeat] = declareAtomWithSetter('replaceTrainerPopup.repea
 
 const submit = declareAction('replaceTrainerPopup.submit',
     (_, store) => {
+        const trainings = store.getState(trainingsAtom)
         const trainingId = store.getState(trainingIdAtom)
         const trainerId = store.getState(trainerIdAtom)
 
-        console.log('replace trainer', trainerId)
-        store.dispatch(close())
+        if (trainings[trainingId].trainerId !== trainerId) {
+            store.dispatch(replaceTrainer({
+                trainerId,
+                trainingId,
+            }))
+        }
+        else {
+            store.dispatch(close())
+        }
     }
 )
 

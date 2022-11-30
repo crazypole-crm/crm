@@ -2,7 +2,7 @@ import {UserData} from "./UserData";
 import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
 import {UsersApi} from "../../../api/usersApi";
 import {usersActions} from "./users";
-import {processStandardError} from "../../../core/error/processStandardError";
+import {Toasts} from "../../../common/notification/notifications";
 
 
 const createUser = declareAsyncAction<Omit<UserData, 'id' | 'lastVisit'> & {password: string}>(
@@ -20,12 +20,13 @@ const createUser = declareAsyncAction<Omit<UserData, 'id' | 'lastVisit'> & {pass
             password: userData.password,
         })
             .then(({id}) => {
+                Toasts.error('Пользователь успешно создан')
                 store.dispatch(usersActions.updateUser({
                     ...userData,
                     id,
                 }))
             })
-            .catch(processStandardError)
+            .catch(() => Toasts.error('При создании пользователя произошла ошибка'))
     }
 )
 

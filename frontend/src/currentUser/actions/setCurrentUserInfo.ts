@@ -2,8 +2,8 @@ import {declareAsyncAction} from "../../core/reatom/declareAsyncAction";
 import {UserData} from "../../admin/viewModel/users/UserData";
 import {CurrentUserApi} from "../../api/currentUserApi";
 import {currentUserActions} from "../currentUser";
-import {processStandardError} from "../../core/error/processStandardError";
 import {usersActions} from "../../admin/viewModel/users/users";
+import {Toasts} from "../../common/notification/notifications";
 
 const setCurrentUserInfo = declareAsyncAction<Omit<UserData, 'lastVisit'>>('currentUser.setInfo',
     (data, store) => {
@@ -18,13 +18,16 @@ const setCurrentUserInfo = declareAsyncAction<Omit<UserData, 'lastVisit'>>('curr
             birthday: data.birthDay ? String(data.birthDay.getTime()) : undefined,
         })
             .then(() => {
+                Toasts.success('Изменение пользователя прошло успешно')
                 store.dispatch(currentUserActions.setCurrentUserData({
                     isAuthUser: true,
                     ...data,
                 }))
                 store.dispatch(usersActions.updateUser(data))
             })
-            .catch(processStandardError)
+            .catch(() => {
+                Toasts.error('При изменении данных пользователя произошла ошибка')
+            })
     }
 )
 
