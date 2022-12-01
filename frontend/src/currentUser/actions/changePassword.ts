@@ -16,7 +16,6 @@ const changePassword = declareAsyncAction<ChangePasswordPayload, Promise<Respons
             userId,
         })
             .then(response => {
-                Toasts.success('Пароль успешно изменен')
                 return Promise.resolve(response)
             })
     }

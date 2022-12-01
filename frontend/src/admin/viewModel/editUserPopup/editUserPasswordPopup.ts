@@ -90,6 +90,7 @@ const submit = declareAction('editUserPassword.submit',
                         store.dispatch(setUserOldPasswordError('Старый пароль не подходит'))
                         return
                     }
+                    Toasts.success('Пароль успешно изменен')
                     store.dispatch(close())
                 })
                 .catch(() => {
