@@ -82,7 +82,7 @@ function Content() {
                 value={phone}
             />}
             {role && <UserFieldBlock
-                title={'Номер телефона'}
+                title={'Роль'}
                 value={getRoleTitle(role)}
             />}
             {birthDay && <UserFieldBlock

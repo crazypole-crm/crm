@@ -140,8 +140,8 @@ function Calendar() {
 
     useEffect(() => {
         const period = getPeriod(calendarType, lastPeriodDateStart, {
-            dayEndTime: calendarSettings.dayStartTime,
-            dayStartTime: calendarSettings.dayEndTime,
+            dayEndTime: calendarSettings.dayEndTime,
+            dayStartTime: calendarSettings.dayStartTime,
         })
         handleLoadTrainings(period)
     }, [calendarType, lastPeriodDateStart, handleLoadTrainings])
