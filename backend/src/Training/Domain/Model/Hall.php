@@ -57,7 +57,7 @@ class Hall
     /**
      * @param int $capability
      */
-    public function setCapability(int $capability): void
+    public function setCapacity(int $capability): void
     {
         $this->capability = $capability;
     }

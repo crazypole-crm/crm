@@ -68,6 +68,16 @@ class Api implements ApiInterface
         $this->trainingAppService->removeCourses($courseIds);
     }
 
+    public function editHall(string $id, string $name, int $capacity): void
+    {
+        $this->trainingAppService->editHall($id, $name, $capacity);
+    }
+
+    public function editCourse(string $id, string $name): void
+    {
+        $this->trainingAppService->editCourse($id, $name);
+    }
+
     public function listTrainings(ListTrainingInput $input): array
     {
         return $this->trainingQueryService->listTrainings(

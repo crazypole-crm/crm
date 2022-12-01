@@ -30,6 +30,10 @@ interface ApiInterface
 
     public function removeCourses(array $courseIds): void;
 
+    public function editHall(string $id, string $name, int $capacity): void;
+
+    public function editCourse(string $id, string $name): void;
+
     public function listTrainings(ListTrainingInput $input): array;
 
     public function listCourses(): array;

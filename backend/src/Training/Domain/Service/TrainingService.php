@@ -301,4 +301,26 @@ class TrainingService
         $this->courseRepository->add($course);
         return $course->getId();
     }
+
+
+    public function editHall(Uuid $id, string $name, int $capacity): void
+    {
+        $hall = $this->hallRepository->findHallById($id);
+        if ($hall === null)
+        {
+            throw new HallNotFoundException($id);
+        }
+        $hall->setName($name);
+        $hall->setCapacity($capacity);
+    }
+
+    public function editCourse(Uuid $id, string $name): void
+    {
+        $course = $this->courseRepository->findById($id);
+        if ($course === null)
+        {
+            throw new CourseNotFoundException($id);
+        }
+        $course->setName($name);
+    }
 }

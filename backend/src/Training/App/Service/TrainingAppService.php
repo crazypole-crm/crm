@@ -146,6 +146,30 @@ class TrainingAppService
         );
     }
 
+    public function editHall(string $id, string $name, int $capacity): void
+    {
+        $operation = $this->blockingOperatorExecutor->execute(
+            [LockNames::getHallLock($id)],
+            function () use ($id, $name, $capacity)
+            {
+                $this->eventService->editCourse(new Uuid($id), $name, $capacity);
+            }
+        );
+        $this->transaction->execute($operation);
+    }
+
+    public function editCourse(string $id, string $name): void
+    {
+        $operation = $this->blockingOperatorExecutor->execute(
+            [LockNames::getCourseLock($id)],
+            function () use ($id, $name)
+            {
+                $this->eventService->editCourse(new Uuid($id), $name);
+            }
+        );
+        $this->transaction->execute($operation);
+    }
+
     public function removeCourses(array $courseIds): void
     {
         $operation = $this->blockingOperatorExecutor->execute(

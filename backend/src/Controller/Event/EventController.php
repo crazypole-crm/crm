@@ -215,6 +215,51 @@ class EventController extends AbstractController
         try
         {
             $userId = $this->securityContext->getAuthenticatedUserId();
+            $hallsId = $requestData['hallId'];
+            $name = $requestData['name'];
+            $capacity = $requestData['capacity'];
+            $this->eventApi->editHall($hallsId, $name, $capacity);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/edit/course")
+     */
+    public function editCourse(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        //TODO добавить права и проверку
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $hallsId = $requestData['courseId'];
+            $name = $requestData['name'];
+            $this->eventApi->editCourse($hallsId, $name);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/edit/hall")
+     */
+    public function editHall(Request $request): Response
+    {
+        //TODO обработка исключений
+        $requestData = json_decode($request->getContent(), true);
+        //TODO добавить права и проверку
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
             $hallsIds = $requestData['hallsIds'];
             $this->eventApi->removeHalls($hallsIds);
             return new Response(null, Response::HTTP_OK);
@@ -224,6 +269,7 @@ class EventController extends AbstractController
             return new Response(null, Response::HTTP_UNAUTHORIZED);
         }
     }
+
 
     /**
      * @Route("/list/trainings")
