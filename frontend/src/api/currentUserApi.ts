@@ -1,5 +1,6 @@
 import {HttpStatus} from "../core/http/HttpStatus"
 import {goToAuth} from "../core/link/goToUrl";
+import {Api_Role} from "../common/role/Api_Role";
 
 type Api_UserInfo = {
     id: string,
@@ -72,6 +73,7 @@ type GetUserDataType = {
     middleName: string,
     birthDay: string | null,
     lastVisit: string | null,
+    role: Api_Role,
 };
 
 function getUserData(): Promise<GetUserDataType> {

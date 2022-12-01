@@ -1,6 +1,6 @@
 import {HttpStatus} from "../core/http/HttpStatus";
 import {UserRole} from "../admin/viewModel/users/UserData";
-import {generateUuid} from "../core/uuid/generateUuid";
+import {Api_Role} from "../common/role/Api_Role";
 
 type Api_UsersData = {
     id: string,
@@ -10,9 +10,9 @@ type Api_UsersData = {
     firstName?: string,
     lastName?: string,
     middleName?: string,
-    role: UserRole,
     birthday?: string,
     lastVisit?: string,
+    role: Api_Role,
 }
 
 function getUsersDataByIds(userIds: Array<string>): Promise<Array<Api_UsersData>> {
@@ -55,13 +55,13 @@ function getAllUsersData(): Promise<Array<Api_UsersData>> {
 type Api_EditUserData = {
     id: string,
     email: string,
-    role: UserRole,
     avatarUrl?: string,
     phoneNumber?: string,
     firstName?: string,
     lastName?: string,
     middleName?: string,
     birthday?: string,
+    role: Api_Role,
 }
 
 function editUser(userData: Api_EditUserData): Promise<void> {
