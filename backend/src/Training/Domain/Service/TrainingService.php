@@ -83,7 +83,7 @@ class TrainingService
                 $training = new Training($baseTraining->getId(),
                     new Uuid(UuidGenerator::generateUuid()),
                     $title,
-                    $description,
+                    $description ?? '',
                     $i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate,
                     $i !== 0 ? $endDate->add(new \DateInterval('P' . $i . 'W')) : $endDate,
                     $hallId,
@@ -167,7 +167,10 @@ class TrainingService
             $training->setName($title);
             $training->setStartDate($i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate);
             $training->setEndDate($i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate);
-            $training->setDescription($description);
+            if ($description !== null)
+            {
+                $training->setDescription($description);
+            }
             $training->setCourseId($courseId);
             $training->setHallId($hallId);
             $training->setTrainerId($trainerId);
