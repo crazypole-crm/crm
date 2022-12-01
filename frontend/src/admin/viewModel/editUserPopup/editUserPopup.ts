@@ -62,8 +62,6 @@ const [userRoleAtom, setUserRole] = declareAtomWithSetter<UserRole>('editUser.us
     on(open, (_, value) => value.mode === 'edit' ? value.userData.role : 'client')
 ])
 
-const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string|null>('editUser.userNewPassword', null)
-
 const [userPhoneErrorAtom, setUserPhoneError] = declareAtomWithSetter('editUser.userPhoneError', '', on => [
     on(setUserPhone, () => '')
 ])
@@ -71,6 +69,33 @@ const [userPhoneErrorAtom, setUserPhoneError] = declareAtomWithSetter('editUser.
 const [userEmailErrorAtom, setUserEmailError] = declareAtomWithSetter('editUser.userEmptyEmailError', '', on => [
     on(setUserEmail, () => '')
 ])
+
+const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string>('editUser.userNewPassword', '')
+
+const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<string>('editUser.userPasswordCheck', '')
+
+const [userNewPasswordErrorAtom, setUserNewPasswordError] = declareAtomWithSetter('editUser.userNewPasswordError', '', on => [
+    on(setUserNewPassword, () => ''),
+])
+
+const [userNewPasswordCheckErrorAtom, setNewPasswordCheckError] = declareAtomWithSetter('editUser.userOldPasswordCheckError', '', on => [
+    on(setUserPasswordCheck, () => ''),
+    on(setUserNewPassword, () => '')
+])
+
+function getUserPasswordCheckError(password: string, conformPassword: string) {
+    if (password !== conformPassword) {
+        return 'Пароли должный совпадать'
+    }
+    return ''
+}
+
+function getUserNewPasswordCheckError(password: string) {
+    if (!password) {
+        return 'Поле новый пароль обязательное'
+    }
+    return ''
+}
 
 function getUserPhoneError(phone: string | null) {
     if (phone && !RegExp(/^\d{11}$/).test(phone)) {
@@ -101,6 +126,7 @@ const submit = declareAction('editUser.submit',
         const userRole = store.getState(userRoleAtom)
         const userBirthDay = store.getState(userBirthDayAtom)
         const userNewPassword = store.getState(userNewPasswordAtom)
+        const userPasswordCheck = store.getState(userPasswordCheckAtom)
 
         const currentUserId = store.getState(authorizedCurrentUser).id
 
@@ -110,7 +136,7 @@ const submit = declareAction('editUser.submit',
         store.dispatch(setUserPhoneError(userPhoneError))
         store.dispatch(setUserEmailError(userEmailError))
 
-        if (userPhoneError || userEmailError) {
+        if (userPhoneError || userEmailError || !userEmail) {
             return
         }
 
@@ -122,14 +148,14 @@ const submit = declareAction('editUser.submit',
                     middleName: userMiddleName || undefined,
                     lastName: userLastName || undefined,
                     phone: userPhone || undefined,
-                    email: verify(userEmail),
+                    email: userEmail,
                     birthDay: userBirthDay || undefined,
                 }))
             }
             else {
                 store.dispatch(updateUser({
                     id: verify(userId),
-                    email: verify(userEmail),
+                    email: userEmail,
                     role: userRole,
                     phone: userPhone || undefined,
                     firstName: userFirstName || undefined,
@@ -140,15 +166,25 @@ const submit = declareAction('editUser.submit',
             }
         }
         else {
+            const userNewPasswordCheckError = getUserNewPasswordCheckError(userNewPassword)
+            const userPasswordCheckError = getUserPasswordCheckError(userNewPassword, userPasswordCheck)
+
+            store.dispatch(setUserNewPasswordError(userNewPasswordCheckError))
+            store.dispatch(setNewPasswordCheckError(userPasswordCheckError))
+
+            if (userNewPasswordCheckError || userPasswordCheckError) {
+                return
+            }
+
             store.dispatch(createUser({
-                email: verify(userEmail),
+                email: userEmail,
                 role: userRole,
                 phone: userPhone || undefined,
                 firstName: userFirstName || undefined,
                 lastName: userLastName || undefined,
                 middleName: userMiddleName || undefined,
                 birthDay: userBirthDay || undefined,
-                password: verify(userNewPassword),
+                password: userNewPassword,
             }))
         }
     }
@@ -165,9 +201,12 @@ const editUserPopupAtom = combine({
     userEmail: userEmailAtom,
     userRole: userRoleAtom,
     userNewPassword: userNewPasswordAtom,
+    userPasswordCheck: userPasswordCheckAtom,
     userBirthDay: userBirthDayAtom,
     userPhoneError: userPhoneErrorAtom,
     userEmailError: userEmailErrorAtom,
+    userNewPasswordError: userNewPasswordErrorAtom,
+    userNewPasswordCheckError: userNewPasswordCheckErrorAtom,
 })
 
 const editUserPopupActions = {
@@ -181,10 +220,11 @@ const editUserPopupActions = {
     setUserPhone,
     setUserEmail,
     setUserRole,
-    setUserNewPassword,
     setUserPhoneError,
     setUserEmailError,
     submit,
+    setUserNewPassword,
+    setUserPasswordCheck,
 }
 
 export {

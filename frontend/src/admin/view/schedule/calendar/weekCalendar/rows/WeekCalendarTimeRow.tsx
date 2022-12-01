@@ -126,7 +126,6 @@ function WeekCalendarTimeRow({
     weekStartDate,
 }: WeekCalendarTimeRowProps) {
     const rowToTrainingsMap = useMemo(() => getRowToTrainingsMap(trainings), [trainings])
-    console.log('rowToTrainingsMap', rowToTrainingsMap)
 
     const rowsItems = useMemo(() => {
         return getArrayWithNElements(rowsCount).map((_, index) => {

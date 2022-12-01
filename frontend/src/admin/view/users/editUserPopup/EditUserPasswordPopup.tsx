@@ -9,10 +9,12 @@ import { EditUserPopupInputBlock } from "./EditUserPopupInputBlock"
 
 function UserOldPasswordInput() {
     const userOldPassword = useAtomWithSelector(editUserPasswordPopupAtom, x => x.userOldPassword)
+    const userOldPasswordError = useAtomWithSelector(editUserPasswordPopupAtom, x => x.userOldPasswordError)
     const handleSetUserPassword = useAction(editUserPasswordPopupActions.setUserOldPassword)
 
     return <Input.Password
         value={userOldPassword || ''}
+        status={userOldPasswordError ? 'error': ''}
         onChange={e => handleSetUserPassword(e.target.value)}
         style={editUserPopupFieldStyle}
     />

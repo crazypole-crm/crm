@@ -1,19 +1,19 @@
-import React, { useMemo } from "react";
-import { useAction, useAtom } from "@reatom/react"
-import { editUserPopupActions, editUserPopupAtom } from "../../../viewModel/editUserPopup/editUserPopup"
+import React, {useMemo} from "react";
+import {useAction, useAtom} from "@reatom/react"
+import {editUserPopupActions, editUserPopupAtom} from "../../../viewModel/editUserPopup/editUserPopup"
 import {useAtomWithSelector} from "../../../../core/reatom/useAtomWithSelector";
-import { Avatar, Button, DatePicker, DatePickerProps, Input, Modal, Select } from "antd";
+import {Avatar, Button, DatePicker, DatePickerProps, Input, Modal, Select} from "antd";
 import styles from './EditUserPopup.module.css'
-import { UserOutlined } from "@ant-design/icons";
-import { userRoles } from "../../../viewModel/users/UserData";
-import { mapRoleTypeToText } from "../table/cells/UserRoleCell";
+import {UserOutlined} from "@ant-design/icons";
+import {userRoles} from "../../../viewModel/users/UserData";
+import {mapRoleTypeToText} from "../table/cells/UserRoleCell";
 import UserPicUploader from "./UserPicUploader";
-import moment, { Moment } from "moment";
+import moment, {Moment} from "moment";
 import ruRU from "antd/lib/calendar/locale/ru_RU";
-import { EditUserPopupInputBlock } from "./EditUserPopupInputBlock";
+import {EditUserPopupInputBlock} from "./EditUserPopupInputBlock";
 import {authorizedCurrentUser} from "../../../../currentUser/currentUser";
-import { optionalArray } from "../../../../core/array/array";
-import { editUserPasswordPopupActions } from "../../../viewModel/editUserPopup/editUserPasswordPopup";
+import {optionalArray} from "../../../../core/array/array";
+import {editUserPasswordPopupActions} from "../../../viewModel/editUserPopup/editUserPasswordPopup";
 
 const editUserPopupFieldStyle: React.CSSProperties = {
     width: 320,
@@ -127,7 +127,6 @@ function UserRoleSelect() {
 }
 
 function UserEditPasswordButton() {
-    const popupMode = useAtomWithSelector(editUserPopupAtom, x => x.popupMode)
     const userId = useAtomWithSelector(editUserPopupAtom, x => x.userId)
     const userLastName = useAtomWithSelector(editUserPopupAtom, x => x.userLastName)
     const userFirstName = useAtomWithSelector(editUserPopupAtom, x => x.userFirstName)
@@ -136,14 +135,9 @@ function UserEditPasswordButton() {
     const handleOpenEditUserPasswordPopup = useAction(editUserPasswordPopupActions.open)
 
     const onClick = () => {
-        handleOpenEditUserPasswordPopup((popupMode === 'edit') ? 
-        {
-            mode: popupMode,
+        handleOpenEditUserPasswordPopup({
             userId: userId || '',
             userFullName : optionalArray([userLastName, userFirstName, userMiddleName]).join(' ')
-        }
-        : {
-            mode: popupMode,
         })
     }
 
@@ -156,6 +150,32 @@ function UserEditPasswordButton() {
     </Button>
 }
 
+function UserPasswordInput() {
+    const userNewPassword = useAtomWithSelector(editUserPopupAtom, x => x.userNewPassword)
+    const userNewPasswordError = useAtomWithSelector(editUserPopupAtom, x => x.userNewPasswordError)
+    const handleSetUserPassword = useAction(editUserPopupActions.setUserNewPassword)
+
+    return <Input.Password
+        value={userNewPassword || ''}
+        status={userNewPasswordError ? 'error' : ''}
+        onChange={e => handleSetUserPassword(e.target.value)}
+        style={editUserPopupFieldStyle}
+    />
+}
+
+function UserPasswordCheckInput() {
+    const userPasswordCheckError = useAtomWithSelector(editUserPopupAtom, x => x.userNewPasswordCheckError)
+    const userPasswordCheck = useAtomWithSelector(editUserPopupAtom, x => x.userPasswordCheck)
+    const handleSetUserPasswordCheck = useAction(editUserPopupActions.setUserPasswordCheck)
+
+    return <Input.Password
+        value={userPasswordCheck || ''}
+        status={userPasswordCheckError ? 'error' : ''}
+        onChange={e => handleSetUserPasswordCheck(e.target.value)}
+        style={editUserPopupFieldStyle}
+    />
+}
+
 function Content() {
     const userPhoneError = useAtomWithSelector(editUserPopupAtom, x => x.userPhoneError)
     const userEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userEmailError)
@@ -163,6 +183,8 @@ function Content() {
     const userLastName = useAtomWithSelector(editUserPopupAtom, x => x.userLastName)
     const userFirstName = useAtomWithSelector(editUserPopupAtom, x => x.userFirstName)
     const userMiddleName = useAtomWithSelector(editUserPopupAtom, x => x.userMiddleName)
+    const userNewPasswordError = useAtomWithSelector(editUserPopupAtom, x => x.userNewPasswordError)
+    const userNewPasswordCheckError = useAtomWithSelector(editUserPopupAtom, x => x.userNewPasswordCheckError)
     const userId = useAtomWithSelector(editUserPopupAtom, x => x.userId)
     const currentUser = useAtom(authorizedCurrentUser)
     const popupMode = useAtomWithSelector(editUserPopupAtom, x => x.popupMode)
@@ -207,9 +229,19 @@ function Content() {
                     title={'Роль'}
                     content={<UserRoleSelect/>}
                 />}
-                {(popupMode === 'create' || currentUser.id === userId) && <EditUserPopupInputBlock
+                {(popupMode === 'edit' &&  currentUser.id === userId) && <EditUserPopupInputBlock
                     title={'Пароль'}
                     content={<UserEditPasswordButton/>}
+                />}
+                {(popupMode === 'create') && <EditUserPopupInputBlock
+                    title={'Новый пароль'}
+                    content={<UserPasswordInput/>}
+                    error={userNewPasswordError}
+                />}
+                {(popupMode === 'create') && <EditUserPopupInputBlock
+                    title={'Повторите пароль'}
+                    content={<UserPasswordCheckInput/>}
+                    error={userNewPasswordCheckError}
                 />}
             </div>
         </div>

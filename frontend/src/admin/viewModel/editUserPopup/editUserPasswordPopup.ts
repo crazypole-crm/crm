@@ -4,14 +4,9 @@ import { declareAtomWithSetter } from "../../../core/reatom/declareAtomWithSette
 import { dispatchAsyncAction } from "../../../core/reatom/dispatchAsyncAction"
 import { changePassword } from "../../../currentUser/actions/changePassword"
 import { authorizedCurrentUser } from "../../../currentUser/currentUser"
-import { editUserPopupActions } from "./editUserPopup"
-
-type ModeType = 'create' | 'edit'
+import {Toasts} from "../../../common/notification/notifications";
 
 type OpenPayload = {
-    mode: 'create',
-} | {
-    mode: 'edit',
     userId: string,
     userFullName: string,
 }
@@ -22,38 +17,42 @@ const close = declareAction('editUser.close')
 const [openedAtom, setOpened] = declareAtomWithSetter('editUserPassword.opened', false, on => [
     on(open, () => true),
     on(close, () => false),
-    on(changePassword.done, () => false),
-])
-
-const popupModeAtom = declareAtom<ModeType>('editUserPassword.popupMode', 'edit', on => [
-    on(open, (_, value) => value.mode)
 ])
 
 const userFullNameAtom = declareAtom<string|null>('editUserPassword.userFullName', null, on => [
-    on(open, (_, value) => (value.mode === 'edit' ? value.userFullName : null) || null)
+    on(open, (_, value) => value.userFullName || null)
 ])
 
 const userIdAtom = declareAtom<string|null>('editUserPassword.userId', null, on => [
-    on(open, (_, value) => (value.mode === 'edit' ? value.userId : null) || null)
+    on(open, (_, value) => value.userId || null)
 ])
 
-const [userOldPasswordAtom, setUserOldPassword] = declareAtomWithSetter<string|null>('editUserPassword.userOldPassword', null)
+const [userOldPasswordAtom, setUserOldPassword] = declareAtomWithSetter<string|null>('editUserPassword.userOldPassword', null, on => [
+    on(open, () => '')
+])
 
-const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string|null>('editUserPassword.userNewPassword', null)
+const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string|null>('editUserPassword.userNewPassword', null, on => [
+    on(open, () => '')
+])
 
-const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<string|null>('editUserPassword.userPasswordCheck', null)
+const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<string|null>('editUserPassword.userPasswordCheck', null, on => [
+    on(open, () => '')
+])
 
 const [userOldPasswordErrorAtom, setUserOldPasswordError] = declareAtomWithSetter('editUserPassword.userOldPasswordError', '', on => [
     on(setUserOldPassword, () => ''),
+    on(open, () => '')
 ])
 
 const [userNewPasswordErrorAtom, setUserNewPasswordError] = declareAtomWithSetter('editUserPassword.userNewPasswordError', '', on => [
     on(setUserNewPassword, () => ''),
+    on(open, () => '')
 ])
 
 const [userNewPasswordCheckErrorAtom, setUserPasswordCheckError] = declareAtomWithSetter('editUserPassword.userPasswordCheckError', '', on => [
     on(setUserPasswordCheck, () => ''),
-    on(setUserNewPassword, () => '')
+    on(setUserNewPassword, () => ''),
+    on(open, () => '')
 ])
 
 function getUserPasswordCheckError(password: string | null, conformPassword: string | null) {
@@ -66,7 +65,6 @@ function getUserPasswordCheckError(password: string | null, conformPassword: str
 const submit = declareAction('editUserPassword.submit',
     (_, store) => {
         const userId = store.getState(userIdAtom)
-        const popupMode = store.getState(popupModeAtom)
         const userOldPassword = store.getState(userOldPasswordAtom)
         const userNewPassword = store.getState(userNewPasswordAtom)
         const userPasswordCheck = store.getState(userPasswordCheckAtom)
@@ -81,31 +79,29 @@ const submit = declareAction('editUserPassword.submit',
             return
         }
 
-        if (popupMode === 'edit') {
-            if (currentUserId === userId) {
-                if (userOldPassword && userNewPassword) {
-                    dispatchAsyncAction(store, changePassword, {
-                        userId,
-                        oldPassword: userOldPassword,
-                        newPassword: userNewPassword,
-                    })
-                        .then(response => {
-                            if ((response as Response).status === HttpStatus.BAD_REQUEST) {
-                                store.dispatch(setUserOldPasswordError('Старый пароль не подходит'))
-                            }
-                        })
-                }
-            }
-        }
-        else {
-            store.dispatch(editUserPopupActions.setUserNewPassword(userNewPassword))
+        if (currentUserId === userId && userOldPassword && userNewPassword) {
+            dispatchAsyncAction(store, changePassword, {
+                userId,
+                oldPassword: userOldPassword,
+                newPassword: userNewPassword,
+            })
+                .then(response => {
+                    if ((response as Response).status === HttpStatus.BAD_REQUEST) {
+                        store.dispatch(setUserOldPasswordError('Старый пароль не подходит'))
+                        return
+                    }
+                    store.dispatch(close())
+                })
+                .catch(() => {
+                    Toasts.error('При изменении пароля произошла ошибка')
+                    store.dispatch(close())
+                })
         }
     }
 )
 
 const editUserPasswordPopupAtom = combine({
     opened: openedAtom,
-    popupMode: popupModeAtom,
     userId: userIdAtom,
     userFullName: userFullNameAtom,
     userOldPassword: userOldPasswordAtom,
