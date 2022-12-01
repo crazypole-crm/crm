@@ -66,12 +66,19 @@ function getFilterItems(directions: DirectionData[], halls: HallData[], trainers
     ]
 }
 
-function getFilteredTrainings(trainings: TrainingData[], filters: string[]) {
-    if (!filters.length) {
+function getFilteredTrainings(trainings: TrainingData[], filtersList: FilterData[], selectedFilters: string[]) {
+    if (!selectedFilters.length) {
         return trainings
     }
     return trainings.filter(training => {
-        return filters.every(filterId => [training.hallId, training.trainerId, training.directionId].includes(filterId))
+        return filtersList.every(filter => {
+            const currFilters = filter.items.filter(item => selectedFilters.includes(item.id))
+            if (currFilters.length) 
+                return currFilters.some(currFilter => {
+                    return [training.hallId, training.trainerId, training.directionId].includes(currFilter.id)
+                })
+            return true
+        })
     })
 }
 
@@ -152,7 +159,7 @@ function Calendar() {
         trainers
     ), [directions, halls, trainers])
 
-    const filteredTrainings = useMemo(() => getFilteredTrainings(Object.values(trainings), selectedFilters), [trainings, selectedFilters])
+    const filteredTrainings = useMemo(() => getFilteredTrainings(Object.values(trainings), filtersList, selectedFilters), [trainings, filtersList, selectedFilters])
 
     return (
         <div className={styles.calendarLayout}>
