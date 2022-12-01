@@ -1,6 +1,12 @@
 import {HallData} from "../admin/viewModel/hall/HallData";
 import {HttpStatus} from "../core/http/HttpStatus";
 
+type Api_HallData = {
+    hallId: string,
+    name: string,
+    capacity: number,
+}
+
 function getHalls(): Promise<HallData[]> {
     return fetch('/list/halls', {
         method: 'POST',
@@ -18,7 +24,7 @@ function getHalls(): Promise<HallData[]> {
         })
 }
 
-function createHall(hallData: Omit<HallData, 'id'>): Promise<{ hallId: string }> {
+function createHall(hallData: Omit<Api_HallData, 'hallId'>): Promise<{ hallId: string }> {
     return fetch('/create/hall', {
         method: 'POST',
         headers: {
@@ -39,12 +45,26 @@ function createHall(hallData: Omit<HallData, 'id'>): Promise<{ hallId: string }>
         })
 }
 
-function saveHall(hallData: HallData): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
+function saveHall(hallData: Api_HallData): Promise<void> {
+    return fetch('/edit/hall', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            hallId: hallData.hallId,
+            name: hallData.name,
+            capacity: hallData.capacity
+        }),
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 function deleteHalls(hallIds: string[]): Promise<void> {
