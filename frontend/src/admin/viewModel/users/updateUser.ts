@@ -3,6 +3,7 @@ import {usersActions} from "./users";
 import {UsersApi} from "../../../api/usersApi";
 import {UserData} from "./UserData";
 import {Toasts} from "../../../common/notification/notifications";
+import {remapModelRoleToApiRole} from "../../../common/role/remapApiRolToModelRole";
 
 const updateUser = declareAsyncAction<Omit<UserData, 'lastVisit'>>(
     'updateUser',
@@ -12,7 +13,7 @@ const updateUser = declareAsyncAction<Omit<UserData, 'lastVisit'>>(
             avatarUrl: userData.avatarUrl,
             email: userData.email,
             firstName: userData.firstName,
-            role: userData.role,
+            role: remapModelRoleToApiRole(userData.role),
             middleName: userData.middleName,
             lastName: userData.lastName,
             phoneNumber: userData.phone,

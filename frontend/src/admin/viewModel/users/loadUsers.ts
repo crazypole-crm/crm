@@ -7,14 +7,16 @@ import {dispatchAsyncAction} from "../../../core/reatom/dispatchAsyncAction";
 import {Api_UsersData, UsersApi} from "../../../api/usersApi";
 import {generateUuid} from "../../../core/uuid/generateUuid";
 import {Toasts} from "../../../common/notification/notifications";
+import {remapApiRolToModelRole} from "../../../common/role/remapApiRolToModelRole";
+import {Api_Role} from "../../../common/role/Api_Role";
 
 function randomInteger(min: number, max: number) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
 }
 
-function getRandomRole(): UserRole {
-    const roles: UserRole[] = ['admin', 'client']
+function getRandomRole(): 0 | 2 {
+    const roles: (0 | 2)[] = [2, 0]
     const randomIndex = randomInteger(0, 1)
     return roles[randomIndex]
 }
@@ -24,7 +26,7 @@ function randomPhone(): string|undefined {
     return show ? '89021025370' : undefined
 }
 
-function getRandomUserData(id?: string, role?: UserRole): Api_UsersData {
+function getRandomUserData(id?: string, role?: Api_Role): Api_UsersData {
     return {
         id: id || generateUuid(),
         avatarUrl: '',
@@ -40,14 +42,14 @@ function getRandomUserData(id?: string, role?: UserRole): Api_UsersData {
 }
 
 function handleUsersData(store: Store, users: Array<Api_UsersData>, updateFn: (users: UserData[]) => void) {
-    users.push(getRandomUserData('trainer1', 'trainer'))
-    users.push(getRandomUserData('trainer2', 'trainer'))
-    users.push(getRandomUserData('trainer3', 'trainer'))
+    users.push(getRandomUserData('trainer1', 1))
+    users.push(getRandomUserData('trainer2', 1))
+    users.push(getRandomUserData('trainer3', 1))
     const remappedUsers = users.map(user => ({
         ...user,
         birthDay: user.birthday ? new Date(Number(user.birthday)) : undefined,
         lastVisit: user.lastVisit ? new Date(Number(user.lastVisit)) : undefined,
-        role: user.role || getRandomRole()
+        role: remapApiRolToModelRole(user.role || getRandomRole())
     }))
     updateFn(remappedUsers)
 }
