@@ -4,13 +4,10 @@ import styles from "./WeekCalendarTimeRow.module.css";
 import {CalendarRow} from "../../common/CalendarRow";
 import {compareTime, Time} from "../../../../../viewModel/calendar/time";
 import {TrainingData, TrainingDate} from "../../../../../viewModel/calendar/TrainingData";
-import { normalizeDate } from "../../../../users/table/userTableDataConvert";
+import {normalizeDate} from "../../../../users/table/userTableDataConvert";
 import {verify} from "../../../../../../core/verify";
 import {useMemo} from "react";
-import {normalizeDayNumber} from "../../../../../viewModel/calendar/normalizeDayNumber";
 import {TrainingCalendarCell} from "../cells/TrainingCalendarCell";
-
-// function calculate
 
 type WeekCalendarRowProps = {
     weekLength: number,
@@ -20,13 +17,16 @@ type WeekCalendarRowProps = {
     isLastRow: boolean,
 }
 
-function isTrainingInThisDay(trainingDate: TrainingData, dayIndex: number) {
+function isTrainingInThisDay(trainingDate: TrainingData, weekStartDate: Date, dayIndex: number) {
     const date = new Date()
     date.setFullYear(trainingDate.date.year)
     date.setMonth(trainingDate.date.month)
     date.setDate(trainingDate.date.date)
 
-    return normalizeDayNumber(date) === dayIndex
+    const currentDate = new Date(weekStartDate)
+    currentDate.setDate(currentDate.getDate() + dayIndex)
+
+    return currentDate.getDate() === date.getDate()
 }
 
 function convertDateToTrainingDate(date: Date): TrainingDate {
@@ -45,7 +45,7 @@ function WeekCalendarRow({
     isLastRow,
 }: WeekCalendarRowProps) {
     const items = getArrayWithNElements(weekLength).map(index => {
-        const rowTraining = trainings.find(training => isTrainingInThisDay(training, index))
+        const rowTraining = trainings.find(training => isTrainingInThisDay(training, weekStartDate, index))
         if (rowTraining) {
            return (
                <TrainingCalendarCell
@@ -126,6 +126,7 @@ function WeekCalendarTimeRow({
     weekStartDate,
 }: WeekCalendarTimeRowProps) {
     const rowToTrainingsMap = useMemo(() => getRowToTrainingsMap(trainings), [trainings])
+    console.log('rowToTrainingsMap', rowToTrainingsMap)
 
     const rowsItems = useMemo(() => {
         return getArrayWithNElements(rowsCount).map((_, index) => {

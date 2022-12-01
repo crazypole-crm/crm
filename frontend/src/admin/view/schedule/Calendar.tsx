@@ -151,7 +151,7 @@ function Calendar() {
             dayStartTime: calendarSettings.dayStartTime,
         })
         handleLoadTrainings(period)
-    }, [calendarType, lastPeriodDateStart, handleLoadTrainings])
+    }, [lastPeriodDateStart, handleLoadTrainings])
 
     const filtersList = useMemo(() => getFilterItems(
         Object.values(directions),
