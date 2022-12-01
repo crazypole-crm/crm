@@ -56,11 +56,11 @@ class TrainingService
         bool $isRepeatable,
     ): Uuid
     {
-//        $hall = $this->hallRepository->findHallById($hallId);
-//        if ($hall === null)
-//        {
-//            throw new HallNotFoundException($hallId);
-//        }
+        $hall = $this->hallRepository->findHallById($hallId);
+        if ($hall === null)
+        {
+            throw new HallNotFoundException($hallId);
+        }
         $course = $this->courseRepository->findById($courseId);
         if ($course === null)
         {
@@ -80,14 +80,12 @@ class TrainingService
         {
             for ($i = 0; $i < self::WEEKS_IN_YEAR; $i++)
             {
-                $startDate = $i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate;
-                $endDate = $i !== 0 ? $endDate->add(new \DateInterval('P' . $i . 'W')) : $endDate;
                 $training = new Training($baseTraining->getId(),
                     new Uuid(UuidGenerator::generateUuid()),
                     $title,
                     $description,
-                    $startDate,
-                    $endDate,
+                    $i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate,
+                    $i !== 0 ? $endDate->add(new \DateInterval('P' . $i . 'W')) : $endDate,
                     $hallId,
                     $courseId,
                     $trainerId,
@@ -166,11 +164,9 @@ class TrainingService
         $i = 0;
         foreach ($trainings as $training)
         {
-            $startDateExample = $startDate;
-            $endDateExample = $endDate;
             $training->setName($title);
-            $training->setStartDate($i !== 0 ? $startDateExample->add(new \DateInterval('P' . $i . 'W')) : $startDateExample);
-            $training->setEndDate($i !== 0 ? $endDateExample->add(new \DateInterval('P' . $i . 'W')) : $endDateExample);
+            $training->setStartDate($i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate);
+            $training->setEndDate($i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate);
             $training->setDescription($description);
             $training->setCourseId($courseId);
             $training->setHallId($hallId);

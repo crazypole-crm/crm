@@ -45,12 +45,12 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         if ($spec->getStartDate() !== null)
         {
             $qb->where($qb->expr()->gte('t.' . TrainingTable::START_DATE, ':startDate'));
-            $qb->setParameter('startDate', $spec->getStartDate()->format('Y-m-d'));
+            $qb->setParameter('startDate', $spec->getStartDate()->format('Y-m-d H:i:s'));
         }
         if ($spec->getEndDate() !== null)
         {
             $qb->where($qb->expr()->lte('t.'  . TrainingTable::END_DATE, ':endDate'));
-            $qb->setParameter('endDate', $spec->getEndDate()->format('Y-m-d'));
+            $qb->setParameter('endDate', $spec->getEndDate()->format('Y-m-d H:i:s'));
         }
         $stmt = $qb->executeQuery()->fetchAllAssociative();
         $result = [];
