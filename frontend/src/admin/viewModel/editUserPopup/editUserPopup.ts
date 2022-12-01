@@ -154,7 +154,6 @@ const submit = declareAction('editUser.submit',
                     lastName: userLastName || undefined,
                     phone: userPhone || undefined,
                     email: verify(userEmail),
-                    role: userRole,
                     birthDay: userBirthDay || undefined,
                 }))
                 if (userOldPassword && userNewPassword) {
