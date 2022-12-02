@@ -8,6 +8,7 @@ use App\User\Domain\Exception\InvalidUserIdException;
 use App\User\Domain\Exception\InvalidUserPasswordException;
 use App\User\Domain\Model\Email;
 use App\User\Domain\Model\Password;
+use App\User\Domain\Model\Role;
 use App\User\Domain\Model\User;
 use App\User\Domain\Model\UserId;
 use App\User\Domain\Model\UserRepositoryInterface;
@@ -24,6 +25,7 @@ class UserService
     /**
      * @param string $email
      * @param string $password
+     * @param int $role
      * @param string|null $firstName
      * @param string|null $middleName
      * @param string|null $lastName
@@ -37,6 +39,7 @@ class UserService
     public function createUser(
         string $email,
         string $password,
+        int $role = Role::CLIENT,
         ?string $firstName = null,
         ?string $middleName = null,
         ?string $lastName = null,
@@ -55,6 +58,7 @@ class UserService
             $this->repository->nextId(),
             new Email($email),
             new Password($password),
+            $role,
             $firstName,
             $lastName,
             $phone,
@@ -78,13 +82,14 @@ class UserService
      * @param string|null $birthday
      * @throws InvalidUserIdException
      */
-    public function updateUserData(UserId $userId, ?string $phone, ?string $firstName, ?string $middleName, ?string $lastName, Email $email, ?string $avatarUrl, ?string $birthday = null): void
+    public function updateUserData(UserId $userId, int $role, ?string $phone, ?string $firstName, ?string $middleName, ?string $lastName, Email $email, ?string $avatarUrl, ?string $birthday = null): void
     {
         $user = $this->repository->findUserById($userId);
         if ($user === null)
         {
             throw new InvalidUserIdException($userId);
         }
+        $user->setRole($role);
         $user->setPhone($phone);
         $user->setLastName($lastName);
         $user->setFirstName($firstName);
