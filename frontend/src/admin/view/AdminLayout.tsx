@@ -22,11 +22,13 @@ import { DeleteDirectionsPopup } from "./directions/directionsPopups/DeleteDirec
 import { HallsLayout } from "./halls/HallsLayout"
 import { EditHallPopup } from "./halls/hallsPopups/EditHallPopup"
 import { DeleteHallsPopup } from "./halls/hallsPopups/DeleteHallsPopup"
+import { EditUserPasswordPopup } from "./users/editUserPopup/EditUserPasswordPopup"
 
 function PopupsLayout() {
     return (
         <>
             <EditUserPopup />
+            <EditUserPasswordPopup />
             <EditTrainingPopup />
             <CalendarSettingsPopup />
             <ViewUserPopup />

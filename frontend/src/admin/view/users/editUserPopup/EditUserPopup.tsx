@@ -1,20 +1,21 @@
-import React, { useMemo } from "react";
-import { useAction, useAtom } from "@reatom/react"
-import { editUserPopupActions, editUserPopupAtom } from "../../../viewModel/editUserPopup/editUserPopup"
+import React, {useMemo} from "react";
+import {useAction, useAtom} from "@reatom/react"
+import {editUserPopupActions, editUserPopupAtom} from "../../../viewModel/editUserPopup/editUserPopup"
 import {useAtomWithSelector} from "../../../../core/reatom/useAtomWithSelector";
-import { Avatar, DatePicker, DatePickerProps, Input, Modal, Select } from "antd";
+import {Avatar, Button, DatePicker, DatePickerProps, Input, Modal, Select} from "antd";
 import styles from './EditUserPopup.module.css'
-import { UserOutlined } from "@ant-design/icons";
-import { userRoles } from "../../../viewModel/users/UserData";
-import { mapRoleTypeToText } from "../table/cells/UserRoleCell";
+import {UserOutlined} from "@ant-design/icons";
+import {userRoles} from "../../../viewModel/users/UserData";
+import {mapRoleTypeToText} from "../table/cells/UserRoleCell";
 import UserPicUploader from "./UserPicUploader";
-import moment, { Moment } from "moment";
+import moment, {Moment} from "moment";
 import ruRU from "antd/lib/calendar/locale/ru_RU";
-import { EditUserPopupInputBlock } from "./EditUserPopupInputBlock";
-import {authorizedCurrentUser, currentUserAtom} from "../../../../currentUser/currentUser";
-import { optionalArray } from "../../../../core/array/array";
+import {EditUserPopupInputBlock} from "./EditUserPopupInputBlock";
+import {authorizedCurrentUser} from "../../../../currentUser/currentUser";
+import {optionalArray} from "../../../../core/array/array";
+import {editUserPasswordPopupActions} from "../../../viewModel/editUserPopup/editUserPasswordPopup";
 
-const fieldStyle: React.CSSProperties = {
+const editUserPopupFieldStyle: React.CSSProperties = {
     width: 320,
 }
 
@@ -25,7 +26,7 @@ function UserLastNameInput() {
     return <Input
         value={userLastName || ''}
         onChange={e => handleSetUserLastName(e.target.value)}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
@@ -36,7 +37,7 @@ function UserFirstNameInput() {
     return <Input
         value={userFirstName || ''}
         onChange={e => handleSetUserFirstName(e.target.value)}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
@@ -47,7 +48,7 @@ function UserMiddleNameInput() {
     return <Input
         value={userMiddleName || ''}
         onChange={e => handleSetUserMiddleName(e.target.value)}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
@@ -74,7 +75,7 @@ function UserBirthDayPicker() {
         allowClear={true}
         disabledDate={disabledDate}
         format={'DD/MM/YYYY'}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
@@ -87,7 +88,7 @@ function UserPhoneInput() {
         value={userPhone || ''}
         status={userPhoneError ? 'error' : ''}
         onChange={e => handleSetUserPhone(e.target.value)}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
@@ -100,7 +101,7 @@ function UserEmailInput() {
         value={userEmail || ''}
         status={userEmailError ? 'error' : ''}
         onChange={e => handleSetUserEmail(e.target.value)}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
@@ -121,34 +122,49 @@ function UserRoleSelect() {
                 label: mapRoleTypeToText(userRoles[2]),
             },
         ]}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
-function UserOldPasswordInput() {
-    const userOldPassword = useAtomWithSelector(editUserPopupAtom, x => x.userOldPassword)
-    const handleSetUserPassword = useAction(editUserPopupActions.setUserOldPassword)
+function UserEditPasswordButton() {
+    const userId = useAtomWithSelector(editUserPopupAtom, x => x.userId)
+    const userLastName = useAtomWithSelector(editUserPopupAtom, x => x.userLastName)
+    const userFirstName = useAtomWithSelector(editUserPopupAtom, x => x.userFirstName)
+    const userMiddleName = useAtomWithSelector(editUserPopupAtom, x => x.userMiddleName)
 
-    return <Input.Password
-        value={userOldPassword || ''}
-        onChange={e => handleSetUserPassword(e.target.value)}
-        style={fieldStyle}
-    />
+    const handleOpenEditUserPasswordPopup = useAction(editUserPasswordPopupActions.open)
+
+    const onClick = () => {
+        handleOpenEditUserPasswordPopup({
+            userId: userId || '',
+            userFullName : optionalArray([userLastName, userFirstName, userMiddleName]).join(' ')
+        })
+    }
+
+    return <Button
+        type="primary"
+        onClick={onClick}
+        style={editUserPopupFieldStyle}
+    >
+        Изменить пароль
+    </Button>
 }
 
 function UserPasswordInput() {
     const userNewPassword = useAtomWithSelector(editUserPopupAtom, x => x.userNewPassword)
+    const userNewPasswordError = useAtomWithSelector(editUserPopupAtom, x => x.userNewPasswordError)
     const handleSetUserPassword = useAction(editUserPopupActions.setUserNewPassword)
 
     return <Input.Password
         value={userNewPassword || ''}
+        status={userNewPasswordError ? 'error' : ''}
         onChange={e => handleSetUserPassword(e.target.value)}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
 function UserPasswordCheckInput() {
-    const userPasswordCheckError = useAtomWithSelector(editUserPopupAtom, x => x.userPasswordCheckError)
+    const userPasswordCheckError = useAtomWithSelector(editUserPopupAtom, x => x.userNewPasswordCheckError)
     const userPasswordCheck = useAtomWithSelector(editUserPopupAtom, x => x.userPasswordCheck)
     const handleSetUserPasswordCheck = useAction(editUserPopupActions.setUserPasswordCheck)
 
@@ -156,22 +172,22 @@ function UserPasswordCheckInput() {
         value={userPasswordCheck || ''}
         status={userPasswordCheckError ? 'error' : ''}
         onChange={e => handleSetUserPasswordCheck(e.target.value)}
-        style={fieldStyle}
+        style={editUserPopupFieldStyle}
     />
 }
 
 function Content() {
     const userPhoneError = useAtomWithSelector(editUserPopupAtom, x => x.userPhoneError)
     const userEmailError = useAtomWithSelector(editUserPopupAtom, x => x.userEmailError)
-    const userPasswordCheckError = useAtomWithSelector(editUserPopupAtom, x => x.userPasswordCheckError)
-    const userOldPasswordError = useAtomWithSelector(editUserPopupAtom, x => x.userOldPasswordError)
 
     const userLastName = useAtomWithSelector(editUserPopupAtom, x => x.userLastName)
     const userFirstName = useAtomWithSelector(editUserPopupAtom, x => x.userFirstName)
     const userMiddleName = useAtomWithSelector(editUserPopupAtom, x => x.userMiddleName)
-    const popupMode = useAtomWithSelector(editUserPopupAtom, x => x.popupMode)
+    const userNewPasswordError = useAtomWithSelector(editUserPopupAtom, x => x.userNewPasswordError)
+    const userNewPasswordCheckError = useAtomWithSelector(editUserPopupAtom, x => x.userNewPasswordCheckError)
     const userId = useAtomWithSelector(editUserPopupAtom, x => x.userId)
     const currentUser = useAtom(authorizedCurrentUser)
+    const popupMode = useAtomWithSelector(editUserPopupAtom, x => x.popupMode)
 
     return (
         <div className={styles.content}>
@@ -209,23 +225,23 @@ function Content() {
                     content={<UserEmailInput/>}
                     error={userEmailError}
                 />
-                {(popupMode === 'create' || currentUser.id === userId) && <EditUserPopupInputBlock
-                    title={'Старый пароль'}
-                    content={<UserOldPasswordInput/>}
-                    error={userOldPasswordError}
-                />}
-                {(popupMode === 'create' || currentUser.id === userId) && <EditUserPopupInputBlock
-                    title={'Новый пароль'}
-                    content={<UserPasswordInput/>}
-                />}
                 {currentUser.role === 'admin' && currentUser.id !== userId && <EditUserPopupInputBlock
                     title={'Роль'}
                     content={<UserRoleSelect/>}
                 />}
-                {(popupMode === 'create' || currentUser.id === userId) &&<EditUserPopupInputBlock
+                {(popupMode === 'edit' &&  currentUser.id === userId) && <EditUserPopupInputBlock
+                    title={'Пароль'}
+                    content={<UserEditPasswordButton/>}
+                />}
+                {(popupMode === 'create') && <EditUserPopupInputBlock
+                    title={'Новый пароль'}
+                    content={<UserPasswordInput/>}
+                    error={userNewPasswordError}
+                />}
+                {(popupMode === 'create') && <EditUserPopupInputBlock
                     title={'Повторите пароль'}
                     content={<UserPasswordCheckInput/>}
-                    error={userPasswordCheckError}
+                    error={userNewPasswordCheckError}
                 />}
             </div>
         </div>
@@ -253,4 +269,5 @@ function EditUserPopup() {
 
 export {
     EditUserPopup,
+    editUserPopupFieldStyle,
 }

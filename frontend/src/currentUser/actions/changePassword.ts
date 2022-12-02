@@ -1,5 +1,6 @@
 import {declareAsyncAction} from "../../core/reatom/declareAsyncAction";
 import {CurrentUserApi} from "../../api/currentUserApi";
+import {Toasts} from "../../common/notification/notifications";
 
 type ChangePasswordPayload = {
     userId: string,
@@ -7,15 +8,16 @@ type ChangePasswordPayload = {
     newPassword: string,
 }
 
-const changePassword = declareAsyncAction<ChangePasswordPayload, Promise<Response>, Promise<Response>>('changePassword',
+const changePassword = declareAsyncAction<ChangePasswordPayload, Promise<Response>>('changePassword',
     ({newPassword, oldPassword, userId}, store) => {
         return CurrentUserApi.changePassword({
             newPassword,
             oldPassword,
             userId,
         })
-            .then(response => Promise.resolve(response))
-            .catch(response => Promise.reject(response))
+            .then(response => {
+                return Promise.resolve(response)
+            })
     }
 )
 

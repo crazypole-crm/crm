@@ -20,7 +20,7 @@ const createUser = declareAsyncAction<Omit<UserData, 'id' | 'lastVisit'> & {pass
             password: userData.password,
         })
             .then(({id}) => {
-                Toasts.error('Пользователь успешно создан')
+                Toasts.success('Пользователь успешно создан')
                 store.dispatch(usersActions.updateUser({
                     ...userData,
                     id,

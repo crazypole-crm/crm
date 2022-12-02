@@ -9,6 +9,10 @@ interface TrainingRepositoryInterface
 {
     public function findById(Uuid $id): ?Training;
 
+    /**
+     * @param Uuid $id
+     * @return Training[]
+     */
     public function findAllByBaseTraining(Uuid $id): array;
 
     public function findAllByHallIds(array $hallIds): array;

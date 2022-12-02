@@ -260,8 +260,11 @@ class EventController extends AbstractController
         try
         {
             $userId = $this->securityContext->getAuthenticatedUserId();
-            $hallsIds = $requestData['hallsIds'];
-            $this->eventApi->removeHalls($hallsIds);
+
+            $hallId = $requestData['hallId'];
+            $name = $requestData['name'];
+            $capacity = $requestData['capacity'];
+            $this->eventApi->editHall($hallId, $name, $capacity);
             return new Response(null, Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)

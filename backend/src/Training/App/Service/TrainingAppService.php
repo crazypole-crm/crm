@@ -152,7 +152,7 @@ class TrainingAppService
             [LockNames::getHallLock($id)],
             function () use ($id, $name, $capacity)
             {
-                $this->eventService->editCourse(new Uuid($id), $name, $capacity);
+                $this->eventService->editHall(new Uuid($id), $name, $capacity);
             }
         );
         $this->transaction->execute($operation);
