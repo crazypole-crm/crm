@@ -84,7 +84,7 @@ function editUser(userData: Api_EditUserData): Promise<void> {
 
 type Api_CreateUserData = {
     email: string,
-    role: UserRole,
+    role: Api_Role,
     password: string,
     avatarUrl?: string,
     phoneNumber?: string,

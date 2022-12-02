@@ -3,6 +3,7 @@ import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction";
 import {UsersApi} from "../../../api/usersApi";
 import {usersActions} from "./users";
 import {Toasts} from "../../../common/notification/notifications";
+import {remapModelRoleToApiRole} from "../../../common/role/remapApiRolToModelRole";
 
 
 const createUser = declareAsyncAction<Omit<UserData, 'id' | 'lastVisit'> & {password: string}>(
@@ -12,7 +13,7 @@ const createUser = declareAsyncAction<Omit<UserData, 'id' | 'lastVisit'> & {pass
             avatarUrl: userData.avatarUrl,
             email: userData.email,
             firstName: userData.firstName,
-            role: userData.role,
+            role: remapModelRoleToApiRole(userData.role),
             middleName: userData.middleName,
             lastName: userData.lastName,
             phoneNumber: userData.phone,
