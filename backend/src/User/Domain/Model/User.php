@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Model;
 
+use App\User\Domain\Exception\InvalidUserRoleException;
 
 class User
 {
     private string $userId;
     private string $email;
     private string $password;
+    private int $role;
     private ?string $firstName;
     private ?string $middleName;
     private ?string $lastName;
@@ -21,19 +23,22 @@ class User
         UserId $userId,
         Email $email,
         Password $password,
+        int $role = Role::CLIENT,
         ?string $firstName = null,
         ?string $lastName = null,
         ?string $phone = null,
         ?string $avatarUrl = null,
         ?string $middleName = null,
         ?string $birthday = null,
-        ?string $lastVisit = null
+        ?string $lastVisit = null,
     )
     {
         $this->userId = (string)$userId;
         $this->assertEmailValid($email);
         $this->email = (string)$email;
         $this->password = (string)$password;
+        $this->role = $role;
+        $this->assertRoleValid();
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         if ($phone !== null)
@@ -93,6 +98,16 @@ class User
     public function setPassword(Password $password): void
     {
         $this->password = (string)$password;
+    }
+
+    public function getRole(): int
+    {
+        return $this->role;
+    }
+
+    public function setRole(int $role): void
+    {
+        $this->role = $role;
     }
 
     /**
@@ -220,5 +235,13 @@ class User
     private function buildLoginKey(): string
     {
         return md5($this->email . ':' . $this->password);
+    }
+    
+    private function assertRoleValid(): void
+    {
+        if (!in_array($this->role, Role::getValues()))
+        {
+            throw new InvalidUserRoleException();
+        }
     }
 }
