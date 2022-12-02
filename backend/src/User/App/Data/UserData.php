@@ -8,6 +8,7 @@ class UserData
     public function __construct(
         private string $userId,
         private string $email,
+        private int $role,
         private ?string $firstName,
         private ?string $middleName,
         private ?string $lastName,
@@ -25,6 +26,11 @@ class UserData
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getRole(): int
+    {
+        return $this->role;
     }
 
     public function getFirstName(): ?string

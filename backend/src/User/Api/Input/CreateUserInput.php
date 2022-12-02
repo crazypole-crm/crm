@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace App\User\Api\Input;
 
+use App\User\Api\Data\Role;
+
 class CreateUserInput
 {
     public function __construct(
         private string $email,
         private string $password,
+        private int $role = Role::CLIENT,
         private ?string $firstName = null,
         private ?string $middleName = null,
         private ?string $lastName = null,
@@ -25,6 +28,11 @@ class CreateUserInput
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getRole(): int
+    {
+        return $this->role;
     }
 
     public function getFirstName(): ?string

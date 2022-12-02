@@ -5,13 +5,12 @@ namespace App\User\App\Service;
 
 use App\Common\App\Transaction\MultiBlockingOperationExecutorInterface;
 use App\Common\App\Transaction\TransactionInterface;
-use App\Common\Exception\UserNotAuthenticated;
 use App\Security\UserAuthenticator;
-use App\User\App\Data\AuthenticateUserRequestInterface;
 use App\User\App\Data\UserData;
 use App\User\App\Lock\LockNames;
 use App\User\App\Query\UserQueryServiceInterface;
 use App\User\Domain\Model\Email;
+use App\User\Domain\Model\Role;
 use App\User\Domain\Model\UserId;
 use App\User\Domain\Service\UserService;
 
@@ -19,14 +18,12 @@ class UserAppService
 {
     private UserService $userService;
     private UserQueryServiceInterface $userQueryService;
-    private UserAuthenticator $authenticator;
     private TransactionInterface $transaction;
     private MultiBlockingOperationExecutorInterface $blockingOperatorExecutor;
 
 
-    public function __construct(UserService $userService, UserQueryServiceInterface $userQueryService, UserAuthenticator $authenticator, TransactionInterface $transaction, MultiBlockingOperationExecutorInterface $blockingOperationExecutor)
+    public function __construct(UserService $userService, UserQueryServiceInterface $userQueryService, TransactionInterface $transaction, MultiBlockingOperationExecutorInterface $blockingOperationExecutor)
     {
-        $this->authenticator = $authenticator;
         $this->userService = $userService;
         $this->userQueryService = $userQueryService;
         $this->transaction = $transaction;
@@ -48,6 +45,7 @@ class UserAppService
     public function createUser(
         string $email,
         string $password,
+        int $role = Role::CLIENT,
         ?string $firstName = null,
         ?string $middleName = null,
         ?string $lastName = null,
@@ -61,6 +59,7 @@ class UserAppService
             function () use (
                 $email,
                 $password,
+                $role,
                 $firstName,
                 $middleName,
                 $lastName,
@@ -73,6 +72,7 @@ class UserAppService
                 return $this->userService->createUser(
                     $email,
                     $password,
+                    $role,
                     $firstName,
                     $middleName,
                     $lastName,
@@ -107,6 +107,7 @@ class UserAppService
             {
                 $this->userService->updateUserData(
                     new UserId($userData->getUserId()),
+                    $userData->getRole(),
                     $userData->getPhone(),
                     $userData->getFirstName(),
                     $userData->getMiddleName(),
@@ -118,21 +119,6 @@ class UserAppService
             }
         );
         $this->transaction->execute($operation);
-    }
-
-    /**
-     * @throws UserNotAuthenticated
-     */
-    public function authenticateUser(AuthenticateUserRequestInterface $request): void
-    {
-        $login = $request->getUsernameOrEmail();
-        $password = $request->getPassword();
-        $userdata = $this->userQueryService->getUserDataByEmailAndPassword($login, $password);
-        if ($userdata === null)
-        {
-            throw new UserNotAuthenticated();
-        }
-        $this->authenticator->authenticateUserById($userdata->getUserId());
     }
 
     public function changeUserPassword(string $userId, string $newPassword, string $oldPassword): void
@@ -160,5 +146,10 @@ class UserAppService
             );
             $this->transaction->execute($operation);
         }
+    }
+
+    public function findUserByEmailAndPassword(string $email, string $password): ?UserData
+    {
+        return $this->userQueryService->getUserDataByEmailAndPassword($email, $password);
     }
 }

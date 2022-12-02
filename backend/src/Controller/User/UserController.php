@@ -54,6 +54,7 @@ class UserController extends AbstractController
         $input = new CreateUserInput(
             $requestData['email'],
             md5($requestData['password']),
+            $requestData['role'],
             $requestData['firstName'] ?? null,
             $requestData['middleName'] ?? null,
             $requestData['lastName'] ?? null,
@@ -91,6 +92,7 @@ class UserController extends AbstractController
         $userData = new UserData(
             $requestData['id'],
             $requestData['email'],
+            $requestData['role'],
             $requestData['firstName'] ?? null,
             $requestData['middleName'] ?? null,
             $requestData['lastName'] ?? null,
@@ -136,10 +138,13 @@ class UserController extends AbstractController
     public function loginUser(Request $request): Response
     {
         $requestData = json_decode($request->getContent(), true);
-        $input = new AuthenticateUserInput(md5($requestData['password']), $requestData['email']);
+        $email = $requestData['email'];
+        $password = md5($requestData['password']);
+        //$input = new AuthenticateUserInput(md5($requestData['password']), $requestData['email']);
         try
         {
-            $this->userApi->authenticateUser($input);
+            $userData = $this->userApi->findUserDataByEmailAndPassword($email, $password);
+            $this->authenticator->authenticateUserById($userData->getUserId());
         }
         catch (UserNotAuthenticated $e)
         {
@@ -231,6 +236,7 @@ class UserController extends AbstractController
             $data[] = [
                 'id' => $userData->getUserId(),
                 'email' => $userData->getEmail(),
+                'role' => $userData->getRole(),
                 'avatarUrl' => $userData->getAvatarUrl(),
                 'phone' => $userData->getPhone(),
                 'firstName' => $userData->getFirstName(),
@@ -249,6 +255,7 @@ class UserController extends AbstractController
         $data = [
             'id' => $userData->getUserId(),
             'email' => $userData->getEmail(),
+            'role' => $userData->getRole(),
             'avatarUrl' => $userData->getAvatarUrl(),
             'phone' => $userData->getPhone(),
             'firstName' => $userData->getFirstName(),

@@ -17,12 +17,6 @@ interface ApiInterface
     public function createUser(CreateUserInput $input): string;
 
     /**
-     * @param AuthenticateUserInput $input
-     * @throws UserNotAuthenticated
-     */
-    public function authenticateUser(AuthenticateUserInput $input): void;
-
-    /**
      * @param string $userId
      * @return UserData|null
      */
@@ -49,4 +43,6 @@ interface ApiInterface
      * @param string[] $userIds
      */
     public function removeUsers(array $userIds): void;
+
+    public function findUserDataByEmailAndPassword(string $email, string $password): ?UserData;
 }

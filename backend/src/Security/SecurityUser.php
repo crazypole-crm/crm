@@ -8,12 +8,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     private $userId;
+    private array $roles;
 
-    //TODO implement roles
-
-    public function __construct(string $userId)
+    public function __construct(string $userId, array $roles)
     {
         $this->userId = $userId;
+        $this->roles = $roles;
     }
 
     public function getUserId(): ?string
@@ -33,7 +33,7 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return [];
+        return $this->roles;
     }
 
     public function getPassword(): ?string

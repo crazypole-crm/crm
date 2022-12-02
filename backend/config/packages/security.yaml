@@ -25,8 +25,34 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+  role_hierarchy:
+    ROLE_TRAINER: ROLE_CLIENT
+    ROLE_ADMIN: ROLE_TRAINER
+
+  # Easy way to control access for large sections of your site
+  # Note: Only the *first* access control that matches will be used
+  access_control:
+    # Users
+    - { path: ^/user/create, roles: ROLE_ADMIN }
+    - { path: ^/update/user_data, roles: ROLE_ADMIN }
+    - { path: ^/get/users_data, roles: ROLE_CLIENT }
+    - { path: ^/users/remove, roles: ROLE_ADMIN }
+
+    # Events
+    - { path: ^/create/training, roles: ROLE_ADMIN }
+    - { path: ^/edit/training, roles: ROLE_ADMIN }
+    - { path: ^/edit/training/trainer, roles: ROLE_ADMIN }
+    - { path: ^/edit/training/time, roles: ROLE_ADMIN }
+    - { path: ^/edit/training/status, roles: ROLE_ADMIN }
+    - { path: ^/remove/base_training, roles: ROLE_ADMIN }
+    - { path: ^/remove/training, roles: ROLE_ADMIN }
+    - { path: ^/remove/courses, roles: ROLE_ADMIN }
+    - { path: ^/remove/halls, roles: ROLE_ADMIN }
+    - { path: ^/edit/course, roles: ROLE_ADMIN }
+    - { path: ^/edit/hall, roles: ROLE_ADMIN }
+    - { path: ^/list/trainings, roles: ROLE_CLIENT }
+    - { path: ^/list/courses, roles: ROLE_CLIENT }
+    - { path: ^/create/hall, roles: ROLE_ADMIN }
+    - { path: ^/list/halls, roles: ROLE_CLIENT }
+    - { path: ^/create/course, roles: ROLE_ADMIN }
+    

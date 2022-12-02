@@ -32,6 +32,7 @@ class Api implements ApiInterface
             return $this->userService->createUser(
                 $input->getEmail(),
                 $input->getPassword(),
+                $input->getRole(),
                 $input->getFirstName(),
                 $input->getMiddleName(),
                 $input->getLastName(),
@@ -52,22 +53,6 @@ class Api implements ApiInterface
         try
         {
             $this->userService->changeUserPassword($input->getUserId(), $input->getNewPassword(), $input->getOldPassword());
-        }
-        catch (\Exception $e)
-        {
-            $this->convertException($e);
-        }
-    }
-
-    /**
-     * @param AuthenticateUserInput $input
-     * @throws \Exception
-     */
-    public function authenticateUser(AuthenticateUserInput $input): void
-    {
-        try
-        {
-            $this->userService->authenticateUser($input);
         }
         catch (\Exception $e)
         {
@@ -125,6 +110,18 @@ class Api implements ApiInterface
         {
             $this->convertException($e);
         }
+    }
+
+    public function findUserDataByEmailAndPassword(string $email, string $password): ?UserData
+    {
+        try
+        {
+            return $this->userService->findUserByEmailAndPassword($email, $password);
+        }
+        catch (\Exception $e)
+        {
+            $this->convertException($e);
+        }   
     }
 
     private function convertException(\Exception $e)
