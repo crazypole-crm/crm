@@ -18,6 +18,7 @@ class UserTable
     public const AVATAR_URL = 'avatar_url';
     public const BIRTHDAY = 'birthday';
     public const LAST_VISIT = 'last_visit';
+    public const ROLE = 'role';
 
     public const USER_FIELDS = [
         self::USER_ID => TypeConverter::STRING,
@@ -31,5 +32,6 @@ class UserTable
         self::AVATAR_URL => TypeConverter::STRING,
         self::BIRTHDAY => TypeConverter::STRING,
         self::LAST_VISIT => TypeConverter::STRING,
+        self::ROLE => TypeConverter::INTEGER,
     ];
 }

@@ -86,6 +86,7 @@ class UserQueryService implements UserQueryServiceInterface
         $qb->addSelect($alias . '.' . UserTable::USER_ID);
         $qb->addSelect($alias . '.' . UserTable::EMAIL);
         $qb->addSelect($alias . '.' . UserTable::PASSWORD);
+        $qb->addSelect($alias . '.' . UserTable::ROLE);
         $qb->addSelect($alias . '.' . UserTable::FIRST_NAME);
         $qb->addSelect($alias . '.' . UserTable::MIDDLE_NAME);
         $qb->addSelect($alias . '.' . UserTable::LAST_NAME);
