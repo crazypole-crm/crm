@@ -113,14 +113,17 @@ class UserController extends AbstractController
         try
         {
             $userId = $this->securityContext->getAuthenticatedUserId();
+
         }
         catch (UserNotAuthenticated $e)
         {
             return new Response(null, Response::HTTP_UNAUTHORIZED);
         }
+        $userData = $this->userApi->getUserData($userId);
         $userData = new UserData(
             $userId,
             $requestData['email'],
+            $userData->getRole(),
             $requestData['firstName'] ?? null,
             $requestData['middleName'] ?? null,
             $requestData['lastName'] ?? null,

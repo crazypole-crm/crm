@@ -4,6 +4,7 @@ import {CurrentUserApi} from "../../api/currentUserApi";
 import {authorizedCurrentUser, currentUserActions} from "../currentUser";
 import {usersActions} from "../../admin/viewModel/users/users";
 import {Toasts} from "../../common/notification/notifications";
+import {remapModelRoleToApiRole} from "../../common/role/remapApiRolToModelRole";
 
 const setCurrentUserInfo = declareAsyncAction<Omit<UserData, 'lastVisit' | 'role'>>('currentUser.setInfo',
     (data, store) => {

@@ -69,6 +69,7 @@ function TrainingCalendarCell({
     showAdd,
 }: TrainingCalendarCellProps) {
     const currentUser = useAtom(authorizedCurrentUser)
+    console.log('currentUser', currentUser)
     const directions = useAtom(directionsAtom)
     const halls = useAtom(hallsAtom)
     const users = useAtom(usersAtom)

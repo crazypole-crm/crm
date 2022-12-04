@@ -14,7 +14,7 @@ const initUserDataAction = declareAsyncAction<void>(
                     isAuthUser: true,
                     birthDay: data.birthDay ? new Date(Number(data.birthDay)) : undefined,
                     lastVisit: data.lastVisit ? new Date(Number(data.lastVisit)) : undefined,
-                    role: remapApiRolToModelRole(2),
+                    role: remapApiRolToModelRole(data.role),
                 }
                 store.dispatch(currentUserActions.setCurrentUserData(modelUserData));
                 return Promise.resolve()

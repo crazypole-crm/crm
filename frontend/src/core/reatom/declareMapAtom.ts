@@ -64,6 +64,10 @@ function declareMapAtom<T>(
     }
 }
 
+export type {
+    MapItems,
+}
+
 export {
     declareMapAtom,
 }

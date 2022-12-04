@@ -18,6 +18,7 @@ import {loadTrainingsForPeriod, trainingsLoadingAtom} from "../../viewModel/cale
 import {Time} from "../../viewModel/calendar/time";
 import {calendarSettingsAtom} from "../../viewModel/calendar/calendartSettings/calendarSettings";
 import {getValueByCheckedKey} from "../../../core/getValueByCheckedKey";
+import {MapItems} from "../../../core/reatom/declareMapAtom";
 
 type CalendarType = 'week' | 'work-week' | 'day'
 
@@ -122,6 +123,16 @@ function getPeriod(calendarType: CalendarType, periodStartDate: Date, calendarCo
     }
 }
 
+function getValidTrainings(trainings: TrainingData[], trainers: Array<UserData>, directions: MapItems<DirectionData>, halls: MapItems<HallData>) {
+    return trainings.filter(training => {
+        const trainer = trainers.find(trainer => trainer.id === training.trainerId)
+        const direction = directions[training.directionId]
+        const hall = halls[training.hallId]
+
+        return !!trainer && !!direction && !!hall
+    })
+}
+
 
 function Calendar() {
     const [calendarType, setCalendarType] = useState<CalendarType>('week')
@@ -159,7 +170,8 @@ function Calendar() {
         trainers
     ), [directions, halls, trainers])
 
-    const filteredTrainings = useMemo(() => getFilteredTrainings(Object.values(trainings), filtersList, selectedFilters), [trainings, filtersList, selectedFilters])
+    const validTrainings = useMemo(() => getValidTrainings(Object.values(trainings), trainers, directions, halls), [trainings, trainers, directions, halls])
+    const filteredTrainings = useMemo(() => getFilteredTrainings(validTrainings, filtersList, selectedFilters), [validTrainings, filtersList, selectedFilters])
 
     return (
         <div className={styles.calendarLayout}>

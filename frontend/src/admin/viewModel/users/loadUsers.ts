@@ -42,14 +42,11 @@ function getRandomUserData(id?: string, role?: Api_Role): Api_UsersData {
 }
 
 function handleUsersData(store: Store, users: Array<Api_UsersData>, updateFn: (users: UserData[]) => void) {
-    users.push(getRandomUserData('trainer1', 1))
-    users.push(getRandomUserData('trainer2', 1))
-    users.push(getRandomUserData('trainer3', 1))
     const remappedUsers = users.map(user => ({
         ...user,
         birthDay: user.birthday ? new Date(Number(user.birthday)) : undefined,
         lastVisit: user.lastVisit ? new Date(Number(user.lastVisit)) : undefined,
-        role: remapApiRolToModelRole(user.role || getRandomRole())
+        role: remapApiRolToModelRole(user.role)
     }))
     updateFn(remappedUsers)
 }
