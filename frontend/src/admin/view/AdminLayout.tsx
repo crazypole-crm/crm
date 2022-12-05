@@ -57,15 +57,12 @@ function AdminLayout() {
                 <div className={styles.content}>
                     <Switch>
                         {authorizedUser.role !== 'client'
-                        ?
-                            adminRoutes.map(route =>
-                                <Route exact path={[route.path]} component={route.component}/>
-                            )
-                            :
-                            clientRoutes.map(route =>
-                                <Route exact path={[route.path]} component={route.component}/>
-                            )
-                        }
+                        ? adminRoutes.map(route =>
+                            <Route exact path={[route.path]} component={route.component}/>
+                        )
+                        : clientRoutes.map(route =>
+                            <Route exact path={[route.path]} component={route.component}/>
+                        )}
                         <Redirect to={Router.Schedule.url()}/>
                     </Switch>
                 </div>
