@@ -1,4 +1,8 @@
 import {History} from "history";
+import {HallsLayout} from "../../admin/view/halls/HallsLayout";
+import {ScheduleLayoutWrapper} from "../../admin/view/schedule/ScheduleLayoutWrapper";
+import {UsersLayout} from "../../admin/view/users/UsersLayout";
+import {DirectionsLayout} from "../../admin/view/directions/DirectionsLayout";
 
 const AUTH = '/auth'
 const ADMIN = '/admin'
@@ -86,7 +90,20 @@ const Router = {
     }
 }
 
+const adminRoutes = [
+    {path: generateScheduleUrl(), component: ScheduleLayoutWrapper},
+    {path: generateUsersListUrl(), component: UsersLayout},
+    {path: generateDirectionsUrl(), component: DirectionsLayout},
+    {path: generateHallsUrl(), component: HallsLayout}
+]
+
+const clientRoutes = [
+    {path: generateScheduleUrl(), component: ScheduleLayoutWrapper}
+]
+
 export {
     initRouterHistory,
     Router,
+    adminRoutes,
+    clientRoutes
 }

@@ -1,13 +1,11 @@
 import {useAtom} from "@reatom/react"
 import {Redirect, Route, Switch} from "react-router-dom"
-import {Router} from "../../core/router/router"
-import {currentUserAtom} from "../../currentUser/currentUser"
+import {adminRoutes, clientRoutes, Router} from "../../core/router/router"
+import {authorizedCurrentUser, currentUserAtom} from "../../currentUser/currentUser"
 import styles from './AdminLayout.module.css'
 import {AdminHeader} from "./header/AdminHeader"
 import {Sidebar} from "./sidebar/Sidebar"
-import {UsersLayout} from "./users/UsersLayout"
 import {EditUserPopup} from "./users/editUserPopup/EditUserPopup";
-import {ScheduleLayoutWrapper} from "./schedule/ScheduleLayoutWrapper";
 import {EditTrainingPopup} from "./schedule/calendar/editTrainingPopup/EditTrainingPopup";
 import {CalendarSettingsPopup} from "./schedule/calendar/calendarSettins/CalendarSettingsPopup";
 import {ViewUserPopup} from "./users/viewUsersPopup/ViewUserPopup";
@@ -15,11 +13,9 @@ import {ReplaceTrainerPopup} from "./schedule/calendar/replaceTrainerPopup/Repla
 import {MoveTrainingPopup} from "./schedule/calendar/moveTrainingPopup/MoveTrainingPopup";
 import {TrainingActionPopup} from "./schedule/calendar/trainingActionPopup/TrainingActionPopup";
 import {TrainingClientsPopup} from "./schedule/calendar/trainingClientsPopup/TrainingClientsPopup";
-import { DirectionsLayout } from "./directions/DirectionsLayout"
 import {RecordToTrainingPopup} from "./schedule/calendar/recordToTrainingPopup/RecordToTrainingPopup";
 import { EditDirectionPopup } from "./directions/directionsPopups/EditDirectionPopup"
 import { DeleteDirectionsPopup } from "./directions/directionsPopups/DeleteDirectionsPopup"
-import { HallsLayout } from "./halls/HallsLayout"
 import { EditHallPopup } from "./halls/hallsPopups/EditHallPopup"
 import { DeleteHallsPopup } from "./halls/hallsPopups/DeleteHallsPopup"
 import { EditUserPasswordPopup } from "./users/editUserPopup/EditUserPasswordPopup"
@@ -45,9 +41,9 @@ function PopupsLayout() {
     )
 }
 
-
 function AdminLayout() {
     const currentUser = useAtom(currentUserAtom)
+    const authorizedUser = useAtom(authorizedCurrentUser)
 
     if (!currentUser.isAuthUser) {
         return <Redirect to={Router.Auth.url()} />
@@ -57,21 +53,19 @@ function AdminLayout() {
         <div className={styles.layout}>
             <AdminHeader />
             <div className={styles.contentRow}>
-                <Sidebar />
+                {authorizedUser.role !== 'client' && <Sidebar/>}
                 <div className={styles.content}>
                     <Switch>
-                        <Route exact path={[Router.Schedule.url()]} >
-                            <ScheduleLayoutWrapper />
-                        </Route>
-                        <Route exact path={[Router.UsersList.url()]} >
-                            <UsersLayout/>
-                        </Route>
-                        <Route exact path={[Router.Directions.url()]} >
-                            <DirectionsLayout />
-                        </Route>
-                        <Route exact path={[Router.Halls.url()]} >
-                            <HallsLayout />
-                        </Route>
+                        {authorizedUser.role !== 'client'
+                        ?
+                            adminRoutes.map(route =>
+                                <Route exact path={[route.path]} component={route.component}/>
+                            )
+                            :
+                            clientRoutes.map(route =>
+                                <Route exact path={[route.path]} component={route.component}/>
+                            )
+                        }
                         <Redirect to={Router.Schedule.url()}/>
                     </Switch>
                 </div>
