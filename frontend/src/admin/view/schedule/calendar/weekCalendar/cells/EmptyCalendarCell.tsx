@@ -54,7 +54,7 @@ function EmptyCalendarCell({
         <CalendarCell className={styles.cell}>
             <>
                 {
-                    currentUser.role === 'admin'
+                    currentUser.role !== 'client'
                         ? <AddPlusButton onAdd={onAdd} />
                         : undefined
                 }

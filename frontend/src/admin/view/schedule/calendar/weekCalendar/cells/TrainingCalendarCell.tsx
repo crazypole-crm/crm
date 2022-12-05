@@ -69,9 +69,7 @@ function TrainingCalendarCell({
     showAdd,
 }: TrainingCalendarCellProps) {
     const currentUser = useAtom(authorizedCurrentUser)
-    console.log('currentUser', currentUser)
     const directions = useAtom(directionsAtom)
-    const halls = useAtom(hallsAtom)
     const users = useAtom(usersAtom)
     const ref = useRef()
     const [popoverOpened, setPopoverOpened] = useState(false)
@@ -275,7 +273,7 @@ function TrainingCalendarCell({
                         : trainingInfo
                 }
                 {
-                    currentUser.role === 'admin' && showAdd
+                    currentUser.role !== 'client' && showAdd
                         ? <AddPlusButton onAdd={onAdd} />
                         : undefined
                 }
