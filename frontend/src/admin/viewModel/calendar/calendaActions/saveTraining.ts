@@ -4,6 +4,7 @@ import {CalendarApi} from "../../../../api/calendarApi";
 import {remapTrainingDataToApiTrainingData} from "../remapTrainingDataToApiTrainingData";
 import {lastLoadedPeriodAtom, loadTrainingsForPeriod} from "./loadTrainingsForPeriod";
 import {Toasts} from "../../../../common/notification/notifications";
+import {verify} from "../../../../core/verify";
 
 const saveTraining = declareAsyncAction<Omit<TrainingData, 'isCanceled'>>(
     'saveTraining',
@@ -16,7 +17,7 @@ const saveTraining = declareAsyncAction<Omit<TrainingData, 'isCanceled'>>(
         return CalendarApi.editTraining(remappedTraining)
             .then(() => {
                 Toasts.success('Занятие успешно изменено')
-                const lastLoadedPeriod = store.getState(lastLoadedPeriodAtom)
+                const lastLoadedPeriod = verify(store.getState(lastLoadedPeriodAtom))
                 store.dispatch(loadTrainingsForPeriod({
                     startDate: lastLoadedPeriod.startDate,
                     endDate: lastLoadedPeriod.endDate,

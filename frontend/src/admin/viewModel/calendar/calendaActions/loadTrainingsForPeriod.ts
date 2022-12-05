@@ -81,7 +81,7 @@ const loadTrainingsForPeriod = declareAsyncAction<LoadTrainingsForPeriodPayload,
     }
 )
 
-const lastLoadedPeriodAtom = declareAtom<DatePeriod>('lastLoadedPeriod', {} as DatePeriod, on => [
+const lastLoadedPeriodAtom = declareAtom<DatePeriod | null>('lastLoadedPeriod', null, on => [
     on(loadTrainingsForPeriod.done, (_, value) => value)
 ])
 

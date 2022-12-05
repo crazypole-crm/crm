@@ -1,6 +1,6 @@
 import styles from './Calendar.module.css'
 import {CalendarSwitcher} from "./CalendarSwitcher";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {WeekCalendar} from "./WeekCalendar";
 import {calculateWeekStartDate} from "../../viewModel/calendar/calculateWeekStartDate";
 import {CalendarSidePanel} from "../calendarSidePanel/CalendarSidePanel";
@@ -14,7 +14,11 @@ import {directionsAtom} from "../../viewModel/direction/directions";
 import {trainersAtom} from "../../viewModel/users/users";
 import {TrainingData} from "../../viewModel/calendar/TrainingData";
 import {trainingsAtom} from "../../viewModel/calendar/trainings";
-import {loadTrainingsForPeriod, trainingsLoadingAtom} from "../../viewModel/calendar/calendaActions/loadTrainingsForPeriod";
+import {
+    lastLoadedPeriodAtom,
+    loadTrainingsForPeriod,
+    trainingsLoadingAtom
+} from "../../viewModel/calendar/calendaActions/loadTrainingsForPeriod";
 import {Time} from "../../viewModel/calendar/time";
 import {calendarSettingsAtom} from "../../viewModel/calendar/calendartSettings/calendarSettings";
 import {getValueByCheckedKey} from "../../../core/getValueByCheckedKey";
@@ -138,31 +142,29 @@ function Calendar() {
     const [calendarType, setCalendarType] = useState<CalendarType>('week')
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
     const [selectedFilters, setSelectedFilters] = useState<string[]>([])
-    const [lastPeriodDateStart, setLastPeriodStart] = useState<Date>(calculateWeekStartDate(selectedDate, calendarType))
     const calendarSettings = useAtom(calendarSettingsAtom)
     const halls = useAtom(hallsAtom)
     const directions = useAtom(directionsAtom)
     const trainers = useAtom(trainersAtom)
     const trainings = useAtom(trainingsAtom)
+    const lastLoadedPeriod = useAtom(lastLoadedPeriodAtom)
     const trainingsLoading = useAtom(trainingsLoadingAtom)
     const handleLoadTrainings = useAction(loadTrainingsForPeriod)
 
-    useEffect(() => {
-        const weekDateStart = calculateWeekStartDate(selectedDate, calendarType)
-        if (lastPeriodDateStart.getFullYear() !== weekDateStart.getFullYear()
-            || lastPeriodDateStart.getMonth() !== weekDateStart.getMonth()
-            || lastPeriodDateStart.getDate() !== weekDateStart.getDate()) {
-            setLastPeriodStart(weekDateStart)
-        }
-    }, [selectedDate, lastPeriodDateStart, calendarType, setLastPeriodStart])
+    const weekDateStart = useMemo(() => calculateWeekStartDate(selectedDate, calendarType), [selectedDate, calendarType])
 
     useEffect(() => {
-        const period = getPeriod(calendarType, lastPeriodDateStart, {
+        const period = getPeriod(calendarType, weekDateStart, {
             dayEndTime: calendarSettings.dayEndTime,
             dayStartTime: calendarSettings.dayStartTime,
         })
-        handleLoadTrainings(period)
-    }, [lastPeriodDateStart, handleLoadTrainings])
+
+        if (!lastLoadedPeriod
+            || (period.startDate.getTime() !== lastLoadedPeriod.startDate.getTime()
+            || period.endDate.getTime() !== lastLoadedPeriod.endDate.getTime())) {
+            handleLoadTrainings(period)
+        }
+    }, [selectedDate, weekDateStart, calendarType, calendarSettings, handleLoadTrainings])
 
     const filtersList = useMemo(() => getFilterItems(
         Object.values(directions),
@@ -177,21 +179,19 @@ function Calendar() {
         <div className={styles.calendarLayout}>
             <div className={styles.calendarWrapper}>
                 <CalendarSwitcher calendarType={calendarType} onCalendarTypeChanged={setCalendarType} />
-                {
-                    <WeekCalendar
-                        weekStartDate={lastPeriodDateStart}
-                        weekLength={getValueByCheckedKey(calendarType, {
-                            'week': 7,
-                            'work-week': 5,
-                            'day': 1,
-                        })}
-                        startTime={calendarSettings.dayStartTime}
-                        endTime={calendarSettings.dayEndTime}
-                        timeStep={calendarSettings.stepTime}
-                        loading={trainingsLoading}
-                        trainings={filteredTrainings}
-                    />
-                }
+                <WeekCalendar
+                    weekStartDate={weekDateStart}
+                    weekLength={getValueByCheckedKey(calendarType, {
+                        'week': 7,
+                        'work-week': 5,
+                        'day': 1,
+                    })}
+                    startTime={calendarSettings.dayStartTime}
+                    endTime={calendarSettings.dayEndTime}
+                    timeStep={calendarSettings.stepTime}
+                    loading={trainingsLoading}
+                    trainings={filteredTrainings}
+                />
             </div>
             <CalendarSidePanel
                 selectedDate={selectedDate}
@@ -205,7 +205,8 @@ function Calendar() {
 }
 
 export type {
-    CalendarType
+    CalendarType,
+    CalendarConfig,
 }
 
 export {

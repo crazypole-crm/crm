@@ -58,10 +58,10 @@ function AdminLayout() {
                     <Switch>
                         {authorizedUser.role !== 'client'
                         ? adminRoutes.map(route =>
-                            <Route exact path={[route.path]} component={route.component}/>
+                            <Route key={route.path} exact path={[route.path]} component={route.component}/>
                         )
                         : clientRoutes.map(route =>
-                            <Route exact path={[route.path]} component={route.component}/>
+                            <Route key={route.path} exact path={[route.path]} component={route.component}/>
                         )}
                         <Redirect to={Router.Schedule.url()}/>
                     </Switch>

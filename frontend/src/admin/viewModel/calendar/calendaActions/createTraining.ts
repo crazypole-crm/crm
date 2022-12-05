@@ -4,6 +4,7 @@ import {CalendarApi} from "../../../../api/calendarApi";
 import {remapTrainingDataToApiTrainingData} from "../remapTrainingDataToApiTrainingData";
 import {lastLoadedPeriodAtom, loadTrainingsForPeriod} from "./loadTrainingsForPeriod";
 import {Toasts} from "../../../../common/notification/notifications";
+import {verify} from "../../../../core/verify";
 
 
 type CreateTrainingPayload = Omit<TrainingData, 'id' | 'baseId' | 'isCanceled'> & {
@@ -21,7 +22,7 @@ const createTraining = declareAsyncAction<CreateTrainingPayload>(
         })
             .then(() => {
                 Toasts.success('Занятие успешно создано')
-                const lastLoadedPeriod = store.getState(lastLoadedPeriodAtom)
+                const lastLoadedPeriod = verify(store.getState(lastLoadedPeriodAtom))
                 store.dispatch(loadTrainingsForPeriod({
                     startDate: lastLoadedPeriod.startDate,
                     endDate: lastLoadedPeriod.endDate,

@@ -5,6 +5,7 @@ import {TrainingDate} from "../TrainingData";
 import {Time} from "../time";
 import {convertTrainingDataToDate} from "../DataConverting";
 import {Toasts} from "../../../../common/notification/notifications";
+import {verify} from "../../../../core/verify";
 
 
 type MoveTrainingPayload = {
@@ -23,7 +24,7 @@ const moveTraining = declareAsyncAction<MoveTrainingPayload>(
         return CalendarApi.moveTraining(trainingId, startDate.getTime(), endDate.getTime())
             .then(() => {
                 Toasts.success('Занятие успешно перенесено')
-                const lastLoadedPeriod = store.getState(lastLoadedPeriodAtom)
+                const lastLoadedPeriod = verify(store.getState(lastLoadedPeriodAtom))
                 store.dispatch(loadTrainingsForPeriod({
                     startDate: lastLoadedPeriod.startDate,
                     endDate: lastLoadedPeriod.endDate,
