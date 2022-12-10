@@ -23,6 +23,7 @@ import {Time} from "../../viewModel/calendar/time";
 import {calendarSettingsAtom} from "../../viewModel/calendar/calendartSettings/calendarSettings";
 import {getValueByCheckedKey} from "../../../core/getValueByCheckedKey";
 import {MapItems} from "../../../core/reatom/declareMapAtom";
+import {getFullName} from "../../../common/name";
 
 type CalendarType = 'week' | 'work-week' | 'day'
 
@@ -50,7 +51,9 @@ function getFilterItems(directions: DirectionData[], halls: HallData[], trainers
         name: 'Преподаватель',
         items: trainers.map(trainer => ({
             id: trainer.id,
-            name: `${trainer.lastName} ${trainer.firstName} ${trainer.middleName}`
+            name: getFullName({
+                ...trainer
+            }),
         }))
     }
 
