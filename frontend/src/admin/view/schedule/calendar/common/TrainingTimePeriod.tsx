@@ -96,6 +96,7 @@ function TrainingTimePeriod({
                 onSelect={value => onChange(value, setTrainingStartTime)}
                 disabledHours={() => disabledStartTime.disabledHours}
                 disabledMinutes={() => disabledStartTime.disabledMinutes}
+                showNow={false}
             />
             -
             <TimePicker
@@ -104,6 +105,7 @@ function TrainingTimePeriod({
                 onSelect={value => onChange(value, setTrainingEndTime)}
                 disabledHours={() => disabledEndTime.disabledHours}
                 disabledMinutes={() => disabledEndTime.disabledMinutes}
+                showNow={false}
             />
         </div>
     )
