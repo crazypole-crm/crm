@@ -1,5 +1,4 @@
 import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelector";
-import {replaceTrainerPopupActions} from "../../../../viewModel/calendar/replaceTrainerPopup/replaceTrainer";
 import {useAction} from "@reatom/react";
 import {Modal} from "antd";
 import React from "react";

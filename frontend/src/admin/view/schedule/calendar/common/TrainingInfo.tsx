@@ -3,7 +3,6 @@ import styles from './TrainingInfo.module.css'
 import {useAtom} from "@reatom/react";
 import {trainersAtom} from "../../../../viewModel/users/users";
 import {directionsAtom} from "../../../../viewModel/direction/directions";
-import {hallsAtom} from "../../../../viewModel/hall/halls";
 import {getValueByCheckedKey} from "../../../../../core/getValueByCheckedKey";
 import {Time} from "../../../../viewModel/calendar/time";
 import {normalizeDate} from "../../../users/table/userTableDataConvert";
@@ -14,7 +13,7 @@ import {verify} from "../../../../../core/verify";
 import {UserOutlined} from "@ant-design/icons";
 import React from "react";
 
-type TrainingInfo = {
+type TrainingInfoProps = {
     trainingData: TrainingData,
 }
 
@@ -69,7 +68,7 @@ function TrainerInfo(trainerData: UserData) {
 
 function TrainingInfo({
     trainingData,
-}: TrainingInfo) {
+}: TrainingInfoProps) {
     const trainers = useAtom(trainersAtom)
     const directions = useAtom(directionsAtom)
 

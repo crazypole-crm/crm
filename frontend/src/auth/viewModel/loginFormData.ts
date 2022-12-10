@@ -56,8 +56,7 @@ const submit = declareAction('auth.login.submit',
         const password = store.getState(passwordAtom)
         const userNameError = store.getState(userNameErrorAtom)
         const passwordError = store.getState(passwordErrorAtom)
-        const remeberMe = store.getState(rememberMeAtom)
-        
+
         const newUserNameError = userNameError || validateRequiredField(userName)
         const newPasswordError = passwordError || validateRequiredField(password)
 

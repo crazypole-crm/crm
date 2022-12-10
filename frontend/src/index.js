@@ -4,12 +4,11 @@ import {context} from '@reatom/react';
 import {combine, createStore,} from "@reatom/core";
 import "antd/dist/antd.css";
 import "./index.css";
-import i18n from "./i18n";
 import {BrowserRouter as Router} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import {AppWrapper} from "./app/AppWrapper";
-import { isLoadingAppAtom } from './app/isAppLoading';
-import { currentUserAtom } from './currentUser/currentUser';
+import {isLoadingAppAtom} from './app/isAppLoading';
+import {currentUserAtom} from './currentUser/currentUser';
 import {initExternalLayer} from "./common/layers/externalLayers";
 import {usersAtom} from "./admin/viewModel/users/users";
 import {directionsAtom} from "./admin/viewModel/direction/directions";
@@ -17,7 +16,6 @@ import {hallsAtom} from "./admin/viewModel/hall/halls";
 import {trainingsAtom} from "./admin/viewModel/calendar/trainings";
 import 'moment/locale/ru';
 import moment from "moment";
-import {calendarSettingsAtom} from "./admin/viewModel/calendar/calendartSettings/calendarSettings";
 import {calendarAtom} from "./admin/viewModel/calendar/calendar";
 
 const store = createStore(

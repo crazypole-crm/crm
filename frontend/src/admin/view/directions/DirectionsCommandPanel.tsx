@@ -50,7 +50,7 @@ function DirectionsTableCommandPanel() {
             (isAdmin && selectedDirectionsRowKeys.length === 1) && 'edit',
             (isAdmin && !!selectedDirectionsRowKeys.length) && 'delete',
         ])
-    }, [selectedDirectionsRowKeys])
+    }, [selectedDirectionsRowKeys, currentUser.role])
 
     return (
         <div className={styles.commandPanel}>

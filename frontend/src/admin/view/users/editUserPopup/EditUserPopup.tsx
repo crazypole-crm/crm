@@ -56,11 +56,9 @@ function UserBirthDayPicker() {
     const userBirthDay = useAtomWithSelector(editUserPopupAtom, x => x.userBirthDay)
     const handleSetUserBirthDay = useAction(editUserPopupActions.setUserBirthDay)
 
-    const disabledDate = (date: Moment) => {
-        return date > moment(new Date)
-    }
+    const disabledDate = (date: Moment) => (date > moment(new Date()))
 
-    const momentDate = useMemo(() => userBirthDay && moment(userBirthDay), [userBirthDay])
+    const momentDate = useMemo(() =>(userBirthDay && moment(userBirthDay)), [userBirthDay])
 
     const onChange: DatePickerProps['onChange'] = (value) => {
         if (value) {

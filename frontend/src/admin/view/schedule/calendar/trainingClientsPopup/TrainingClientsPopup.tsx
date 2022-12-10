@@ -77,7 +77,7 @@ function ClientsTable() {
     const clientsLoading = useAtomWithSelector(clientsTrainingPopupAtom, x => x.clientsLoading)
     const clients = useAtom(clientsAtom)
 
-    const data = useMemo(() => clientsData && remapClientsDataToTableData(clients, clientsData), [clientsData])
+    const data = useMemo(() => clientsData && remapClientsDataToTableData(clients, clientsData), [clientsData, clients])
 
     return <Table
         columns={COLUMNS}

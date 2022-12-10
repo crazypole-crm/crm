@@ -1,9 +1,3 @@
-import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelector";
-import {
-    editTrainingPopupActions,
-    editTrainingPopupAtom
-} from "../../../../viewModel/calendar/editTrainingPopup/editTrainingPopup";
-import {useAction} from "@reatom/react";
 import React, {useMemo} from "react";
 import moment from "moment/moment";
 import {DatePicker, DatePickerProps} from "antd";

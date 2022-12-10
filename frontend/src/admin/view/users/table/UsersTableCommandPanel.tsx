@@ -116,7 +116,7 @@ function UsersTableCommandPanel({
             (isAdmin && !!selectedRowKeys.length) && 'delete',
             ((isAdmin || isTrainer) && selectedRowKeys.length === 1) && 'view',
         ])
-    }, [selectedRowKeys])
+    }, [selectedRowKeys, currentUser.role])
 
     return (
         <div className={styles.commandPanel}>

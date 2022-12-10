@@ -1,9 +1,9 @@
 import React from "react";
-import { useAction } from "@reatom/react"
-import { Input, InputNumber, Modal } from "antd";
-import { useAtomWithSelector } from "../../../../core/reatom/useAtomWithSelector";
-import { editHallPopupActions, editHallPopupAtom } from "../../../viewModel/hall/popups/editHallPopup";
-import { FieldBlock } from "../../schedule/calendar/common/FieldBlock";
+import {useAction} from "@reatom/react"
+import {Input, Modal} from "antd";
+import {useAtomWithSelector} from "../../../../core/reatom/useAtomWithSelector";
+import {editHallPopupActions, editHallPopupAtom} from "../../../viewModel/hall/popups/editHallPopup";
+import {FieldBlock} from "../../schedule/calendar/common/FieldBlock";
 
 
 const fieldStyle: React.CSSProperties = {

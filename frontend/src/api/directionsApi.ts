@@ -1,5 +1,4 @@
-import { DirectionData } from "../admin/viewModel/direction/DirectionData"
-import { generateUuid } from "../core/uuid/generateUuid"
+import {DirectionData} from "../admin/viewModel/direction/DirectionData"
 import {HttpStatus} from "../core/http/HttpStatus";
 
 type Api_Direction = {

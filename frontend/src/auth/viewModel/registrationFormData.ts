@@ -68,7 +68,6 @@ const submit = declareAction('auth.registation.submit',
         const email = store.getState(emailAtom)
         const password = store.getState(passwordAtom)
         const confirmPassword = store.getState(confirmPasswordAtom)
-        const rememberMe = store.getState(rememberMeAtom)
         const emailError = store.getState(emailErrorAtom)
         const passwordError = store.getState(passwordErrorAtom)
         const confirmPasswordError = store.getState(confirmPasswordErrorAtom)

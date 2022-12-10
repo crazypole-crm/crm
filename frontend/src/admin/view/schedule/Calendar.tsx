@@ -1,6 +1,6 @@
 import styles from './Calendar.module.css'
 import {CalendarSwitcher} from "./CalendarSwitcher";
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {WeekCalendar} from "./WeekCalendar";
 import {calculateWeekStartDate} from "../../viewModel/calendar/calculateWeekStartDate";
 import {CalendarSidePanel} from "../calendarSidePanel/CalendarSidePanel";
@@ -25,16 +25,6 @@ import {getValueByCheckedKey} from "../../../core/getValueByCheckedKey";
 import {MapItems} from "../../../core/reatom/declareMapAtom";
 
 type CalendarType = 'week' | 'work-week' | 'day'
-
-const WEEK_LENGTH = 7
-const DAY_START_TIME = {
-    hour: 7,
-    minutes: 0,
-}
-const DAY_END_TIME = {
-    hour: 22,
-    minutes: 0,
-}
 
 function getFilterItems(directions: DirectionData[], halls: HallData[], trainers: UserData[]): FilterData[] {
     const directionsFilters: FilterData = {
@@ -160,11 +150,11 @@ function Calendar() {
         })
 
         if (!lastLoadedPeriod
-            || (period.startDate.getTime() !== lastLoadedPeriod.startDate.getTime()
-            || period.endDate.getTime() !== lastLoadedPeriod.endDate.getTime())) {
+            || period.startDate.getTime() !== lastLoadedPeriod.startDate.getTime()
+            || period.endDate.getTime() !== lastLoadedPeriod.endDate.getTime()) {
             handleLoadTrainings(period)
         }
-    }, [selectedDate, weekDateStart, calendarType, calendarSettings, handleLoadTrainings])
+    }, [selectedDate, weekDateStart, calendarType, calendarSettings, handleLoadTrainings, lastLoadedPeriod])
 
     const filtersList = useMemo(() => getFilterItems(
         Object.values(directions),

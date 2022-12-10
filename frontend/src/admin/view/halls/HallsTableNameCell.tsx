@@ -37,7 +37,3 @@ function HallsTableNameCell({
 export {
     HallsTableNameCell,
 }
-
-function handleOpenEditHallPopup(arg0: { hallData: import("../../viewModel/hall/HallData").HallData; mode: string }) {
-    throw new Error("Function not implemented.")
-}
