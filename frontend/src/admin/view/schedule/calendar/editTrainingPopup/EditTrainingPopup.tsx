@@ -211,6 +211,7 @@ function Content() {
 function EditTrainingPopup() {
     const mode = useAtomWithSelector(editTrainingPopupAtom, x => x.mode)
     const editTrainingPopupOpened = useAtomWithSelector(editTrainingPopupAtom, x => x.opened)
+    const submitButtonLoading = useAtomWithSelector(editTrainingPopupAtom, x => x.submitButtonLoading)
     const handleCloseEditTrainingPopup = useAction(editTrainingPopupActions.close)
     const handleSubmitTraining = useAction(editTrainingPopupActions.submit)
 
@@ -224,7 +225,11 @@ function EditTrainingPopup() {
                 ? 'Изменить занятие'
                 : 'Добавить занятие'}
         cancelText={'Отмена'}
-        onOk={handleSubmitTraining}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleSubmitTraining,
+        }}
         onCancel={handleCloseEditTrainingPopup}
     >
         <Content/>

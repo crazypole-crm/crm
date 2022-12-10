@@ -127,6 +127,16 @@ const [trainingDescriptionAtom, setTrainingDescription] = declareAtomWithSetter<
 
 const [repeatableAtom, setRepeatable] = declareAtomWithSetter('editTraining.repeatable', false)
 
+const submitButtonLoadingAtom = declareAtom('editTraining.submitButtonLoading', false, on => [
+    on(createTraining, () => true),
+    on(createTraining.done, () => false),
+    on(createTraining.fail, () => false),
+    on(saveTraining, () => true),
+    on(saveTraining.done, () => false),
+    on(saveTraining.fail, () => false),
+    on(close, () => false),
+])
+
 const submit = declareAction('editTraining.submit',
     (_, store) => {
         const mode = store.getState(modeAtom)
@@ -203,6 +213,7 @@ const editTrainingPopupAtom = combine({
     repeatable: repeatableAtom,
     trainingId: trainingIdAtom,
     baseId: baseIdAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const editTrainingPopupActions = {
