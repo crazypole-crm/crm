@@ -63,11 +63,13 @@ const [userRoleAtom, setUserRole] = declareAtomWithSetter<UserRole>('editUser.us
 ])
 
 const [userPhoneErrorAtom, setUserPhoneError] = declareAtomWithSetter('editUser.userPhoneError', '', on => [
-    on(setUserPhone, () => '')
+    on(setUserPhone, () => ''),
+    on(close, () => '')
 ])
 
 const [userEmailErrorAtom, setUserEmailError] = declareAtomWithSetter('editUser.userEmptyEmailError', '', on => [
-    on(setUserEmail, () => '')
+    on(setUserEmail, () => ''),
+    on(close, () => '')
 ])
 
 const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string>('editUser.userNewPassword', '')
@@ -76,11 +78,13 @@ const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<stri
 
 const [userNewPasswordErrorAtom, setUserNewPasswordError] = declareAtomWithSetter('editUser.userNewPasswordError', '', on => [
     on(setUserNewPassword, () => ''),
+    on(close, () => '')
 ])
 
 const [userNewPasswordCheckErrorAtom, setNewPasswordCheckError] = declareAtomWithSetter('editUser.userOldPasswordCheckError', '', on => [
     on(setUserPasswordCheck, () => ''),
-    on(setUserNewPassword, () => '')
+    on(setUserNewPassword, () => ''),
+    on(close, () => '')
 ])
 
 function getUserPasswordCheckError(password: string, conformPassword: string) {
