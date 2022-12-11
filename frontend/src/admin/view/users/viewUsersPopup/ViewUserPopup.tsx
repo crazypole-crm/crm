@@ -1,5 +1,5 @@
 import {useAtomWithSelector} from "../../../../core/reatom/useAtomWithSelector";
-import {useAction, useAtom} from "@reatom/react";
+import {useAction} from "@reatom/react";
 import {Avatar, Modal} from "antd";
 import React from "react";
 import {viewUserPopupActions, viewUserPopupAtom} from "../../../viewModel/users/viewUserPopup/viewUserPopup";

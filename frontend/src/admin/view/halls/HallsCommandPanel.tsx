@@ -50,7 +50,7 @@ function HallsTableCommandPanel() {
             (isAdmin && selectedHallsRowKeys.length === 1) && 'edit',
             (isAdmin && !!selectedHallsRowKeys.length) && 'delete',
         ])
-    }, [selectedHallsRowKeys])
+    }, [selectedHallsRowKeys, currentUser.role])
 
     return (
         <div className={styles.commandPanel}>

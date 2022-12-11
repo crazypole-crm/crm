@@ -19,7 +19,7 @@ function TextWithEllipsis({
 
     useLayoutEffect(() => {
         ref.current && ref.current.style.setProperty('-webkit-line-clamp', `${rows}`)
-    }, [rows, ref.current, rows])
+    }, [rows])
 
     return (
         <Tooltip

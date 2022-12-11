@@ -5,7 +5,6 @@ import {Time} from "../time";
 import {createTraining} from "../calendaActions/createTraining";
 import {verify} from "../../../../core/verify";
 import {saveTraining} from "../calendaActions/saveTraining";
-import {useAtomWithSelector} from "../../../../core/reatom/useAtomWithSelector";
 
 type EditTrainingPopupMode = 'edit' | 'create'
 
@@ -21,7 +20,7 @@ type OpenPayload = {
 const open = declareAction<OpenPayload>('edit.training.open')
 const close = declareAction('edit.training.close')
 
-const [openedAtom, setOpened] = declareAtomWithSetter('editTraining', false, on => [
+const [openedAtom] = declareAtomWithSetter('editTraining', false, on => [
     on(open, () => true),
     on(close, () => false),
     on(createTraining.done, () => false),
@@ -128,6 +127,16 @@ const [trainingDescriptionAtom, setTrainingDescription] = declareAtomWithSetter<
 
 const [repeatableAtom, setRepeatable] = declareAtomWithSetter('editTraining.repeatable', false)
 
+const submitButtonLoadingAtom = declareAtom('editTraining.submitButtonLoading', false, on => [
+    on(createTraining, () => true),
+    on(createTraining.done, () => false),
+    on(createTraining.fail, () => false),
+    on(saveTraining, () => true),
+    on(saveTraining.done, () => false),
+    on(saveTraining.fail, () => false),
+    on(close, () => false),
+])
+
 const submit = declareAction('editTraining.submit',
     (_, store) => {
         const mode = store.getState(modeAtom)
@@ -204,6 +213,7 @@ const editTrainingPopupAtom = combine({
     repeatable: repeatableAtom,
     trainingId: trainingIdAtom,
     baseId: baseIdAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const editTrainingPopupActions = {

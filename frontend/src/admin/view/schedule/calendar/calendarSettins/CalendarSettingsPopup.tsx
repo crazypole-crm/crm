@@ -47,6 +47,7 @@ function TimeStepBlock() {
         value={momentTimeStep}
         onSelect={onChange}
         format={'HH:mm'}
+        showNow={false}
     />
 }
 
@@ -83,6 +84,7 @@ function PeriodTimeBlock() {
                 value={momentStartTime}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, handleSetDayStartTime)}
+                showNow={false}
             />
             -
             <TimePicker
@@ -90,6 +92,7 @@ function PeriodTimeBlock() {
                 value={momentEndTime}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, handleSetDayEndTime)}
+                showNow={false}
             />
         </div>
     )

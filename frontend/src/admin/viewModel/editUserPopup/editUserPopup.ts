@@ -108,7 +108,7 @@ function getEmailError(email: string | null) {
     if (!email) {
         return 'Поле email обязательное!'
     }
-    if (!RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(email)) {
+    if (!RegExp(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/).test(email)) {
         return 'Некорректный email'
     }
     return ''

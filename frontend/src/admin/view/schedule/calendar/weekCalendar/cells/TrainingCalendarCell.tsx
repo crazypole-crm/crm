@@ -6,7 +6,6 @@ import {directionsAtom} from "../../../../../viewModel/direction/directions";
 import {Time} from "../../../../../viewModel/calendar/time";
 import {normalizeDate} from "../../../../users/table/userTableDataConvert";
 import {usersAtom} from "../../../../../viewModel/users/users";
-import {hallsAtom} from "../../../../../viewModel/hall/halls";
 import {AddPlusIcon} from "../../../../../../icons/AddPlusIcon";
 import {authorizedCurrentUser} from "../../../../../../currentUser/currentUser";
 import {TextWithEllipsis} from "../../../../../../common/text/TextWithEllipsis";

@@ -1,4 +1,3 @@
-import { resolve } from "path";
 import { AuthenticationApi } from "../../api/authenticationApi";
 import { Toasts } from "../../common/notification/notifications";
 import { HttpStatus } from "../../core/http/HttpStatus";

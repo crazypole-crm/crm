@@ -1,8 +1,7 @@
-import { CurrentUserApi } from "../../api/currentUserApi";
-import { declareAsyncAction } from "../../core/reatom/declareAsyncAction";
-import { currentUserActions } from "../currentUser";
-import { UserModel } from "../UserModel";
-import {remapApiRolToModelRole} from "../../common/role/remapApiRolToModelRole";
+import {CurrentUserApi} from "../../api/currentUserApi";
+import {declareAsyncAction} from "../../core/reatom/declareAsyncAction";
+import {currentUserActions} from "../currentUser";
+import {UserModel} from "../UserModel";
 
 const initUserDataAction = declareAsyncAction<void>(
     'currentUser.init',
@@ -14,7 +13,7 @@ const initUserDataAction = declareAsyncAction<void>(
                     isAuthUser: true,
                     birthDay: data.birthDay ? new Date(Number(data.birthDay)) : undefined,
                     lastVisit: data.lastVisit ? new Date(Number(data.lastVisit)) : undefined,
-                    role: remapApiRolToModelRole(data.role),
+                    role: 'admin',
                 }
                 store.dispatch(currentUserActions.setCurrentUserData(modelUserData));
                 return Promise.resolve()

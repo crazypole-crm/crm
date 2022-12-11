@@ -1,5 +1,4 @@
 import {HttpStatus} from "../core/http/HttpStatus";
-import {UserRole} from "../admin/viewModel/users/UserData";
 import {Api_Role} from "../common/role/Api_Role";
 
 type Api_UsersData = {
