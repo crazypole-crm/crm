@@ -98,7 +98,7 @@ function getUserNewPasswordCheckError(password: string) {
 }
 
 function getUserPhoneError(phone: string | null) {
-    if (phone && !RegExp(/^\d{11}$/).test(phone)) {
+    if (phone && !RegExp(/^(\+7|8)\d{10}$/).test(phone)) {
         return 'Некорректный телефон'
     }
     return ''
