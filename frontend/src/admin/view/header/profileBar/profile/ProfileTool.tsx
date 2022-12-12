@@ -5,6 +5,7 @@ import {useAction, useAtom} from "@reatom/react";
 import {authorizedCurrentUser} from "../../../../../currentUser/currentUser";
 import {editUserPopupActions} from "../../../../viewModel/editUserPopup/editUserPopup";
 import {UserOutlined} from "@ant-design/icons";
+import { getFullName } from '../../../../../common/name';
 
 const {Text} = Typography;
 
@@ -17,13 +18,14 @@ const ProfileTool = () => {
             className={styles.profileTool}
             onClick={() => handleOpenEditUserPopup({
                 mode: 'edit',
-                userData: {
-                    ...currentUser,
-                }
+                userData: currentUser,
             })}
         >
             <Avatar icon={<UserOutlined />} src={currentUser.avatarUrl}/>
-            <Text className={styles.text}>{currentUser.firstName} {currentUser.lastName}</Text>
+            <Text className={styles.text}>{getFullName({
+                firstName: currentUser.firstName,
+                lastName: currentUser.lastName,
+            }) || currentUser.email}</Text>
         </div>
     );
 };
