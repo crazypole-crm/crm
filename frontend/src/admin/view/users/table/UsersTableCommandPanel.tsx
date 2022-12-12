@@ -14,8 +14,7 @@ import {usersLoadingAtom} from "../../../viewModel/users/loadUsers";
 import {authorizedCurrentUser} from "../../../../currentUser/currentUser";
 import {viewUserPopupActions} from "../../../viewModel/users/viewUserPopup/viewUserPopup";
 import {checkNever} from "../../../../core/checkNever";
-import {deleteUser} from "../../../viewModel/users/deleteUser";
-import { submitDeleteUsersPopupActions } from '../../../viewModel/users/submitDeleteUserPopup/submitDeleteUsersPopup'
+import {submitDeleteUsersPopupActions} from '../../../viewModel/users/submitDeleteUserPopup/submitDeleteUsersPopup'
 
 type UsersActionsButtonType = 'delete' | 'edit' | 'add' | 'view'
 
