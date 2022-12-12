@@ -1,8 +1,8 @@
 import { declareAtomWithSetter } from "../../../../core/reatom/declareAtomWithSetter";
-import { deleteDirectionsPopupActions } from "./deleteDirectionsPopup";
+import { submitDeleteDirectionsPopupActions } from "./submitDeleteDirectionsPopup";
 
 const [selectedDirectionsRowKeysAtom, setSelectedDirectionsRowKeys] = declareAtomWithSetter<React.Key[]>('directionsSelectedRows', [], on => [
-    on(deleteDirectionsPopupActions.submit, () => [])
+    on(submitDeleteDirectionsPopupActions.submit, () => [])
 ])
 
 export {

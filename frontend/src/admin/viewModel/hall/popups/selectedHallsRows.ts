@@ -1,8 +1,8 @@
 import { declareAtomWithSetter } from "../../../../core/reatom/declareAtomWithSetter";
-import { deleteHallsPopupActions } from "./deleteHallsPopup";
+import { submitDeleteHallsPopupActions } from "./submitDeleteHallsPopup";
 
 const [selectedHallsRowKeysAtom, setSelectedHallsRowKeys] = declareAtomWithSetter<React.Key[]>('hallsSelectedRows', [], on => [
-    on(deleteHallsPopupActions.submit, () => [])
+    on(submitDeleteHallsPopupActions.submit, () => [])
 ])
 
 export {
