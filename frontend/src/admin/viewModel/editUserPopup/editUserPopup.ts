@@ -63,11 +63,13 @@ const [userRoleAtom, setUserRole] = declareAtomWithSetter<UserRole>('editUser.us
 ])
 
 const [userPhoneErrorAtom, setUserPhoneError] = declareAtomWithSetter('editUser.userPhoneError', '', on => [
-    on(setUserPhone, () => '')
+    on(setUserPhone, () => ''),
+    on(close, () => '')
 ])
 
 const [userEmailErrorAtom, setUserEmailError] = declareAtomWithSetter('editUser.userEmptyEmailError', '', on => [
-    on(setUserEmail, () => '')
+    on(setUserEmail, () => ''),
+    on(close, () => '')
 ])
 
 const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string>('editUser.userNewPassword', '')
@@ -76,11 +78,13 @@ const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<stri
 
 const [userNewPasswordErrorAtom, setUserNewPasswordError] = declareAtomWithSetter('editUser.userNewPasswordError', '', on => [
     on(setUserNewPassword, () => ''),
+    on(close, () => '')
 ])
 
 const [userNewPasswordCheckErrorAtom, setNewPasswordCheckError] = declareAtomWithSetter('editUser.userOldPasswordCheckError', '', on => [
     on(setUserPasswordCheck, () => ''),
-    on(setUserNewPassword, () => '')
+    on(setUserNewPassword, () => ''),
+    on(close, () => '')
 ])
 
 function getUserPasswordCheckError(password: string, conformPassword: string) {
@@ -98,7 +102,7 @@ function getUserNewPasswordCheckError(password: string) {
 }
 
 function getUserPhoneError(phone: string | null) {
-    if (phone && !RegExp(/^\d{11}$/).test(phone)) {
+    if (phone && !RegExp(/^(\+7|8)\d{10}$/).test(phone)) {
         return 'Некорректный телефон'
     }
     return ''

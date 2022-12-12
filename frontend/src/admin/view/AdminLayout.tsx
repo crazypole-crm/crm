@@ -19,6 +19,9 @@ import { DeleteDirectionsPopup } from "./directions/directionsPopups/DeleteDirec
 import { EditHallPopup } from "./halls/hallsPopups/EditHallPopup"
 import { DeleteHallsPopup } from "./halls/hallsPopups/DeleteHallsPopup"
 import { EditUserPasswordPopup } from "./users/editUserPopup/EditUserPasswordPopup"
+import { SubmitDeleteDirectionsPopup } from "./directions/directionsPopups/SubmitDeleteDirectionsPopup"
+import { SubmitDeleteHallsPopup } from "./halls/hallsPopups/SubmitDeleteHallsPopup"
+import { SubmitDeleteUsersPopup } from "./users/submitDeleteUserPopup/SubmitDeleteUsersPopup"
 
 function PopupsLayout() {
     return (
@@ -28,6 +31,7 @@ function PopupsLayout() {
             <EditTrainingPopup />
             <CalendarSettingsPopup />
             <ViewUserPopup />
+            <SubmitDeleteUsersPopup />
             <ReplaceTrainerPopup />
             <MoveTrainingPopup />
             <TrainingActionPopup />
@@ -35,8 +39,10 @@ function PopupsLayout() {
             <RecordToTrainingPopup />
             <EditDirectionPopup />
             <DeleteDirectionsPopup />
+            <SubmitDeleteDirectionsPopup />
             <EditHallPopup />
             <DeleteHallsPopup />
+            <SubmitDeleteHallsPopup />
         </>
     )
 }

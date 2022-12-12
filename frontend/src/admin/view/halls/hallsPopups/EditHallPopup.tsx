@@ -30,7 +30,6 @@ function HallCapacityInput() {
 
     return <Input
         value={hallCapacity || ''}
-        // min={'1'}
         status={hallCapacityError ? 'error' : ''}
         onChange={e => handleSetHallCapacity(e.target.value)}
         style={fieldStyle}
@@ -64,7 +63,7 @@ function EditHallPopup() {
     const handleSubmitHall = useAction(editHallPopupActions.submit)
 
     return <Modal
-        title={editHallPopupMode === 'create' ? 'Добавить направление' : 'Редактировать направление'}
+        title={editHallPopupMode === 'create' ? 'Добавить зал' : 'Редактировать зал'}
         open={editHallPopupOpened}
         centered
         okText={'Сохранить'}

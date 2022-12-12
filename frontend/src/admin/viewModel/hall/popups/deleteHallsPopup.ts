@@ -15,13 +15,6 @@ const deletingHallsIds = declareAtom<string[]>('deleteHalls.deletingHallsIds', [
     on(open, (_, value) => value)
 ])
 
-const submit = declareAction('deleteHalls.submit',
-    (_, store) => {
-        const hallsIds = store.getState(deletingHallsIds)
-        store.dispatch(deleteHalls(hallsIds))
-    }
-)
-
 const deleteHallsPopupAtom = combine({
     opened: openedAtom,
     hallsIds: deletingHallsIds,
@@ -31,7 +24,6 @@ const deleteHallsPopupActions = {
     setOpened,
     open,
     close,
-    submit,
 }
 
 export {

@@ -15,13 +15,6 @@ const deletingDirectionsIds = declareAtom<string[]>('deleteDirections.deletingDi
     on(open, (_, value) => value)
 ])
 
-const submit = declareAction('deleteDirections.submit',
-    (_, store) => {
-        const directionsIds = store.getState(deletingDirectionsIds)
-        store.dispatch(deleteDirections(directionsIds))
-    }
-)
-
 const deleteDirectionsPopupAtom = combine({
     opened: openedAtom,
     directionsIds: deletingDirectionsIds,
@@ -31,7 +24,6 @@ const deleteDirectionsPopupActions = {
     setOpened,
     open,
     close,
-    submit,
 }
 
 export {

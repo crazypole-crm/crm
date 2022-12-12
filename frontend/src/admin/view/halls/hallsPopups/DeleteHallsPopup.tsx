@@ -3,6 +3,7 @@ import { List, Modal } from "antd"
 import { useAtomWithSelector } from "../../../../core/reatom/useAtomWithSelector"
 import { hallsAtom } from "../../../viewModel/hall/halls"
 import { deleteHallsPopupActions, deleteHallsPopupAtom } from "../../../viewModel/hall/popups/deleteHallsPopup"
+import { submitDeleteHallsPopupActions } from "../../../viewModel/hall/popups/submitDeleteHallsPopup"
 import { FieldBlock } from "../../schedule/calendar/common/FieldBlock"
 import styles from './DeleteHallsPopup.module.css'
 
@@ -29,16 +30,21 @@ function Content() {
 
 function DeleteHallsPopup() {                                                                                                                                                                                                                                                                                                                                                                                          
     const deleteHallPopupOpened = useAtomWithSelector(deleteHallsPopupAtom, x => x.opened)
+    const hallsIds = useAtomWithSelector(deleteHallsPopupAtom, x => x.hallsIds)
     const handleCloseDeleteHallPopup = useAction(deleteHallsPopupActions.close)
-    const handleSubmitDelete = useAction(deleteHallsPopupActions.submit)
+    const handleSubmitDelete = useAction(submitDeleteHallsPopupActions.open)
+
+    const handleOnOkClick = () => {
+        handleSubmitDelete(hallsIds)
+    }
 
     return <Modal
-        title={'Удалить направления'}
+        title={'Удалить залы'}
         open={deleteHallPopupOpened}
         centered
         okText={'Удалить'}
         cancelText={'Отмена'}
-        onOk={handleSubmitDelete}
+        onOk={handleOnOkClick}
         onCancel={handleCloseDeleteHallPopup}
         width={430}
     >

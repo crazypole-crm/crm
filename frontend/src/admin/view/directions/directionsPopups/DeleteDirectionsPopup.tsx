@@ -3,6 +3,7 @@ import { List, Modal } from "antd"
 import { useAtomWithSelector } from "../../../../core/reatom/useAtomWithSelector"
 import { directionsAtom } from "../../../viewModel/direction/directions"
 import { deleteDirectionsPopupActions, deleteDirectionsPopupAtom } from "../../../viewModel/direction/popups/deleteDirectionsPopup"
+import { submitDeleteDirectionsPopupActions } from "../../../viewModel/direction/popups/submitDeleteDirectionsPopup"
 import { FieldBlock } from "../../schedule/calendar/common/FieldBlock"
 import styles from './DeleteDirectionsPopup.module.css'
 
@@ -29,8 +30,13 @@ function Content() {
 
 function DeleteDirectionsPopup() {                                                                                                                                                                                                                                                                                                                                                                                          
     const deleteDirectionPopupOpened = useAtomWithSelector(deleteDirectionsPopupAtom, x => x.opened)
+    const directionsIds = useAtomWithSelector(deleteDirectionsPopupAtom, x => x.directionsIds)
     const handleCloseDeleteDirectionPopup = useAction(deleteDirectionsPopupActions.close)
-    const handleSubmitDelete = useAction(deleteDirectionsPopupActions.submit)
+    const handleSubmitDelete = useAction(submitDeleteDirectionsPopupActions.open)
+
+    const handleOnOkClick = () => {
+        handleSubmitDelete(directionsIds)
+    }
 
     return <Modal
         title={'Удалить направления'}
@@ -38,7 +44,7 @@ function DeleteDirectionsPopup() {
         centered
         okText={'Удалить'}
         cancelText={'Отмена'}
-        onOk={handleSubmitDelete}
+        onOk={handleOnOkClick}
         onCancel={handleCloseDeleteDirectionPopup}
         width={430}
     >
