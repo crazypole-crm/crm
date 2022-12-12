@@ -6,7 +6,9 @@ namespace App\Training\Domain\Service;
 use App\Common\Domain\Uuid;
 use App\Common\Domain\UuidGenerator;
 use App\Training\Domain\Exception\CourseNotFoundException;
+use App\Training\Domain\Exception\HallAlreadyHasTrainingAtThisTimeException;
 use App\Training\Domain\Exception\HallNotFoundException;
+use App\Training\Domain\Exception\TrainerAlreadyHaveTrainingAtThisTimeException;
 use App\Training\Domain\Exception\TrainingNotFoundException;
 use App\Training\Domain\Model\BaseTraining;
 use App\Training\Domain\Model\BaseTrainingRepositoryInterface;
@@ -75,6 +77,16 @@ class TrainingService
             $trainerId,
             $type,
         );
+        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $trainerId);
+        if ($intersectingTrainings !== null)
+        {
+            throw new TrainerAlreadyHaveTrainingAtThisTimeException();
+        }
+        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $hallId);
+        if ($intersectingTrainings !== null)
+        {
+            throw new HallAlreadyHasTrainingAtThisTimeException();
+        }
         $this->baseTrainingRepository->add($baseTraining);
         if ($isRepeatable)
         {
@@ -125,7 +137,7 @@ class TrainingService
      * @param int $type
      * @throws CourseNotFoundException
      * @throws HallNotFoundException
-     * @throws TrainingNotFoundException
+     * @throws TrainingNotFoundException|TrainerAlreadyHaveTrainingAtThisTimeException
      */
     public function editTrainingByBase(
         Uuid $baseTrainingId,
@@ -150,6 +162,16 @@ class TrainingService
             throw new CourseNotFoundException($courseId);
         }
         $trainings = $this->trainingRepository->findAllByBaseTraining($baseTrainingId);
+        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $trainerId);
+        if (!empty($intersectingTrainings))
+        {
+            throw new TrainerAlreadyHaveTrainingAtThisTimeException();
+        }
+        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $hallId);
+        if (!empty($intersectingTrainings))
+        {
+            throw new HallAlreadyHasTrainingAtThisTimeException();
+        }
         $baseTraining = $this->baseTrainingRepository->findById($baseTrainingId);
         if ($baseTraining === null)
         {
@@ -195,6 +217,16 @@ class TrainingService
         if ($training === null)
         {
             throw new TrainingNotFoundException($trainingId);
+        }
+        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $training->getTrainerId());
+        if (!empty($intersectingTrainings))
+        {
+            throw new TrainerAlreadyHaveTrainingAtThisTimeException();
+        }
+        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $training->getHallId());
+        if (!empty($intersectingTrainings))
+        {
+            throw new HallAlreadyHasTrainingAtThisTimeException();
         }
         $training->setStartDate($startDate);
         $training->setEndDate($endDate);
@@ -279,6 +311,15 @@ class TrainingService
         foreach ($courses as $course)
         {
             $this->courseRepository->remove($course);
+        }
+    }
+
+    public function removeTrainingsByTrainer(Uuid $trainerId): void
+    {
+        $trainings = $this->trainingRepository->findAllByTrainerId($trainerId);
+        foreach ($trainings as $training)
+        {
+            $this->trainingRepository->remove($training);
         }
     }
 

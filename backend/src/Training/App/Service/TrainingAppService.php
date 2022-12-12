@@ -42,6 +42,18 @@ class TrainingAppService
         );
     }
 
+    /**
+     * @param string $baseTrainingId
+     * @param string $title
+     * @param string|null $description
+     * @param \DateTimeImmutable $startDate
+     * @param \DateTimeImmutable $endDate
+     * @param string $hallId
+     * @param string $courseId
+     * @param string $trainerId
+     * @param int $type
+     * @return string
+     */
     public function editTraining(string $baseTrainingId, string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $hallId, string $courseId, string $trainerId, int $type): string
     {
         $operation = $this->blockingOperatorExecutor->execute(
@@ -177,6 +189,18 @@ class TrainingAppService
             function () use ($courseIds)
             {
                 $this->eventService->removeCourses($this->convertStringsToUuids($courseIds));
+            }
+        );
+        $this->transaction->execute($operation);
+    }
+
+    public function handleTrainerRemoved(Uuid $trainerId): void
+    {
+        $operation = $this->blockingOperatorExecutor->execute(
+            [LockNames::getTrainerLock((string)$trainerId)],
+            function () use ($trainerId)
+            {
+                $this->eventService->removeTrainingsByTrainer($trainerId);
             }
         );
         $this->transaction->execute($operation);

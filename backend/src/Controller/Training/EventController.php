@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Event;
+namespace App\Controller\Training;
 
 use App\Common\Exception\UserNotAuthenticated;
 use App\Common\Security\SecurityContextInterface;
@@ -9,6 +9,8 @@ use App\Training\Api\ApiInterface;
 use App\Training\Api\Input\CreateTrainingInput;
 use App\Training\Api\Input\EditTrainingInput;
 use App\Training\App\Query\ListTrainingInput;
+use App\Training\Domain\Exception\HallAlreadyHasTrainingAtThisTimeException;
+use App\Training\Domain\Exception\TrainerAlreadyHaveTrainingAtThisTimeException;
 use App\Training\Domain\Model\TrainingType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +51,22 @@ class EventController extends AbstractController
         {
             return new Response(null, Response::HTTP_UNAUTHORIZED);
         }
+        catch (TrainerAlreadyHaveTrainingAtThisTimeException)
+        {
+            return new Response(json_encode([
+                [
+                    'code' => 'trainers_time_intersection',
+                ], Response::HTTP_BAD_REQUEST
+            ], JSON_THROW_ON_ERROR));
+        }
+        catch (HallAlreadyHasTrainingAtThisTimeException)
+        {
+            return new Response(json_encode([
+                [
+                    'code' => 'halls_time_intersection',
+                ], Response::HTTP_BAD_REQUEST
+            ], JSON_THROW_ON_ERROR));
+        }
     }
 
     /**
@@ -73,6 +91,22 @@ class EventController extends AbstractController
         catch (UserNotAuthenticated $e)
         {
             return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+        catch (TrainerAlreadyHaveTrainingAtThisTimeException)
+        {
+            return new Response(json_encode([
+                [
+                    'code' => 'trainers_time_intersection',
+                ], Response::HTTP_BAD_REQUEST
+            ], JSON_THROW_ON_ERROR));
+        }
+        catch (HallAlreadyHasTrainingAtThisTimeException)
+        {
+            return new Response(json_encode([
+                [
+                    'code' => 'halls_time_intersection',
+                ], Response::HTTP_BAD_REQUEST
+            ], JSON_THROW_ON_ERROR));
         }
     }
 
@@ -117,6 +151,18 @@ class EventController extends AbstractController
         catch (UserNotAuthenticated $e)
         {
             return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+        catch (TrainerAlreadyHaveTrainingAtThisTimeException)
+        {
+            return new Response(json_encode([
+                ['code' => 'trainers_time_intersection']
+            ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
+        }
+        catch (HallAlreadyHasTrainingAtThisTimeException)
+        {
+            return new Response(json_encode([
+                ['code' => 'halls_time_intersection']
+            ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
     }
 

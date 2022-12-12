@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Service;
 
+use App\Common\Domain\Event\EventDispatcherInterface;
 use App\User\Domain\Exception\InvalidUserEmailException;
 use App\User\Domain\Exception\InvalidUserIdException;
 use App\User\Domain\Exception\InvalidUserPasswordException;
 use App\User\Domain\Model\Email;
+use App\User\Domain\Model\Event\UserRemovedEvent;
 use App\User\Domain\Model\Password;
 use App\User\Domain\Model\Role;
 use App\User\Domain\Model\User;
@@ -16,10 +18,12 @@ use App\User\Domain\Model\UserRepositoryInterface;
 class UserService
 {
     private UserRepositoryInterface $repository;
+    private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(UserRepositoryInterface $repository)
+    public function __construct(UserRepositoryInterface $repository, EventDispatcherInterface $eventDispatcher)
     {
         $this->repository = $repository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -148,6 +152,7 @@ class UserService
             throw new InvalidUserIdException($userId);
         }
         $this->repository->remove($user);
+        $this->eventDispatcher->dispatch(new UserRemovedEvent($userId));
     }
 
 }

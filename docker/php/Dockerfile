@@ -1,4 +1,4 @@
-FROM php:8.0-fpm
+FROM php:8.1-fpm
 
 RUN docker-php-ext-install pdo_mysql
 RUN pecl install apcu
@@ -8,8 +8,11 @@ RUN apt-get update && \
 apt-get install -y \
 libzip-dev
 
+RUN apt-get install -y librabbitmq-dev libssl-dev
+RUN pecl install amqp
 RUN docker-php-ext-install zip
 RUN docker-php-ext-enable apcu
+RUN docker-php-ext-enable amqp
 
 WORKDIR /usr/src/backend
 

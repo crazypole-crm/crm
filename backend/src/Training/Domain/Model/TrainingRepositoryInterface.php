@@ -15,9 +15,23 @@ interface TrainingRepositoryInterface
      */
     public function findAllByBaseTraining(Uuid $id): array;
 
+    /**
+     * @param Uuid[] $hallIds
+     * @return Training[]
+     */
     public function findAllByHallIds(array $hallIds): array;
 
+    public function findIntersectingTrainingsByTrainerId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $trainerId): ?int;
+
+    public function findIntersectingTrainingsByHallId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $hallId): ?int;
+
+    /**
+     * @param Uuid[] $courseIds
+     * @return Training[]
+     */
     public function findAllByCourseIds(array $courseIds): array;
+
+    public function findAllByTrainerId(Uuid $trainerId): array;
 
     public function add(Training $event): void;
 

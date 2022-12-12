@@ -38,7 +38,7 @@ security:
     - { path: ^/get/users_data, roles: ROLE_CLIENT }
     - { path: ^/users/remove, roles: ROLE_ADMIN }
 
-    # Events
+    # Training
     - { path: ^/create/training, roles: ROLE_ADMIN }
     - { path: ^/edit/training, roles: ROLE_ADMIN }
     - { path: ^/edit/training/trainer, roles: ROLE_ADMIN }

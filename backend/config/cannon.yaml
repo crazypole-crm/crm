@@ -1,0 +1,53 @@
+rabbitmq:
+  connections:
+    default:
+      dsn: "amqp://guest:guest@rabbitmq:5672/"
+      timeout: 10s
+      sleep: 500ms
+  exchanges:
+    events:
+      type: direct
+      options:
+        auto_delete: false
+        durable: true
+        internal: false
+        no_wait: false
+    logs:
+      type: direct
+      options:
+        no_wait: false
+    fallback:
+      type: direct
+      options:
+        durable: true
+  consumers:
+    events:
+      connection: default
+      workers: 1                 # Number of concurrent messages processed. Defaults to 1.
+      prefetch_count: 10         # Prefetch message count per consumer. Must be greater or equal than workers.
+      queue:
+        name: "events"
+        options:
+          auto_delete: false
+          durable: false
+          exclusive: false
+          no_wait: false
+        bindings:
+          -
+            routing_keys:
+              - '#'
+            exchange: events
+      # Consumer options available with default values:
+      options:
+        no_ack: false
+        no_local: false
+        no_wait: false
+        exclusive: false
+      runner:
+        type: http
+        ignore-output: false
+        options:
+          url: "http://nginx:80/dispatchevent"
+          return-on-5xx: 3 # ExitNACK
+          headers:
+            Content-Type: text/plain #override the Content-Type from message

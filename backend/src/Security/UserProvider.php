@@ -6,6 +6,7 @@ namespace App\Security;
 use App\User\Api\Data\Role;
 use App\User\Api\ApiInterface as UserApiInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 

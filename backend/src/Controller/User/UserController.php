@@ -143,11 +143,10 @@ class UserController extends AbstractController
         $requestData = json_decode($request->getContent(), true);
         $email = $requestData['email'];
         $password = md5($requestData['password']);
-        //$input = new AuthenticateUserInput(md5($requestData['password']), $requestData['email']);
         try
         {
             $userData = $this->userApi->findUserDataByEmailAndPassword($email, $password);
-            $this->authenticator->authenticateUserById($userData->getUserId());
+            $this->authenticator->authenticateUserById($userData?->getUserId() ?? '');
         }
         catch (UserNotAuthenticated $e)
         {

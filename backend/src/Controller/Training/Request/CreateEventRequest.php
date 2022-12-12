@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Event\Request;
+namespace App\Controller\Training\Request;
 
 class CreateEventRequest
 {

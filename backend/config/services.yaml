@@ -37,3 +37,12 @@ services:
     Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
         arguments:
             - '@Redis'
+
+    infrastructure.messaging.message_dispatcher:
+        class: App\Common\Infrastructure\Event\MessageDispatcher
+        calls:
+            - [ subscribe, [ '@App\Training\App\Event\Integration\User\UserRemovedEventHandler' ] ]
+
+    App\Controller\Event\MessagingController:
+        arguments:
+            $messageDispatcher: '@infrastructure.messaging.message_dispatcher'
