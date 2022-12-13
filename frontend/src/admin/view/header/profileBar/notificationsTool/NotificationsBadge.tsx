@@ -6,11 +6,14 @@ import {useAction, useAtom} from "@reatom/react";
 import {notificationsAtom} from "../../../../viewModel/notifications/notifications";
 import {notificationsActions} from "../../../../viewModel/notifications/notifications";
 import NotificationsWindow from "./notificationsWindow/NotificationsWindow";
+import {
+    sendCustomNotificationPopupActions
+} from "../../../../viewModel/calendar/sendCustomNotification/sendCustomNotification";
 
 const NotificationsBadge = () => {
     const notificationList = useAtom(notificationsAtom)
     const clearNotificationsCallback = useAction(notificationsActions.removeAllNotifications)
-    const sendNotificationCallback = useAction(notificationsActions.removeAllNotifications)
+    const sendNotificationCallback = useAction(sendCustomNotificationPopupActions.open)
 
     const content = (
         <NotificationsWindow
