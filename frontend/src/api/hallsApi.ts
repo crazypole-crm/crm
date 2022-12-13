@@ -1,6 +1,7 @@
 import {HallData} from "../admin/viewModel/hall/HallData";
 import {HttpStatus} from "../core/http/HttpStatus";
 import {goToUrl} from "../core/link/goToUrl";
+import { Router } from "../core/router/router";
 
 type Api_HallData = {
     hallId: string,

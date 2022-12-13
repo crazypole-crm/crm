@@ -1,6 +1,7 @@
 import {DirectionData} from "../admin/viewModel/direction/DirectionData"
 import {HttpStatus} from "../core/http/HttpStatus";
 import {goToUrl} from "../core/link/goToUrl";
+import { Router } from "../core/router/router";
 
 type Api_Direction = {
     courseId: string,
