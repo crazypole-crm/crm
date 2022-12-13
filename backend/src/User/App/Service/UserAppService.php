@@ -92,11 +92,12 @@ class UserAppService
 
     /**
      * @param string[]|null $userIds
+     * @param int|null $role
      * @return UserData[]
      */
-    public function getUsersData(?array $userIds): array
+    public function getUsersData(?array $userIds, ?int $role): array
     {
-        return $this->userQueryService->listUsersData($userIds);
+        return $this->userQueryService->listUsersData($userIds, $role);
     }
 
     public function updateUserData(UserData $userData): void

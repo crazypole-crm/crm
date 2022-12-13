@@ -56,16 +56,16 @@ class EventController extends AbstractController
             return new Response(json_encode([
                 [
                     'code' => 'trainers_time_intersection',
-                ], Response::HTTP_BAD_REQUEST
-            ], JSON_THROW_ON_ERROR));
+                ]
+            ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
         catch (HallAlreadyHasTrainingAtThisTimeException)
         {
             return new Response(json_encode([
                 [
                     'code' => 'halls_time_intersection',
-                ], Response::HTTP_BAD_REQUEST
-            ], JSON_THROW_ON_ERROR));
+                ]
+            ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
     }
 

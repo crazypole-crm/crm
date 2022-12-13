@@ -72,11 +72,11 @@ class Api implements ApiInterface
         }
     }
 
-    public function getUsersData(?array $userIds): array
+    public function getUsersData(?array $userIds, ?int $role): array
     {
         try
         {
-            return $this->userService->getUsersData($userIds);
+            return $this->userService->getUsersData($userIds, $role);
         }
         catch (\Exception $e)
         {

@@ -179,7 +179,7 @@ class UserController extends AbstractController
     {
         $requestData = json_decode($request->getContent(), true);
         $userIds = $requestData['ids'] ?? null;
-        $usersData = $this->userApi->getUsersData($userIds);
+        $usersData = $this->userApi->getUsersData($userIds, null);
         return new Response($this->serializeUsersData($usersData));
     }
 

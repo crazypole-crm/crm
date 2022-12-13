@@ -16,9 +16,10 @@ interface UserQueryServiceInterface
 
     /**
      * @param string[]|null $userIds
+     * @param int|null $role
      * @return UserData[]
      */
-    public function listUsersData(?array $userIds): array;
+    public function listUsersData(?array $userIds, ?int $role): array;
 
     /**
      * @param string $email

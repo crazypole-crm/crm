@@ -55,4 +55,6 @@ security:
     - { path: ^/create/hall, roles: ROLE_ADMIN }
     - { path: ^/list/halls, roles: ROLE_CLIENT }
     - { path: ^/create/course, roles: ROLE_ADMIN }
-    
+
+    # Notification
+    - { path: ^/notify, roles: ROLE_ADMIN }

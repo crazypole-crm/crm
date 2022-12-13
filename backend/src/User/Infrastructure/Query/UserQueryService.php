@@ -42,11 +42,7 @@ class UserQueryService implements UserQueryServiceInterface
         return $result ? $this->hydrator->hydrateRow($result) : null;
     }
 
-    /**
-     * @param array|null $userIds
-     * @return array
-     */
-    public function listUsersData(?array $userIds): array
+    public function listUsersData(?array $userIds, ?int $role): array
     {
         $qb = $this->conn->createQueryBuilder();
         $qb->from('user', 'u');
@@ -55,6 +51,11 @@ class UserQueryService implements UserQueryServiceInterface
         {
             $qb->where($qb->expr()->in('u.' . UserTable::USER_ID, ':userIds'));
             $qb->setParameter('userIds', $userIds, Connection::PARAM_STR_ARRAY);
+        }
+        if ($role !== null)
+        {
+            $qb->where($qb->expr()->eq('u.' . UserTable::ROLE, ':role'));
+            $qb->setParameter('role', $role);
         }
         $result = $qb->executeQuery()->fetchAllAssociative();
 
