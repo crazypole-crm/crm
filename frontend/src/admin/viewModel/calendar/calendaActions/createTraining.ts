@@ -28,7 +28,9 @@ const createTraining = declareAsyncAction<CreateTrainingPayload>(
                     endDate: lastLoadedPeriod.endDate,
                 }))
             })
-            .catch(() => Toasts.error('При создании занятия произошла ошибка'))
+            .catch(error => {
+                Toasts.error('При создании занятия произошла ошибка')
+            })
     }
 )
 

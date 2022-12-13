@@ -14,14 +14,15 @@ import {MoveTrainingPopup} from "./schedule/calendar/moveTrainingPopup/MoveTrain
 import {TrainingActionPopup} from "./schedule/calendar/trainingActionPopup/TrainingActionPopup";
 import {TrainingClientsPopup} from "./schedule/calendar/trainingClientsPopup/TrainingClientsPopup";
 import {RecordToTrainingPopup} from "./schedule/calendar/recordToTrainingPopup/RecordToTrainingPopup";
-import { EditDirectionPopup } from "./directions/directionsPopups/EditDirectionPopup"
-import { DeleteDirectionsPopup } from "./directions/directionsPopups/DeleteDirectionsPopup"
-import { EditHallPopup } from "./halls/hallsPopups/EditHallPopup"
-import { DeleteHallsPopup } from "./halls/hallsPopups/DeleteHallsPopup"
-import { EditUserPasswordPopup } from "./users/editUserPopup/EditUserPasswordPopup"
-import { SubmitDeleteDirectionsPopup } from "./directions/directionsPopups/SubmitDeleteDirectionsPopup"
-import { SubmitDeleteHallsPopup } from "./halls/hallsPopups/SubmitDeleteHallsPopup"
-import { SubmitDeleteUsersPopup } from "./users/submitDeleteUserPopup/SubmitDeleteUsersPopup"
+import {EditDirectionPopup} from "./directions/directionsPopups/EditDirectionPopup"
+import {DeleteDirectionsPopup} from "./directions/directionsPopups/DeleteDirectionsPopup"
+import {EditHallPopup} from "./halls/hallsPopups/EditHallPopup"
+import {DeleteHallsPopup} from "./halls/hallsPopups/DeleteHallsPopup"
+import {EditUserPasswordPopup} from "./users/editUserPopup/EditUserPasswordPopup"
+import {SubmitDeleteDirectionsPopup} from "./directions/directionsPopups/SubmitDeleteDirectionsPopup"
+import {SubmitDeleteHallsPopup} from "./halls/hallsPopups/SubmitDeleteHallsPopup"
+import {SubmitDeleteUsersPopup} from "./users/submitDeleteUserPopup/SubmitDeleteUsersPopup"
+import {SendCustomNotificationPopup} from "./customNotifications/SendCustomNotificationPopup";
 
 function PopupsLayout() {
     return (
@@ -43,6 +44,7 @@ function PopupsLayout() {
             <EditHallPopup />
             <DeleteHallsPopup />
             <SubmitDeleteHallsPopup />
+            <SendCustomNotificationPopup />
         </>
     )
 }

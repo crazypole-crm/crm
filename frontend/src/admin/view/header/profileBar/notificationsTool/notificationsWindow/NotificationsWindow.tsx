@@ -6,14 +6,20 @@ import {NotificationData} from "../../../../../viewModel/notifications/Notificat
 
 type NotificationWindowProps = {
     notificationList: NotificationData[],
-    onClearButtonClick: () => void
+    onClearButtonClick: () => void,
+    onSendNotificationClick: () => void,
 }
 
-const NotificationsWindow : FC<NotificationWindowProps> = ({notificationList, onClearButtonClick}) => {
+const NotificationsWindow : FC<NotificationWindowProps> = ({
+    notificationList,
+    onClearButtonClick,
+    onSendNotificationClick,
+}) => {
     return (
         <div className={styles.window}>
             <NotificationList list={notificationList}/>
             {!!notificationList.length && <div className={styles.footer}>
+                <Button onClick={onSendNotificationClick} type="primary">Отправить уведомление</Button>
                 <Button onClick={onClearButtonClick} type="primary">Очистить уведомления</Button>
             </div>}
         </div>

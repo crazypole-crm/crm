@@ -7,16 +7,16 @@ import {notificationsAtom} from "../../../../viewModel/notifications/notificatio
 import {notificationsActions} from "../../../../viewModel/notifications/notifications";
 import NotificationsWindow from "./notificationsWindow/NotificationsWindow";
 
-
-
 const NotificationsBadge = () => {
     const notificationList = useAtom(notificationsAtom)
     const clearNotificationsCallback = useAction(notificationsActions.removeAllNotifications)
+    const sendNotificationCallback = useAction(notificationsActions.removeAllNotifications)
 
     const content = (
         <NotificationsWindow
             notificationList={Object.values(notificationList)}
             onClearButtonClick={clearNotificationsCallback}
+            onSendNotificationClick={sendNotificationCallback}
         />
     );
 
