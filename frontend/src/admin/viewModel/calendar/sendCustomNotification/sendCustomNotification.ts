@@ -13,19 +13,28 @@ const openedAtom = declareAtom('sendCustomNotificationPopupAtom.opened', false, 
     on(sendNotification.done, () => false)
 ])
 
-const [consumersRoleAtom, setConsumersRole] = declareAtomWithSetter<UserRole|null>('sendCustomNotificationPopupAtom.opened', null)
+const [consumersRoleAtom, setConsumersRole] = declareAtomWithSetter<UserRole|null>('sendCustomNotificationPopupAtom.opened', null, on => [
+    on(open, () => null),
+])
 const [roleErrorAtom, setRoleError] = declareAtomWithSetter('sendCustomNotificationPopupAtom.roleError', '', on => [
-    on(setConsumersRole, () => '')
+    on(setConsumersRole, () => ''),
+    on(open, () => ''),
 ])
 
-const [titleAtom, setTitle] = declareAtomWithSetter<string>('sendCustomNotificationPopupAtom.title', '')
+const [titleAtom, setTitle] = declareAtomWithSetter<string>('sendCustomNotificationPopupAtom.title', '', on => [
+    on(open, () => ''),
+])
 const [titleErrorAtom, setTitleError] = declareAtomWithSetter('sendCustomNotificationPopupAtom.titleError', '', on => [
-    on(setTitle, () => '')
+    on(setTitle, () => ''),
+    on(open, () => ''),
 ])
 
-const [bodyAtom, setBody] = declareAtomWithSetter<string>('sendCustomNotificationPopupAtom.body', '')
+const [bodyAtom, setBody] = declareAtomWithSetter<string>('sendCustomNotificationPopupAtom.body', '', on => [
+    on(open, () => ''),
+])
 const [bodyErrorAtom, setBodyError] = declareAtomWithSetter('sendCustomNotificationPopupAtom.bodyError', '', on => [
-    on(setBody, () => '')
+    on(setBody, () => ''),
+    on(open, () => ''),
 ])
 
 const submit = declareAction('sendCustomNotificationPopupAtom.submit',

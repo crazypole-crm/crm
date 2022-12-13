@@ -15,9 +15,9 @@ const NotificationList: FC<NotificationListProps> = ({list}) => {
             className={styles.list}
             style={{
                 height: 300,
+                width: '100%',
                 overflow: 'auto',
                 padding: '0 16px',
-
             }}
         >
             <List

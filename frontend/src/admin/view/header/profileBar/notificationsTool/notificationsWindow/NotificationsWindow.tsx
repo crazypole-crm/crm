@@ -5,12 +5,14 @@ import styles from './NotificationsWindow.module.css'
 import {NotificationData} from "../../../../../viewModel/notifications/NotificationData";
 
 type NotificationWindowProps = {
+    showSendNotificationButton: boolean,
     notificationList: NotificationData[],
     onClearButtonClick: () => void,
     onSendNotificationClick: () => void,
 }
 
 const NotificationsWindow : FC<NotificationWindowProps> = ({
+    showSendNotificationButton,
     notificationList,
     onClearButtonClick,
     onSendNotificationClick,
@@ -18,10 +20,10 @@ const NotificationsWindow : FC<NotificationWindowProps> = ({
     return (
         <div className={styles.window}>
             <NotificationList list={notificationList}/>
-            {!!notificationList.length && <div className={styles.footer}>
-                <Button onClick={onSendNotificationClick} type="primary">Отправить уведомление</Button>
-                <Button onClick={onClearButtonClick} type="primary">Очистить уведомления</Button>
-            </div>}
+            <div className={styles.footer}>
+                {showSendNotificationButton && <Button onClick={onSendNotificationClick} type="primary">Отправить уведомление</Button>}
+                {!!notificationList.length && <Button onClick={onClearButtonClick} type="primary">Очистить уведомления</Button>}
+            </div>
         </div>
     );
 };
