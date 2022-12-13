@@ -1,5 +1,6 @@
 import {HttpStatus} from "../core/http/HttpStatus";
 import {Api_Role} from "../common/role/Api_Role";
+import {goToUrl} from "../core/link/goToUrl";
 
 type Api_UsersData = {
     id: string,
@@ -26,7 +27,7 @@ function getUsersDataByIds(userIds: Array<string>): Promise<Array<Api_UsersData>
                 case HttpStatus.OK:
                     return response.json()
                 case HttpStatus.UNAUTHORIZED:
-                    // goToUrl('/auth')
+                    goToUrl(Router.Auth.url())
                     return Promise.reject(response)
                 default:
                     return Promise.reject(response.status)
@@ -45,6 +46,9 @@ function getAllUsersData(): Promise<Array<Api_UsersData>> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -75,6 +79,9 @@ function editUser(userData: Api_EditUserData): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -105,6 +112,9 @@ function createUser(userData: Api_CreateUserData): Promise<{id: string}> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -125,6 +135,9 @@ function deleteUsers(usersId: Array<string>): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }

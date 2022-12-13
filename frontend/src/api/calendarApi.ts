@@ -1,4 +1,6 @@
 import {HttpStatus} from "../core/http/HttpStatus";
+import {goToUrl} from "../core/link/goToUrl";
+import {Router} from "../core/router/router";
 
 type Api_TrainingData = {
     baseTrainingId: string,
@@ -28,6 +30,9 @@ function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_Trai
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -60,6 +65,9 @@ function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -88,6 +96,9 @@ function editTraining(trainingData: Omit<Api_TrainingData, 'isCanceled'>): Promi
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -108,6 +119,9 @@ function deleteTraining(baseId: string): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -145,6 +159,9 @@ function cancelTraining(trainingId: string): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -167,6 +184,9 @@ function moveTraining(trainingId: string, startDate: number, endDate: number): P
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -189,6 +209,9 @@ function replaceTrainingTrainer(trainingId: string, trainerId: string): Promise<
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }

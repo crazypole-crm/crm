@@ -1,5 +1,6 @@
 import {DirectionData} from "../admin/viewModel/direction/DirectionData"
 import {HttpStatus} from "../core/http/HttpStatus";
+import {goToUrl} from "../core/link/goToUrl";
 
 type Api_Direction = {
     courseId: string,
@@ -17,6 +18,9 @@ function getDirections(): Promise<DirectionData[]> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -37,6 +41,9 @@ function createDirection(directionData: Omit<Api_Direction, 'courseId'>): Promis
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -58,6 +65,9 @@ function editDirection(directionData: Api_Direction): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -78,6 +88,9 @@ function deleteDirections(directionsIds: string[]): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }

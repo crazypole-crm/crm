@@ -1,5 +1,6 @@
 import {HallData} from "../admin/viewModel/hall/HallData";
 import {HttpStatus} from "../core/http/HttpStatus";
+import {goToUrl} from "../core/link/goToUrl";
 
 type Api_HallData = {
     hallId: string,
@@ -18,6 +19,9 @@ function getHalls(): Promise<HallData[]> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -39,6 +43,9 @@ function createHall(hallData: Omit<Api_HallData, 'hallId'>): Promise<{ hallId: s
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -61,6 +68,9 @@ function saveHall(hallData: Api_HallData): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }
@@ -81,6 +91,9 @@ function deleteHalls(hallIds: string[]): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
                 default:
                     return Promise.reject(response)
             }

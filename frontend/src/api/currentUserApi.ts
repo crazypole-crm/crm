@@ -1,5 +1,5 @@
 import {HttpStatus} from "../core/http/HttpStatus"
-import {goToAuth} from "../core/link/goToUrl";
+import {goToAuth, goToUrl} from "../core/link/goToUrl";
 import {Api_Role} from "../common/role/Api_Role";
 
 type Api_UserInfo = {
@@ -26,7 +26,7 @@ function setUserInfo(userInfo: Api_UserInfo): Promise<Response> {
                 case HttpStatus.OK:
                     return Promise.resolve(response)
                 case HttpStatus.UNAUTHORIZED:
-                    // goToUrl('/auth')
+                    goToUrl(Router.Auth.url())
                     return Promise.reject(response)
                 default:
                     return Promise.reject(response)
@@ -85,7 +85,7 @@ function getUserData(): Promise<GetUserDataType> {
                 case HttpStatus.OK:
                     return response.json()
                 case HttpStatus.UNAUTHORIZED:
-                    // goToUrl('/auth')
+                    goToUrl(Router.Auth.url())
                     return Promise.reject(response)
                 default:
                     return Promise.reject(response.status)
