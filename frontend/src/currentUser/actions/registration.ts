@@ -1,6 +1,10 @@
 import {AuthenticationApi} from "../../api/authenticationApi";
 import {Toasts} from "../../common/notification/notifications";
 import {declareAsyncAction} from "../../core/reatom/declareAsyncAction";
+import {useAction} from "@reatom/react";
+import {registrationFormDataActions} from "../../auth/viewModel/registrationFormData";
+import {loginFormDataActions} from "../../auth/viewModel/loginFormData";
+import {loginAction} from "./login";
 
 
 type RegistrationActionPayload = {
@@ -14,7 +18,10 @@ const registrationAction = declareAsyncAction<RegistrationActionPayload>(
         return AuthenticationApi.registration(email, password)
             .then((resp) => {
                 Toasts.success('Регистрация прошла успешно')
-                setTimeout(() => window.location.reload(), 1000)
+                store.dispatch(loginAction({
+                    login: email,
+                    password: password,
+                }))
                 return Promise.resolve()
             })
             .catch(err => {
