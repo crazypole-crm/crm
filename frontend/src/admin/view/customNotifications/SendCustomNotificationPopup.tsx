@@ -9,10 +9,6 @@ import {
 import {FieldBlock} from "../schedule/calendar/common/FieldBlock";
 import {userRoles} from "../../viewModel/users/UserData";
 import {mapRoleTypeToText} from "../users/table/cells/UserRoleCell";
-import {
-    editTrainingPopupActions,
-    editTrainingPopupAtom
-} from "../../viewModel/calendar/editTrainingPopup/editTrainingPopup";
 import TextArea from "antd/lib/input/TextArea";
 
 
@@ -34,6 +30,10 @@ function RoleField() {
                     label: mapRoleTypeToText(userRoles[2]),
                 },
             ]}
+            placeholder={'Выберите роль'}
+            style={{
+                width: 200,
+            }}
         />
     )
 }
