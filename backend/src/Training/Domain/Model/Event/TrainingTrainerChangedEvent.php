@@ -10,7 +10,7 @@ class TrainingTrainerChangedEvent implements EventInterface
 {
     public const TYPE = 'training.training_trainer_changed';
 
-    public function __construct(private Uuid $trainingId, private string $title)
+    public function __construct(private Uuid $trainingId, private string $title, private \DateTimeImmutable $startDate)
     {}
 
     /**
@@ -19,6 +19,14 @@ class TrainingTrainerChangedEvent implements EventInterface
     public function getTrainingId(): Uuid
     {
         return $this->trainingId;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getStartDate(): \DateTimeImmutable
+    {
+        return $this->startDate;
     }
 
     /**

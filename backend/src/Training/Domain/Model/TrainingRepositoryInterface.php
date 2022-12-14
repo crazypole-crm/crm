@@ -21,9 +21,9 @@ interface TrainingRepositoryInterface
      */
     public function findAllByHallIds(array $hallIds): array;
 
-    public function findIntersectingTrainingsByTrainerId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $trainerId): ?int;
+    public function findIntersectingTrainingsByTrainerId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $trainerId): bool;
 
-    public function findIntersectingTrainingsByHallId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $hallId): ?int;
+    public function findIntersectingTrainingsByHallId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $hallId): bool;
 
     /**
      * @param Uuid[] $courseIds

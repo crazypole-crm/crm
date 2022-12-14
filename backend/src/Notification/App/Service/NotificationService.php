@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Notification\App\Service;
 
 use App\User\Api\ApiInterface;
+use App\User\App\Data\UserData;
 
 class NotificationService
 {
@@ -12,11 +13,15 @@ class NotificationService
 
     public function sendNotification(string $title, string $body, int $role): void
     {
-        $userIds = $this->userApi->getUsersData(null, $role);
-        if (empty($userIds))
+        $usersData = $this->userApi->getUsersData(null, $role);
+        if (empty($usersData))
         {
             return;
         }
-        $this->notificationSender->sendMessage($title, $body, $userIds);
+        $this->notificationSender->sendMessage($title, $body, array_map(
+            static function (UserData $userData): string {
+                return $userData->getUserId();
+            }, $usersData
+        ));
     }
 }

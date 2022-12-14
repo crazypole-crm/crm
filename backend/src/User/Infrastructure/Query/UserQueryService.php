@@ -54,7 +54,7 @@ class UserQueryService implements UserQueryServiceInterface
         }
         if ($role !== null)
         {
-            $qb->where($qb->expr()->eq('u.' . UserTable::ROLE, ':role'));
+            $qb->andWhere($qb->expr()->eq('u.' . UserTable::ROLE, ':role'));
             $qb->setParameter('role', $role);
         }
         $result = $qb->executeQuery()->fetchAllAssociative();

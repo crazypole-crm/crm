@@ -16,7 +16,9 @@ use App\Training\Domain\Model\BaseTrainingRepositoryInterface;
 use App\Training\Domain\Model\Course;
 use App\Training\Domain\Model\CourseRepositoryInterface;
 use App\Training\Domain\Model\Event\TrainingCanceledEvent;
+use App\Training\Domain\Model\Event\TrainingRescheduledEvent;
 use App\Training\Domain\Model\Event\TrainingsRemovedEvent;
+use App\Training\Domain\Model\Event\TrainingTrainerChangedEvent;
 use App\Training\Domain\Model\Hall;
 use App\Training\Domain\Model\HallRepositoryInterface;
 use App\Training\Domain\Model\Training;
@@ -72,6 +74,16 @@ class TrainingService
         {
             throw new CourseNotFoundException($courseId);
         }
+        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $trainerId);
+        if ($intersectingTrainings)
+        {
+            throw new TrainerAlreadyHaveTrainingAtThisTimeException();
+        }
+        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $hallId);
+        if ($intersectingTrainings)
+        {
+            throw new HallAlreadyHasTrainingAtThisTimeException();
+        }
         $baseTraining = new BaseTraining(
             new Uuid(UuidGenerator::generateUuid()),
             $startDate,
@@ -81,16 +93,6 @@ class TrainingService
             $trainerId,
             $type,
         );
-        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $trainerId);
-        if ($intersectingTrainings !== null)
-        {
-            throw new TrainerAlreadyHaveTrainingAtThisTimeException();
-        }
-        $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $hallId);
-        if ($intersectingTrainings !== null)
-        {
-            throw new HallAlreadyHasTrainingAtThisTimeException();
-        }
         $this->baseTrainingRepository->add($baseTraining);
         if ($isRepeatable)
         {
@@ -98,7 +100,7 @@ class TrainingService
             {
                 $training = new Training($baseTraining->getId(),
                     new Uuid(UuidGenerator::generateUuid()),
-                    $title,
+                    $title === '' ? $course->getName() : $title,
                     $description ?? '',
                     $i !== 0 ? $startDate->add(new \DateInterval('P' . $i . 'W')) : $startDate,
                     $i !== 0 ? $endDate->add(new \DateInterval('P' . $i . 'W')) : $endDate,
@@ -167,12 +169,12 @@ class TrainingService
         }
         $trainings = $this->trainingRepository->findAllByBaseTraining($baseTrainingId);
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $trainerId);
-        if ($intersectingTrainings !== null)
+        if ($intersectingTrainings)
         {
             throw new TrainerAlreadyHaveTrainingAtThisTimeException();
         }
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $hallId);
-        if ($intersectingTrainings !== null)
+        if ($intersectingTrainings)
         {
             throw new HallAlreadyHasTrainingAtThisTimeException();
         }
@@ -213,6 +215,7 @@ class TrainingService
             throw new TrainingNotFoundException($trainingId);
         }
         $training->setTrainerId($trainerId);
+        $this->dispatcher->dispatch(new TrainingTrainerChangedEvent($trainingId, $training->getName(), $training->getStartDate()));
     }
 
     public function changeChangeTrainingTime(Uuid $trainingId, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate): void
@@ -223,19 +226,20 @@ class TrainingService
             throw new TrainingNotFoundException($trainingId);
         }
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $training->getTrainerId());
-        if ($intersectingTrainings !== null)
+        if ($intersectingTrainings)
         {
             throw new TrainerAlreadyHaveTrainingAtThisTimeException();
         }
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $training->getHallId());
-        if ($intersectingTrainings !== null)
+        if ($intersectingTrainings)
         {
             throw new HallAlreadyHasTrainingAtThisTimeException();
         }
+        $oldStartDate = $training->getStartDate();
+
         $training->setStartDate($startDate);
         $training->setEndDate($endDate);
-        $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName()));
-
+        $this->dispatcher->dispatch(new TrainingRescheduledEvent($trainingId, $training->getName(), $startDate, $oldStartDate));
     }
 
     public function changeTrainingStatus(Uuid $trainingId, bool $isCanceled): void
@@ -248,7 +252,7 @@ class TrainingService
         $training->setIsCanceled($isCanceled);
         if ($isCanceled)
         {
-            $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName()));
+            $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName(), $training->getStartDate()));
         }
     }
 
