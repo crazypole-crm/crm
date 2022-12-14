@@ -1,27 +1,34 @@
 import {combine, declareAction, declareAtom} from "@reatom/core";
 import {declareAtomWithSetter} from "../../../../core/reatom/declareAtomWithSetter";
-import {Api_TrainingClients, CalendarApi} from "../../../../api/calendarApi";
+import {Api_TrainingRegistrations, CalendarApi} from "../../../../api/calendarApi";
+import {declareAsyncAction} from "../../../../core/reatom/declareAsyncAction";
+import {Toasts} from "../../../../common/notification/notifications";
+
+type RegistrationData = {
+    id: string,
+    userId: string,
+    attended: boolean,
+}
 
 type OpenPayload = {
     id: string,
 }
 
-function remapApiTrainingClientsDate(clientsData: Api_TrainingClients) {
-    const clientsMap = new Map<string, boolean>()
-    Object.keys(clientsData).forEach(clientId => {
-        clientsMap.set(clientId, clientsData[clientId])
-    })
-    return clientsMap
+function remapApiRegistrationDataToModel(apiRegistrationsData: Array<Api_TrainingRegistrations>): Array<RegistrationData> {
+    return apiRegistrationsData.map(registration => ({
+        id: registration.id,
+        userId: registration.userId,
+        attended: !!registration.status,
+    }))
 }
 
-const open = declareAction<OpenPayload>('clientTrainingPopup.open',
+const open = declareAsyncAction<OpenPayload>('clientTrainingPopup.open',
     ({id}, store) => {
-        store.dispatch(setClientsLoading(true))
-        return CalendarApi.getTrainingClients(id)
-            .then(clientsData => {
-                const clientsMap = remapApiTrainingClientsDate(clientsData)
-                store.dispatch(setClientsData(clientsMap))
-                store.dispatch(setClientsLoading(false))
+        return CalendarApi.getTrainingRegistrations(id)
+            .then(apiRegistrationsData => {
+                const registrations = remapApiRegistrationDataToModel(apiRegistrationsData)
+                store.dispatch(setRegistrationsData(registrations))
+                return Promise.resolve()
             })
     }
 )
@@ -32,44 +39,70 @@ const openedAtom = declareAtom('clientTrainingPopup.opened', false, on => [
     on(close, () => false),
 ])
 
-const trainingIdAtom = declareAtom('clientTrainingPopup.trainingId', '', on => [
-    on(open, (_, {id}) => id),
-])
+const markClientAttendanceImpl =  declareAction<{registrationId: string, attendance: boolean}>('clientTrainingPopup.markClientAttendanceImpl')
 
-const markClientAttendance = declareAction<{clientId: string, attendance: boolean}>('clientTrainingPopup.markClientAttendance')
-
-const [clientsDataAtom, setClientsData] = declareAtomWithSetter<Map<string, boolean>>('clientTrainingPopup.clientsData', new Map(), on => [
-    on(open, () => new Map()),
-    on(markClientAttendance, (state, {clientId, attendance}) => {
-        const newState = new Map(state)
-        state.set(clientId, attendance)
-        return newState
-    })
-])
-
-const [clientsLoadingAtom, setClientsLoading] = declareAtomWithSetter<boolean>('clientTrainingPopup.clientsLoading', true)
-
-const submit = declareAction('trainingActionPopup.submit',
-    (_, store) => {
-        const clientsData = store.getState(clientsDataAtom)
-        console.log('submit clientsData', clientsData)
+const markClientAttendance = declareAsyncAction<{registrationId: string, attendance: boolean}>('clientTrainingPopup.markClientAttendance',
+    ({registrationId, attendance}, store) => {
+        const status = attendance ? 1 : 0
+        const registrationsDataBeforeChange = store.getState(registrationsDataAtom)
+        store.dispatch(markClientAttendanceImpl({registrationId, attendance}))
+        return CalendarApi.changeTrainingRegistrationStatus(registrationId, status)
+            .catch(() => {
+                Toasts.error('При отметке пользователя произошла ошибка')
+                store.dispatch(setRegistrationsData(registrationsDataBeforeChange))
+            })
     }
 )
 
+const removeRegistrationImpl =  declareAction<string>('clientTrainingPopup.removeRegistration')
+
+const removeRegistration = declareAsyncAction<string>('clientTrainingPopup.removeRegistration',
+    (registrationId, store) => {
+        const registrationsDataBeforeChange = store.getState(registrationsDataAtom)
+        store.dispatch(removeRegistrationImpl(registrationId))
+        return CalendarApi.removeTrainingRegistrationStatus(registrationId)
+            .catch(() => {
+                Toasts.error('При удаления записи произошла ошибка')
+                store.dispatch(setRegistrationsData(registrationsDataBeforeChange))
+            })
+    }
+)
+
+const [registrationsDataAtom, setRegistrationsData] = declareAtomWithSetter<Array<RegistrationData>>('clientTrainingPopup.registrations', [], on => [
+    on(open, () => []),
+    on(markClientAttendanceImpl, (state, {attendance, registrationId}) => state.map(registrationData => {
+        if (registrationData.id === registrationId) {
+            return {
+                ...registrationData,
+                attended: attendance,
+            }
+        }
+        return registrationData
+    })),
+    on(removeRegistrationImpl, (state, registrationId) => state.filter(registrationData => registrationData.id !== registrationId))
+])
+
+const popupLoadingAtom = declareAtom<boolean>('clientTrainingPopup.popupLoading', true, on =>[
+    on(open, () => true),
+    on(open.done, () => false),
+])
+
 const clientsTrainingPopupAtom = combine({
     opened: openedAtom,
-    trainingId: trainingIdAtom,
-    clientsData: clientsDataAtom,
-    clientsLoading: clientsLoadingAtom,
+    registrationsData: registrationsDataAtom,
+    popupLoading: popupLoadingAtom,
 })
 
 const clientsTrainingPopupActions = {
     open,
     close,
     markClientAttendance,
-    submit,
-    setClientsData,
-    setClientsLoading,
+    setRegistrationsData,
+    removeRegistration,
+}
+
+export type {
+    RegistrationData,
 }
 
 export {

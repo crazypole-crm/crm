@@ -4,7 +4,7 @@ import {getValueByCheckedKey} from "../../../core/getValueByCheckedKey";
 import {convertTrainingDataToDate} from "./DataConverting";
 
 
-function remapTrainingDataToApiTrainingData(trainingData: Omit<TrainingData, 'id' | 'baseId' | 'isCanceled'>): Omit<Api_TrainingData, 'trainingId' | 'baseTrainingId' | 'isCanceled'> {
+function remapTrainingDataToApiTrainingData(trainingData: Omit<TrainingData, 'id' | 'baseId' | 'isCanceled' | 'availableRegistrationsCount'>): Omit<Api_TrainingData, 'trainingId' | 'baseTrainingId' | 'isCanceled' | 'availableRegistrationsCount'> {
     return {
         type: getValueByCheckedKey(trainingData.type, {
             'grouped': 'group',
@@ -16,6 +16,7 @@ function remapTrainingDataToApiTrainingData(trainingData: Omit<TrainingData, 'id
         courseId: trainingData.directionId,
         trainerId: trainingData.trainerId,
         startDate: convertTrainingDataToDate(trainingData.date, trainingData.timeStart).getTime(),
+        maxRegistrationsCount: trainingData.maxRegistrationsCount,
     }
 }
 

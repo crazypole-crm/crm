@@ -54,17 +54,13 @@ class EventController extends AbstractController
         catch (TrainerAlreadyHaveTrainingAtThisTimeException)
         {
             return new Response(json_encode([
-                [
-                    'code' => 'trainers_time_intersection',
-                ]
+                'code' => 'trainers_time_intersection',
             ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
         catch (HallAlreadyHasTrainingAtThisTimeException)
         {
             return new Response(json_encode([
-                [
-                    'code' => 'halls_time_intersection',
-                ]
+                'code' => 'halls_time_intersection',
             ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
     }
@@ -95,18 +91,14 @@ class EventController extends AbstractController
         catch (TrainerAlreadyHaveTrainingAtThisTimeException)
         {
             return new Response(json_encode([
-                [
-                    'code' => 'trainers_time_intersection',
-                ], Response::HTTP_BAD_REQUEST
-            ], JSON_THROW_ON_ERROR));
+                'code' => 'trainers_time_intersection',
+            ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
         catch (HallAlreadyHasTrainingAtThisTimeException)
         {
             return new Response(json_encode([
-                [
-                    'code' => 'halls_time_intersection',
-                ], Response::HTTP_BAD_REQUEST
-            ], JSON_THROW_ON_ERROR));
+                 'code' => 'halls_time_intersection',
+            ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -155,13 +147,13 @@ class EventController extends AbstractController
         catch (TrainerAlreadyHaveTrainingAtThisTimeException)
         {
             return new Response(json_encode([
-                ['code' => 'trainers_time_intersection']
+                'code' => 'trainers_time_intersection'
             ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
         catch (HallAlreadyHasTrainingAtThisTimeException)
         {
             return new Response(json_encode([
-                ['code' => 'halls_time_intersection']
+                 'code' => 'halls_time_intersection',
             ], JSON_THROW_ON_ERROR), Response::HTTP_BAD_REQUEST);
         }
     }

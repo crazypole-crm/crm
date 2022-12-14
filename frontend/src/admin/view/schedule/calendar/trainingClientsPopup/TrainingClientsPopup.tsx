@@ -1,26 +1,24 @@
 import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelector";
 import {useAction, useAtom} from "@reatom/react";
-import {Checkbox, Modal, Table} from "antd";
+import {Button, Checkbox, Modal, Table} from "antd";
 import React, {useMemo} from "react";
 import {
     clientsTrainingPopupActions,
-    clientsTrainingPopupAtom
+    clientsTrainingPopupAtom, RegistrationData
 } from "../../../../viewModel/calendar/trainingClientsPopup/trainingClientsPopup";
 import {ColumnsType} from "antd/lib/table";
 import {UserData} from "../../../../viewModel/users/UserData";
 import {verify} from "../../../../../core/verify";
 import {getFullName} from "../../../../../common/name";
 import {clientsAtom} from "../../../../viewModel/users/users";
+import styles from './TrainingClientsPopup.module.css'
+import {Preloader} from "../../../../../common/preloader/Preloader";
 
 interface DataType {
     key: string;
     name: string;
-    attendance: {
-        clientId: string,
-        value: boolean,
-    },
+    attendance: boolean,
 }
-
 
 const COLUMNS: ColumnsType<DataType> = [
     {
@@ -32,37 +30,55 @@ const COLUMNS: ColumnsType<DataType> = [
     {
         title: 'Посещаемость',
         dataIndex: 'attendance',
-        render: attendance => <AttendanceCell value={attendance.value} clientId={attendance.clientId}/>,
+        render: (attendance, record: DataType) => <AttendanceCell value={attendance} registrationId={record.key}/>,
         width: 135
     },
+    {
+        title: '',
+        dataIndex: 'delete',
+        render: (_, record: DataType) => <DeleteRegistrationCell registrationId={record.key} />
+    }
 ];
 
 type AttendanceCellProps = {
-    clientId: string,
+    registrationId: string,
     value: boolean,
 }
 
 function AttendanceCell({
-    clientId,
+    registrationId,
     value,
 }: AttendanceCellProps) {
     const handleMarkClientAttendance = useAction(clientsTrainingPopupActions.markClientAttendance)
 
     return <Checkbox
         value={value}
-        onChange={e => handleMarkClientAttendance({clientId, attendance: e.target.value})}
+        onChange={e => handleMarkClientAttendance({registrationId, attendance: e.target.value})}
     />
 }
 
-function remapClientsDataToTableData(clients: UserData[], clientsAttendance: Map<string, boolean>): DataType[] {
-    return Array.from(clientsAttendance.keys()).map(clientId => {
-        const clientData = verify(clients.find(clientIdItem => clientIdItem.id === clientId))
+type DeleteRegistrationCellProps = {
+    registrationId: string,
+}
+
+function DeleteRegistrationCell({
+    registrationId,
+}: DeleteRegistrationCellProps) {
+    const handleDeleteRegistration = useAction(clientsTrainingPopupActions.removeRegistration)
+    return <Button
+        type={'primary'}
+        onClick={() => handleDeleteRegistration(registrationId)}
+    >
+        Удалить
+    </Button>
+}
+
+function remapClientsDataToTableData(registrationsData: RegistrationData[], clients: UserData[]): DataType[] {
+    return registrationsData.map(registrationData => {
+        const clientData = verify(clients.find(clientIdItem => clientIdItem.id === registrationData.userId))
         return {
-            key: clientId,
-            attendance: {
-                clientId: clientId,
-                value: verify(clientsAttendance.get(clientId))
-            },
+            key: registrationData.id,
+            attendance: registrationData.attended,
             name: getFullName({
                 firstName: clientData.firstName,
                 lastName: clientData.lastName,
@@ -72,12 +88,11 @@ function remapClientsDataToTableData(clients: UserData[], clientsAttendance: Map
     })
 }
 
-function ClientsTable() {
-    const clientsData = useAtomWithSelector(clientsTrainingPopupAtom, x => x.clientsData)
-    const clientsLoading = useAtomWithSelector(clientsTrainingPopupAtom, x => x.clientsLoading)
+function RegistrationsTable() {
+    const registrationsData = useAtomWithSelector(clientsTrainingPopupAtom, x => x.registrationsData)
     const clients = useAtom(clientsAtom)
 
-    const data = useMemo(() => clientsData && remapClientsDataToTableData(clients, clientsData), [clientsData, clients])
+    const data = useMemo(() => remapClientsDataToTableData(registrationsData, clients), [registrationsData, clients])
 
     return <Table
         columns={COLUMNS}
@@ -86,25 +101,34 @@ function ClientsTable() {
             y: 600,
         }}
         pagination={false}
-        loading={clientsLoading}
+        showSorterTooltip={false}
     />
 }
 
+function ContentWrapper() {
+    const popupLoading = useAtomWithSelector(clientsTrainingPopupAtom, x => x.popupLoading)
+    return (
+        <div className={styles.contentWrapper}>
+            {
+                popupLoading
+                    ? <Preloader size={'small'} />
+                    : <RegistrationsTable />
+            }
+        </div>
+    )
+}
+
+
 function TrainingClientsPopup() {
     const calendarClientsTrainingPopupOpened = useAtomWithSelector(clientsTrainingPopupAtom, x => x.opened)
-    const handleCloseClientsTrainingPopup = useAction(clientsTrainingPopupActions.close)
-    const handleSubmitClientsTrainingSubmit = useAction(clientsTrainingPopupActions.submit)
 
     return <Modal
         title={'Записанные клиенты'}
         open={calendarClientsTrainingPopupOpened}
         centered
-        okText={'Сохранить'}
-        cancelText={'Отмена'}
-        onCancel={handleCloseClientsTrainingPopup}
-        onOk={handleSubmitClientsTrainingSubmit}
+        footer={() => null}
     >
-        <ClientsTable />
+        <ContentWrapper />
     </Modal>
 }
 

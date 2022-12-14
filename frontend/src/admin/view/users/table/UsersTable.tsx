@@ -136,6 +136,7 @@ function UsersTable({
                 borderRadius: 10,
                 background: "#ffffff"
             }}
+            showSorterTooltip={false}
         />
     )
 }

@@ -1,5 +1,5 @@
 import {Api_TrainingData, CalendarApi} from "../../../../api/calendarApi";
-import {declareAtom} from "@reatom/core";
+import {declareAction, declareAtom} from "@reatom/core";
 import {declareAsyncAction} from "../../../../core/reatom/declareAsyncAction";
 import {trainingsActions} from "../trainings";
 import {Time} from "../time";
@@ -50,6 +50,8 @@ function remapApiTrainingDataToTrainingData(trainingsData: Api_TrainingData[]): 
             hallId: trainingData.hallId,
             description: trainingData.description,
             isCanceled: trainingData.isCanceled,
+            availableRegistrationsCount: trainingData.availableRegistrationsCount || 4,
+            maxRegistrationsCount: trainingData.maxRegistrationsCount || 10,
         }
     })
 }
@@ -81,8 +83,11 @@ const loadTrainingsForPeriod = declareAsyncAction<LoadTrainingsForPeriodPayload,
     }
 )
 
+const calendarPageOpened = declareAction('calendarPageOpened')
+
 const lastLoadedPeriodAtom = declareAtom<DatePeriod | null>('lastLoadedPeriod', null, on => [
-    on(loadTrainingsForPeriod.done, (_, value) => value)
+    on(loadTrainingsForPeriod.done, (_, value) => value),
+    on(calendarPageOpened, () => null),
 ])
 
 const trainingsLoadingAtom = declareAtom('trainingsLoading', false, on => [
@@ -92,6 +97,7 @@ const trainingsLoadingAtom = declareAtom('trainingsLoading', false, on => [
 
 export {
     loadTrainingsForPeriod,
+    calendarPageOpened,
     trainingsLoadingAtom,
     lastLoadedPeriodAtom,
 }

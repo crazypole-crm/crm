@@ -10,6 +10,11 @@ const deleteUser = declareAsyncAction<Array<string>>(
         const currentUserId = store.getState(authorizedCurrentUser).id
         const users = store.getState(usersAtom)
 
+        if (userIds.length === 1 && userIds[0] === currentUserId) {
+            Toasts.error('Нельзя удалить самого себя')
+            return Promise.reject()
+        }
+
         const removedUsersIds = userIds.filter(userId => userId !== currentUserId)
         const removedUsers = removedUsersIds.map(id => users[id])
 

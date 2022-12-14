@@ -1,4 +1,4 @@
-import {History} from "history";
+import {History, Location} from "history";
 import {HallsLayout} from "../../admin/view/halls/HallsLayout";
 import {ScheduleLayoutWrapper} from "../../admin/view/schedule/ScheduleLayoutWrapper";
 import {UsersLayout} from "../../admin/view/users/UsersLayout";
@@ -15,6 +15,7 @@ let RouterHistory: History|null = null
 
 function initRouterHistory(history: History) {
     RouterHistory = history
+    history.listen(location => onLocationChanged(location))
 }
 
 function replaceUrl(path: string, push: boolean = false) {
@@ -90,6 +91,19 @@ const Router = {
     }
 }
 
+let onCalendarPageOpened: (() => void) | null = null
+
+function setOnCalendarPageOpened(handler: () => void) {
+    onCalendarPageOpened = handler
+}
+
+function onLocationChanged(location: Location) {
+    switch (location.pathname) {
+        case Router.Schedule.url():
+            onCalendarPageOpened && onCalendarPageOpened()
+    }
+}
+
 const adminRoutes = [
     {path: generateScheduleUrl(), component: ScheduleLayoutWrapper},
     {path: generateUsersListUrl(), component: UsersLayout},
@@ -103,6 +117,7 @@ const clientRoutes = [
 
 export {
     initRouterHistory,
+    setOnCalendarPageOpened,
     Router,
     adminRoutes,
     clientRoutes
