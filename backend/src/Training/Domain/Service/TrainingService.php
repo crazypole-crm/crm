@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Training\Domain\Service;
 
+use App\Common\Domain\Event\EventDispatcherInterface;
 use App\Common\Domain\Uuid;
 use App\Common\Domain\UuidGenerator;
 use App\Training\Domain\Exception\CourseNotFoundException;
@@ -14,6 +15,8 @@ use App\Training\Domain\Model\BaseTraining;
 use App\Training\Domain\Model\BaseTrainingRepositoryInterface;
 use App\Training\Domain\Model\Course;
 use App\Training\Domain\Model\CourseRepositoryInterface;
+use App\Training\Domain\Model\Event\TrainingCanceledEvent;
+use App\Training\Domain\Model\Event\TrainingsRemovedEvent;
 use App\Training\Domain\Model\Hall;
 use App\Training\Domain\Model\HallRepositoryInterface;
 use App\Training\Domain\Model\Training;
@@ -28,6 +31,7 @@ class TrainingService
         private HallRepositoryInterface $hallRepository,
         private CourseRepositoryInterface $courseRepository,
         private BaseTrainingRepositoryInterface $baseTrainingRepository,
+        private EventDispatcherInterface $dispatcher,
     )
     {
     }
@@ -137,7 +141,7 @@ class TrainingService
      * @param int $type
      * @throws CourseNotFoundException
      * @throws HallNotFoundException
-     * @throws TrainingNotFoundException|TrainerAlreadyHaveTrainingAtThisTimeException
+     * @throws TrainingNotFoundException|TrainerAlreadyHaveTrainingAtThisTimeException|HallAlreadyHasTrainingAtThisTimeException
      */
     public function editTrainingByBase(
         Uuid $baseTrainingId,
@@ -163,12 +167,12 @@ class TrainingService
         }
         $trainings = $this->trainingRepository->findAllByBaseTraining($baseTrainingId);
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $trainerId);
-        if (!empty($intersectingTrainings))
+        if ($intersectingTrainings !== null)
         {
             throw new TrainerAlreadyHaveTrainingAtThisTimeException();
         }
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $hallId);
-        if (!empty($intersectingTrainings))
+        if ($intersectingTrainings !== null)
         {
             throw new HallAlreadyHasTrainingAtThisTimeException();
         }
@@ -219,17 +223,19 @@ class TrainingService
             throw new TrainingNotFoundException($trainingId);
         }
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $training->getTrainerId());
-        if (!empty($intersectingTrainings))
+        if ($intersectingTrainings !== null)
         {
             throw new TrainerAlreadyHaveTrainingAtThisTimeException();
         }
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByHallId($startDate, $endDate, $training->getHallId());
-        if (!empty($intersectingTrainings))
+        if ($intersectingTrainings !== null)
         {
             throw new HallAlreadyHasTrainingAtThisTimeException();
         }
         $training->setStartDate($startDate);
         $training->setEndDate($endDate);
+        $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName()));
+
     }
 
     public function changeTrainingStatus(Uuid $trainingId, bool $isCanceled): void
@@ -240,6 +246,10 @@ class TrainingService
             throw new TrainingNotFoundException($trainingId);
         }
         $training->setIsCanceled($isCanceled);
+        if ($isCanceled)
+        {
+            $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName()));
+        }
     }
 
     /**
@@ -248,10 +258,7 @@ class TrainingService
     public function removeBaseTraining(Uuid $baseId): void
     {
         $trainings = $this->trainingRepository->findAllByBaseTraining($baseId);
-        foreach ($trainings as $training)
-        {
-            $this->trainingRepository->remove($training);
-        }
+        $this->removeTrainings($trainings);
         $baseTraining = $this->baseTrainingRepository->findById($baseId);
         if ($baseTraining === null)
         {
@@ -267,7 +274,7 @@ class TrainingService
         {
             throw new TrainingNotFoundException($trainingId);
         }
-        $this->trainingRepository->remove($training);
+        $this->removeTrainings([$training]);
     }
 
     /**
@@ -276,10 +283,7 @@ class TrainingService
     public function removeHalls(array $hallIds): void
     {
         $trainings = $this->trainingRepository->findAllByHallIds($hallIds);
-        foreach ($trainings as $training)
-        {
-            $this->trainingRepository->remove($training);
-        }
+        $this->removeTrainings($trainings);
         $baseTrainings = $this->baseTrainingRepository->findAllByHallIds($hallIds);
         foreach ($baseTrainings as $training)
         {
@@ -298,10 +302,7 @@ class TrainingService
     public function removeCourses(array $courseIds): void
     {
         $trainings = $this->trainingRepository->findAllByCourseIds($courseIds);
-        foreach ($trainings as $training)
-        {
-            $this->trainingRepository->remove($training);
-        }
+        $this->removeTrainings($trainings);
         $baseTrainings = $this->baseTrainingRepository->findAllByCourseIds($courseIds);
         foreach ($baseTrainings as $training)
         {
@@ -317,10 +318,7 @@ class TrainingService
     public function removeTrainingsByTrainer(Uuid $trainerId): void
     {
         $trainings = $this->trainingRepository->findAllByTrainerId($trainerId);
-        foreach ($trainings as $training)
-        {
-            $this->trainingRepository->remove($training);
-        }
+        $this->removeTrainings($trainings);
     }
 
     public function createHall(string $name, int $capacity): Uuid
@@ -366,5 +364,21 @@ class TrainingService
             throw new CourseNotFoundException($id);
         }
         $course->setName($name);
+    }
+
+    /**
+     * @param Training[] $trainings
+     */
+    private function removeTrainings(array $trainings): void
+    {
+        foreach ($trainings as $training)
+        {
+            $this->trainingRepository->remove($training);
+        }
+        $this->dispatcher->dispatch(new TrainingsRemovedEvent(array_map(
+            static function(Training $training): Uuid {
+                return $training->getId();
+            }, $trainings
+        )));
     }
 }
