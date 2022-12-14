@@ -124,6 +124,7 @@ function DirectionsTable({
                 borderRadius: 10,
                 background: "#ffffff"
             }}
+            showSorterTooltip={false}
         />
     )
 }

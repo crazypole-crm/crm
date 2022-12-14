@@ -1,7 +1,7 @@
 import {combine, declareAction, declareAtom} from "@reatom/core";
 import {UserRole} from "../../users/UserData";
 import {declareAtomWithSetter} from "../../../../core/reatom/declareAtomWithSetter";
-import {sendNotification} from "./sendNotification";
+import {sendNotification} from "../calendaActions/sendNotification";
 import {verify} from "../../../../core/verify";
 
 const open = declareAction('sendCustomNotificationPopup.open')
@@ -37,6 +37,13 @@ const [bodyErrorAtom, setBodyError] = declareAtomWithSetter('sendCustomNotificat
     on(open, () => ''),
 ])
 
+const submitButtonLoadingAtom = declareAtom<boolean>('sendCustomNotificationPopupAtom.submitButtonLoading', false, on => [
+    on(open, () => false),
+    on(sendNotification, () => true),
+    on(sendNotification.done, () => false),
+    on(sendNotification.fail, () => false),
+])
+
 const submit = declareAction('sendCustomNotificationPopupAtom.submit',
     (_, store) => {
         const title = store.getState(titleAtom)
@@ -49,8 +56,9 @@ const submit = declareAction('sendCustomNotificationPopupAtom.submit',
 
         const titleError = store.getState(titleErrorAtom)
         const bodyError = store.getState(bodyErrorAtom)
+        const consumerRoleError = store.getState(roleErrorAtom)
 
-        if (titleError || bodyError) {
+        if (titleError || bodyError || consumerRoleError) {
             return
         }
 
@@ -70,6 +78,7 @@ const sendCustomNotificationPopupAtom = combine({
     roleError: roleErrorAtom,
     titleError: titleErrorAtom,
     bodyError: bodyErrorAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const sendCustomNotificationPopupActions = {

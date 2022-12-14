@@ -110,13 +110,14 @@ function UsersTableCommandPanel({
     const buttons: UsersActionsButtonType[] = useMemo(() => {
         const isAdmin = currentUser.role === 'admin'
         const isTrainer = currentUser.role === 'trainer'
+        const isOneSelectedCurrentUsers = selectedRowKeys.length === 1 && selectedRowKeys[0] === currentUser.id
         return optionalArray([
             (isAdmin && !selectedRowKeys.length) && 'add',
             (isAdmin && selectedRowKeys.length === 1) && 'edit',
-            (isAdmin && !!selectedRowKeys.length) && 'delete',
+            (isAdmin && !!selectedRowKeys.length && !isOneSelectedCurrentUsers) && 'delete',
             ((isAdmin || isTrainer) && selectedRowKeys.length === 1) && 'view',
         ])
-    }, [selectedRowKeys, currentUser.role])
+    }, [selectedRowKeys, currentUser.role, currentUser.id])
 
     return (
         <div className={styles.commandPanel}>

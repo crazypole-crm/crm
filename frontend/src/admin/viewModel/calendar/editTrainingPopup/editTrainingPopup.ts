@@ -117,6 +117,14 @@ const [trainingTrainerErrorAtom, setTrainingTrainerError] = declareAtomWithSette
     on(setTrainingTrainer, () => false)
 ])
 
+const [trainingCapacityAtom, setTrainingCapacity] = declareAtomWithSetter<number|null>('editTraining.trainingCapacity', null, on => [
+    on(open, (_, value) => value.mode === 'edit' ? value.trainingData.maxRegistrationsCount : null)
+])
+
+const [trainingCapacityErrorAtom, setTrainingCapacityError] = declareAtomWithSetter('editTraining.trainingCapacityError', false, on => [
+    on(setTrainingCapacity, () => false)
+])
+
 function convertDescription(description?: string) {
     return description || ''
 }
@@ -150,17 +158,20 @@ const submit = declareAction('editTraining.submit',
         const trainingStartTime = store.getState(trainingStartTimeAtom)
         const trainingEndTime = store.getState(trainingEndTimeAtom)
         const trainingDescription = store.getState(trainingDescriptionAtom)
+        const trainingCapacity = store.getState(trainingCapacityAtom)
         const repeatable = store.getState(repeatableAtom)
 
         const trainingHallError = !trainingHall
         const trainingDirectionError = !trainingDirection
         const trainingTrainerError = !trainingTrainer
+        const trainingCapacityError = !trainingCapacity
 
         store.dispatch(setTrainingHallError(trainingHallError))
         store.dispatch(setTrainingDirectionError(trainingDirectionError))
         store.dispatch(setTrainingTrainerError(trainingTrainerError))
+        store.dispatch(setTrainingCapacityError(trainingCapacityError))
 
-        if (trainingTrainerError || trainingHallError || trainingTrainerError) {
+        if (trainingTrainerError || trainingHallError || trainingTrainerError || trainingCapacityError) {
             return
         }
 
@@ -175,6 +186,7 @@ const submit = declareAction('editTraining.submit',
                 timeEnd: trainingEndTime,
                 description: trainingDescription || undefined,
                 isRepeatable: repeatable,
+                maxRegistrationsCount: trainingCapacity,
             }))
         }
 
@@ -190,6 +202,7 @@ const submit = declareAction('editTraining.submit',
                 description: trainingDescription || undefined,
                 id: verify(trainingId),
                 baseId: verify(baseId),
+                maxRegistrationsCount: trainingCapacity,
             }))
         }
     }
@@ -207,6 +220,8 @@ const editTrainingPopupAtom = combine({
     trainingHallError: trainingHallErrorAtom,
     trainingTrainer: trainingTrainerAtom,
     trainingTrainerError: trainingTrainerErrorAtom,
+    trainingCapacity: trainingCapacityAtom,
+    trainingCapacityError: trainingCapacityErrorAtom,
     trainingDescription: trainingDescriptionAtom,
     type: typeAtom,
     individualClient: individualClientAtom,
@@ -226,6 +241,7 @@ const editTrainingPopupActions = {
     setTrainingHall,
     setTrainingTrainer,
     setTrainingDescription,
+    setTrainingCapacity,
     setType,
     setIndividualClient,
     setRepeatable,

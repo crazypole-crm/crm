@@ -13,6 +13,8 @@ type Api_TrainingData = {
     courseId: string,
     type: 'group' | 'individual',
     isCanceled: boolean,
+    availableRegistrationsCount: number,
+    maxRegistrationsCount: number,
 }
 
 function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_TrainingData[]> {
@@ -40,8 +42,9 @@ function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_Trai
 
 }
 
-type Api_CreateTrainingData = Omit<Api_TrainingData, 'trainingId' | 'baseTrainingId' | 'isCanceled'> & {
+type Api_CreateTrainingData = Omit<Api_TrainingData, 'trainingId' | 'baseTrainingId' | 'isCanceled' | 'availableRegistrationsCount'> & {
     isRepeatable: boolean,
+    maxRegistrationsCount: number
 }
 
 function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
@@ -65,6 +68,9 @@ function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
             switch (response.status) {
                 case HttpStatus.OK:
                     return Promise.resolve()
+                case HttpStatus.BAD_REQUEST:
+                    console.log('response bad request')
+                    return Promise.reject(response)
                 case HttpStatus.UNAUTHORIZED:
                     goToUrl(Router.Auth.url())
                     return Promise.reject(response)
@@ -74,7 +80,11 @@ function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
         })
 }
 
-function editTraining(trainingData: Omit<Api_TrainingData, 'isCanceled'>): Promise<void> {
+type Api_EditTraining = Omit<Api_TrainingData, 'isCanceled' | 'availableRegistrationsCount'> & {
+    maxRegistrationsCount: number,
+}
+
+function editTraining(trainingData: Api_EditTraining): Promise<void> {
     return fetch('/edit/training', {
         method: 'POST',
         headers: {
@@ -128,20 +138,73 @@ function deleteTraining(baseId: string): Promise<void> {
         })
 }
 
-type Api_TrainingClients = {
-    [item: string]: boolean
+type Api_TrainingRegistrations = {
+    id: string,
+    userId: string,
+    status: 0 | 1,
 }
 
-function getTrainingClients(trainingId: string): Promise<Api_TrainingClients> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve({
-                'client1': false,
-                'client2': false,
-                'client3': false,
-            })
-        }, 1000)
+function getTrainingRegistrations(trainingId: string): Promise<Array<Api_TrainingRegistrations>> {
+    return fetch(`/training/${trainingId}/registration/list`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
     })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
+                default:
+                    return Promise.reject(response)
+            }
+        })
+}
+
+function changeTrainingRegistrationStatus(registrationId: string, status: 0 | 1): Promise<Response> {
+    return fetch(`/training/registration/${registrationId}/changeStatus`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            status,
+        })
+    })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response)
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
+                default:
+                    return Promise.reject(response)
+            }
+        })
+}
+
+function removeTrainingRegistrationStatus(registrationId: string): Promise<Response> {
+    return fetch(`/training/registration/${registrationId}/remove`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response)
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
+                default:
+                    return Promise.reject(response)
+            }
+        })
 }
 
 function cancelTraining(trainingId: string): Promise<void> {
@@ -218,12 +281,38 @@ function replaceTrainingTrainer(trainingId: string, trainerId: string): Promise<
         })
 }
 
+function createRegistration(trainingId: string, userId: string): Promise<void> {
+    return fetch(`/training/${trainingId}/registration/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId,
+        }),
+    })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
+                default:
+                    return Promise.reject(response)
+            }
+        })
+}
+
 const CalendarApi = {
     getTrainingsForPeriod,
     createTraining,
     editTraining,
     deleteTraining,
-    getTrainingClients,
+    getTrainingRegistrations,
+    changeTrainingRegistrationStatus,
+    removeTrainingRegistrationStatus,
+    createRegistration,
     cancelTraining,
     moveTraining,
     replaceTrainingTrainer,
@@ -231,7 +320,7 @@ const CalendarApi = {
 
 export type {
     Api_TrainingData,
-    Api_TrainingClients,
+    Api_TrainingRegistrations,
 }
 
 export {
