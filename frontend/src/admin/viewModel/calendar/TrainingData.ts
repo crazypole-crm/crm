@@ -19,6 +19,8 @@ type TrainingData = {
     timeStart: Time,
     timeEnd: Time,
     isCanceled: boolean,
+    availableRegistrationsCount: number,
+    maxRegistrationsCount: number,
     description?: string,
 }
 

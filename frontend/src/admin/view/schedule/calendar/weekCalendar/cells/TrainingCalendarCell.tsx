@@ -40,6 +40,24 @@ function getTrainerName(firstName?: string, lastName?: string) {
     return `${firstName} ${lastName[0]}.`
 }
 
+function getFreePlaces(availablePlaceCount: number) {
+    if (availablePlaceCount === 0) {
+        return 'Все места заняты'
+    }
+    const lastDigit = Number(String(availablePlaceCount)[String(availablePlaceCount).length - 1])
+    console.log('lastDigit', lastDigit)
+    if (lastDigit === 0) {
+        return `Свободно ${availablePlaceCount} мест`
+    }
+    if (lastDigit === 1) {
+        return `Свободно ${availablePlaceCount} место`
+    }
+    if (lastDigit < 5) {
+        return `Свободно ${availablePlaceCount} места`
+    }
+    return `Свободно ${availablePlaceCount} мест`
+}
+
 type AddPlusButtonProps = {
     onAdd: () => void
 }
@@ -236,10 +254,9 @@ function TrainingCalendarCell({
             </div>
             <div className={styles.freePlaces}>
                 {
-                    getValueByCheckedKey(trainingData.type, {
-                        'grouped': 'Групповое',
-                        'individual': 'Индивидуальное',
-                    })
+                    trainingData.type === 'grouped'
+                        ? getFreePlaces(trainingData.availableRegistrationsCount)
+                        : 'Индивидуальное'
                 }
             </div>
             <div className={styles.trainerName}>

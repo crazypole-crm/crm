@@ -18,7 +18,7 @@ function RoleField() {
 
     return (
         <Select
-            defaultValue={consumersRole}
+            value={consumersRole}
             onChange={handleSetConsumersRole}
             options={[
                 {
@@ -89,6 +89,7 @@ function Content() {
 
 function SendCustomNotificationPopup() {
     const sendCustomNotificationPopupOpened = useAtomWithSelector(sendCustomNotificationPopupAtom, x => x.opened)
+    const submitButtonLoading = useAtomWithSelector(sendCustomNotificationPopupAtom, x => x.submitButtonLoading)
     const handleCloseSendCustomNotificationPopup = useAction(sendCustomNotificationPopupActions.close)
     const handleSubmitSendCustomNotificationPopup = useAction(sendCustomNotificationPopupActions.submit)
 
@@ -99,7 +100,11 @@ function SendCustomNotificationPopup() {
         okText={'Отправить'}
         cancelText={'Отмена'}
         onCancel={handleCloseSendCustomNotificationPopup}
-        onOk={handleSubmitSendCustomNotificationPopup}
+        okButtonProps={{
+            onClick: handleSubmitSendCustomNotificationPopup,
+            loading: submitButtonLoading,
+            type: 'primary',
+        }}
     >
         <Content/>
     </Modal>

@@ -5,10 +5,12 @@ import {remapTrainingDataToApiTrainingData} from "../remapTrainingDataToApiTrain
 import {lastLoadedPeriodAtom, loadTrainingsForPeriod} from "./loadTrainingsForPeriod";
 import {Toasts} from "../../../../common/notification/notifications";
 import {verify} from "../../../../core/verify";
+import {HttpStatus} from "../../../../core/http/HttpStatus";
 
 
-type CreateTrainingPayload = Omit<TrainingData, 'id' | 'baseId' | 'isCanceled'> & {
-    isRepeatable: boolean
+type CreateTrainingPayload = Omit<TrainingData, 'id' | 'baseId' | 'isCanceled' | 'availableRegistrationsCount'> & {
+    isRepeatable: boolean,
+    maxRegistrationsCount: number,
 }
 
 const createTraining = declareAsyncAction<CreateTrainingPayload>(
@@ -29,6 +31,17 @@ const createTraining = declareAsyncAction<CreateTrainingPayload>(
                 }))
             })
             .catch(error => {
+                if (error.status === HttpStatus.BAD_REQUEST) {
+                    error.json().then((data: {code: string}) => {
+                        if (data.code === 'trainers_time_intersection') {
+                            Toasts.error('У выбранного тренера в это время уже есть занятие')
+                        }
+                        else if (data.code === 'halls_time_intersection') {
+                            Toasts.error('В это время выбранный зал уже занят')
+                        }
+                    })
+                    return
+                }
                 Toasts.error('При создании занятия произошла ошибка')
             })
     }

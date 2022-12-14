@@ -8,7 +8,7 @@ import styles from './EditTrainingPopup.module.css'
 import {directionsAtom} from "../../../../viewModel/direction/directions";
 import {hallsAtom} from "../../../../viewModel/hall/halls";
 import React, {useMemo} from "react";
-import {Modal, Select} from "antd";
+import {Modal, Select, InputNumber} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import {FieldBlock} from "../common/FieldBlock";
 import {RepeatableBlock} from "../common/RepeatableBlock";
@@ -16,7 +16,7 @@ import {TrainingTrainer} from "../common/TrainingTrainer";
 import {clientsAtom} from "../../../../viewModel/users/users";
 import {getFullName} from "../../../../../common/name";
 import {TrainingDatePicker} from "../common/TrainingDatePicker";
-import { TrainingTimePeriod } from "../common/TrainingTimePeriod";
+import {TrainingTimePeriod} from "../common/TrainingTimePeriod";
 
 
 function TrainingDescription() {
@@ -86,6 +86,18 @@ function TrainingHall() {
     />
 }
 
+function TrainingCapacity() {
+    const trainingCapacity = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingCapacity)
+    const handleSetTrainingCapacity = useAction(editTrainingPopupActions.setTrainingCapacity)
+
+    return <InputNumber
+        min={1}
+        max={1000}
+        value={trainingCapacity}
+        onChange={handleSetTrainingCapacity}
+    />
+}
+
 function TrainingType() {
     const type = useAtomWithSelector(editTrainingPopupAtom, x => x.type)
     const individualClient = useAtomWithSelector(editTrainingPopupAtom, x => x.individualClient)
@@ -151,6 +163,7 @@ function Content() {
     const trainingDate = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingDate)
     const trainingStartTime = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingStartTime)
     const trainingEndTime = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingEndTime)
+    const trainingCapacityError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingCapacityError)
 
     const handleSetTrainingDate = useAction(editTrainingPopupActions.setTrainingDate)
     const handleSetRepeatable = useAction(editTrainingPopupActions.setRepeatable)
@@ -196,6 +209,11 @@ function Content() {
                 error={trainingTrainerError}
             />
             <TrainingType />
+            <FieldBlock
+                title={'Колличество мест'}
+                content={<TrainingCapacity />}
+                error={trainingCapacityError}
+            />
             <FieldBlock
                 title={'О занятии:'}
                 content={<TrainingDescription/>}

@@ -6,7 +6,11 @@ import {lastLoadedPeriodAtom, loadTrainingsForPeriod} from "./loadTrainingsForPe
 import {Toasts} from "../../../../common/notification/notifications";
 import {verify} from "../../../../core/verify";
 
-const saveTraining = declareAsyncAction<Omit<TrainingData, 'isCanceled'>>(
+type SaveTrainingPayload = Omit<TrainingData, 'isCanceled' | 'availableRegistrationsCount'> & {
+    maxRegistrationsCount: number,
+}
+
+const saveTraining = declareAsyncAction<SaveTrainingPayload>(
     'saveTraining',
     (trainingData, store) => {
         const remappedTraining = {

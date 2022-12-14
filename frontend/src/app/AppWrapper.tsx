@@ -2,18 +2,21 @@ import {useAction, useAtom} from "@reatom/react";
 import {useEffect, useLayoutEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {Preloader} from "../common/preloader/Preloader";
-import {initRouterHistory} from "../core/router/router";
+import {initRouterHistory, setOnCalendarPageOpened} from "../core/router/router";
 import {initUserDataAction} from "../currentUser/actions/initUser";
 import {App} from "./App";
 import {isLoadingAppAtom} from "./isAppLoading";
+import {calendarPageOpened} from "../admin/viewModel/calendar/calendaActions/loadTrainingsForPeriod";
 
 const AppWrapper = withRouter(({history}) => {
     const isLoadingApp = useAtom(isLoadingAppAtom)
     const handleInitUserData = useAction(initUserDataAction)
+    const handleSetLastLoadedPeriod = useAction(calendarPageOpened)
 
     useLayoutEffect(() => {
         initRouterHistory(history)
-    }, [history])
+        setOnCalendarPageOpened(handleSetLastLoadedPeriod)
+    }, [history, handleSetLastLoadedPeriod])
 
     useEffect(() => {
       handleInitUserData()
