@@ -7,6 +7,7 @@ use App\Common\Exception\UserNotAuthenticated;
 use App\Common\Security\SecurityContextInterface;
 use App\Security\UserAuthenticator;
 use App\User\Api\ApiInterface;
+use App\User\Api\Data\Role;
 use App\User\Api\Input\AuthenticateUserInput;
 use App\User\Api\Input\ChangeUserPasswordInput;
 use App\User\Api\Input\CreateUserInput;
@@ -223,6 +224,15 @@ class UserController extends AbstractController
             return new Response(null, Response::HTTP_BAD_REQUEST);
         }
         return new Response();
+    }
+
+    /**
+     * @Route("/user/trainers")
+     */
+    public function listTrainers(): Response
+    {
+        $usersData = $this->userApi->getUsersData(null, Role::TRAINER);
+        return new Response($this->serializeUsersData($usersData));
     }
 
     /**
