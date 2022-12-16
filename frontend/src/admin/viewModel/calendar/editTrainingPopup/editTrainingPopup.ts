@@ -35,17 +35,6 @@ const [typeAtom, setType] = declareAtomWithSetter<TrainingType>('editTraining.ty
     on(open, (_, value) => value.mode === 'edit' ? value.trainingData.type : 'grouped')
 ])
 
-const [individualClientAtom, setIndividualClient] = declareAtomWithSetter<string|null>('editTraining.individualClient', null, on => [
-    on(open, (_, value) => {
-        if (value.mode === 'edit') {
-            if (value.trainingData.type === 'individual') {
-                return null
-            }
-        }
-        return null
-    })
-])
-
 const trainingIdAtom = declareAtom<string | null>('editTraining.trainingId', null, on => [
     on(open, (_, value) => value.mode === 'edit' ? value.trainingData.id : null)
 ])
@@ -224,7 +213,6 @@ const editTrainingPopupAtom = combine({
     trainingCapacityError: trainingCapacityErrorAtom,
     trainingDescription: trainingDescriptionAtom,
     type: typeAtom,
-    individualClient: individualClientAtom,
     repeatable: repeatableAtom,
     trainingId: trainingIdAtom,
     baseId: baseIdAtom,
@@ -243,7 +231,6 @@ const editTrainingPopupActions = {
     setTrainingDescription,
     setTrainingCapacity,
     setType,
-    setIndividualClient,
     setRepeatable,
     submit,
 }

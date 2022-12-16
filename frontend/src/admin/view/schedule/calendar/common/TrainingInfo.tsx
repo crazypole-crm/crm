@@ -41,6 +41,23 @@ function normalizeDayNumber(day: number): number {
     return day - 1
 }
 
+function getFreePlaces(availablePlaceCount: number) {
+    if (availablePlaceCount === 0) {
+        return 'Все места заняты'
+    }
+    const lastDigit = Number(String(availablePlaceCount)[String(availablePlaceCount).length - 1])
+    if (lastDigit === 0) {
+        return `Свободно ${availablePlaceCount} мест`
+    }
+    if (lastDigit === 1) {
+        return `Свободно ${availablePlaceCount} место`
+    }
+    if (lastDigit < 5) {
+        return `Свободно ${availablePlaceCount} места`
+    }
+    return `Свободно ${availablePlaceCount} мест`
+}
+
 function getDateString(date: TrainingDate): string {
     const modelDate = new Date()
     modelDate.setDate(date.date)
@@ -79,10 +96,9 @@ function TrainingInfo({
             <div className={styles.timePeriod}>{getTimePeriodString(trainingData.timeStart, trainingData.timeEnd)}</div>
             <div className={styles.capacity}>
                 {
-                    getValueByCheckedKey(trainingData.type, {
-                        'grouped': 'Групповое',
-                        'individual': 'Индивидуальное',
-                    })
+                    trainingData.type === 'grouped'
+                        ? getFreePlaces(trainingData.availableRegistrationsCount)
+                        : 'Индивидуальное'
                 }
             </div>
             <TrainerInfo {...verify(trainers.find(trainer => trainingData.trainerId === trainer.id))} />

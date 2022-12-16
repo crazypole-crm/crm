@@ -1,6 +1,6 @@
 import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelector";
 import {useAction, useAtom} from "@reatom/react";
-import {Button, Checkbox, Modal, Table} from "antd";
+import {Button, Checkbox, Empty, Modal, Table} from "antd";
 import React, {useMemo} from "react";
 import {
     clientsTrainingPopupActions,
@@ -13,6 +13,8 @@ import {getFullName} from "../../../../../common/name";
 import {clientsAtom} from "../../../../viewModel/users/users";
 import styles from './TrainingClientsPopup.module.css'
 import {Preloader} from "../../../../../common/preloader/Preloader";
+import {recordToTrainingPopupActions} from "../../../../viewModel/calendar/recordToTrainingPopup/recordToTrainingPopup";
+import {trainingActionPopupActions} from "../../../../viewModel/calendar/trainingActionPopup/trainingActionPopup";
 
 interface DataType {
     key: string;
@@ -105,14 +107,45 @@ function RegistrationsTable() {
     />
 }
 
+function RegistrationTableWrapper() {
+    const registrationsData = useAtomWithSelector(clientsTrainingPopupAtom, x => x.registrationsData)
+    const trainingId = useAtomWithSelector(clientsTrainingPopupAtom, x => x.trainingId)
+    const handleOpenRecordToTrainingPopup = useAction(recordToTrainingPopupActions.open)
+    const handleCloseTrainingClientsPopup = useAction(trainingActionPopupActions.close)
+
+    if (!registrationsData.length) {
+        return <Empty
+            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+            imageStyle={{
+                height: 60,
+            }}
+            description={'На это занятие еще нет записанных пользователей'}
+        >
+            <Button
+                type={'primary'}
+                onClick={() => {
+                    handleCloseTrainingClientsPopup()
+                    handleOpenRecordToTrainingPopup({
+                        trainingId,
+                    })
+                }}
+            >
+                Записать пользователя
+            </Button>
+        </Empty>
+    }
+
+    return <RegistrationsTable />
+}
+
 function ContentWrapper() {
     const popupLoading = useAtomWithSelector(clientsTrainingPopupAtom, x => x.popupLoading)
     return (
         <div className={styles.contentWrapper}>
             {
                 popupLoading
-                    ? <Preloader size={'small'} />
-                    : <RegistrationsTable />
+                    ? <Preloader size={'normal'} />
+                    : <RegistrationTableWrapper />
             }
         </div>
     )
@@ -126,7 +159,7 @@ function TrainingClientsPopup() {
         title={'Записанные клиенты'}
         open={calendarClientsTrainingPopupOpened}
         centered
-        footer={() => null}
+        footer={null}
     >
         <ContentWrapper />
     </Modal>

@@ -45,7 +45,6 @@ function getFreePlaces(availablePlaceCount: number) {
         return 'Все места заняты'
     }
     const lastDigit = Number(String(availablePlaceCount)[String(availablePlaceCount).length - 1])
-    console.log('lastDigit', lastDigit)
     if (lastDigit === 0) {
         return `Свободно ${availablePlaceCount} мест`
     }

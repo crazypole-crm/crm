@@ -8,13 +8,11 @@ import styles from './EditTrainingPopup.module.css'
 import {directionsAtom} from "../../../../viewModel/direction/directions";
 import {hallsAtom} from "../../../../viewModel/hall/halls";
 import React, {useMemo} from "react";
-import {Modal, Select, InputNumber} from "antd";
+import {InputNumber, Modal, Select} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import {FieldBlock} from "../common/FieldBlock";
 import {RepeatableBlock} from "../common/RepeatableBlock";
 import {TrainingTrainer} from "../common/TrainingTrainer";
-import {clientsAtom} from "../../../../viewModel/users/users";
-import {getFullName} from "../../../../../common/name";
 import {TrainingDatePicker} from "../common/TrainingDatePicker";
 import {TrainingTimePeriod} from "../common/TrainingTimePeriod";
 
@@ -100,10 +98,7 @@ function TrainingCapacity() {
 
 function TrainingType() {
     const type = useAtomWithSelector(editTrainingPopupAtom, x => x.type)
-    const individualClient = useAtomWithSelector(editTrainingPopupAtom, x => x.individualClient)
-    const clients = useAtom(clientsAtom)
     const handleSetType = useAction(editTrainingPopupActions.setType)
-    const handleSetIndividualClient = useAction(editTrainingPopupActions.setIndividualClient)
 
     const typesOptions = [
         {
@@ -115,11 +110,6 @@ function TrainingType() {
             label: 'Индивидуальное',
         }
     ]
-
-    const clientsOption = clients.map(client => ({
-        value: client.id,
-        label: getFullName(client) || client.email,
-    }))
 
     return (
         <>
@@ -134,20 +124,6 @@ function TrainingType() {
                     }}
                 />}
             />
-            {type === 'individual' && <FieldBlock
-                title={'Клиент:'}
-                content={<Select
-                    placeholder={'Пользователь'}
-                    showSearch={true}
-                    value={individualClient}
-                    onChange={id => handleSetIndividualClient(id)}
-                    options={clientsOption}
-                    filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                    style={{
-                        width: 200,
-                    }}
-                />}
-            />}
         </>
     )
 }
@@ -209,11 +185,11 @@ function Content() {
                 error={trainingTrainerError}
             />
             <TrainingType />
-            <FieldBlock
+            {type === 'grouped' && <FieldBlock
                 title={'Колличество мест'}
                 content={<TrainingCapacity />}
                 error={trainingCapacityError}
-            />
+            />}
             <FieldBlock
                 title={'О занятии:'}
                 content={<TrainingDescription/>}

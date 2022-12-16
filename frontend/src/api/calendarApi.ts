@@ -304,6 +304,26 @@ function createRegistration(trainingId: string, userId: string): Promise<void> {
         })
 }
 
+function signUpToTraining(trainingId: string) {
+    return fetch(`/training/${trainingId}/registration/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve()
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
+                default:
+                    return Promise.reject(response)
+            }
+        })
+}
+
 const CalendarApi = {
     getTrainingsForPeriod,
     createTraining,
@@ -313,6 +333,7 @@ const CalendarApi = {
     changeTrainingRegistrationStatus,
     removeTrainingRegistrationStatus,
     createRegistration,
+    signUpToTraining,
     cancelTraining,
     moveTraining,
     replaceTrainingTrainer,
