@@ -43,7 +43,18 @@ class EventController extends AbstractController
             $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
             $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
             $type = $this->convertTrainingType($requestData['type']);
-            $input = new CreateTrainingInput("", $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['trainerId'], $type, $requestData['isRepeatable']);
+            $input = new CreateTrainingInput(
+                "", 
+                $requestData['description'] ?? null, 
+                $startDate, 
+                $endDate, 
+                $requestData['hallId'], 
+                $requestData['courseId'], 
+                $requestData['trainerId'], 
+                $type, 
+                $requestData['isRepeatable'],
+                $requestData['maxRegistrationsCount'] ?? null
+            );
             $trainingId = $this->eventApi->createTraining($input);
             return new Response(json_encode(['trainingId' => $trainingId]), Response::HTTP_OK);
         }
@@ -78,8 +89,17 @@ class EventController extends AbstractController
             $userId = $this->securityContext->getAuthenticatedUserId();
             $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
             $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
-            $type = $this->convertTrainingType($requestData['type']);
-            $input = new EditTrainingInput($requestData['baseId'], $requestData['trainingId'],"", $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['trainerId'], $type);
+            $input = new EditTrainingInput(
+                $requestData['baseId'], 
+                $requestData['trainingId'],
+                "", 
+                $requestData['description'] ?? null, 
+                $startDate, 
+                $endDate, 
+                $requestData['hallId'], 
+                $requestData['courseId'], 
+                $requestData['trainerId'], 
+                $requestData['maxRegistrationsCount'] ?? null);
             $this->eventApi->editTraining($input);
 
             return new Response(null, Response::HTTP_OK);

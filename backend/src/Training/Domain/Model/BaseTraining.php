@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Training\Domain\Model;
 
 use App\Common\Domain\Uuid;
+use App\Training\Domain\Exception\InvalidMaxRegistrationsException;
 
 class BaseTraining
 {
@@ -14,6 +15,7 @@ class BaseTraining
     private string $courseId;
     private string $trainerId;
     private int $type;
+    private int $maxRegistrations;
 
     public function __construct(
         Uuid $id,
@@ -23,6 +25,7 @@ class BaseTraining
         Uuid $courseId,
         Uuid $trainerId,
         int $type,
+        ?int $maxRegistrations
     )
     {
         $this->id = (string)$id;
@@ -32,6 +35,19 @@ class BaseTraining
         $this->courseId = (string)$courseId;
         $this->trainerId = (string)$trainerId;
         $this->type = $type;
+        if ($type === TrainingType::INDIVIDUAL_TRAINING)
+        {
+            if ($maxRegistrations !== null)
+            {
+                throw new InvalidMaxRegistrationsException($maxRegistrations);
+            }
+
+            $this->maxRegistrations = 1;
+        }
+        else 
+        {
+            $this->maxRegistrations = $maxRegistrations;
+        }
     }
 
     /**
@@ -144,5 +160,19 @@ class BaseTraining
     public function setType(int $type): void
     {
         $this->type = $type;
+    }
+
+    public function getMaxRegistrations(): int
+    {
+        return $this->maxRegistrations;
+    }
+
+    public function setMaxRegistrations(int $maxRegistrations): void
+    {
+        if ($this->type === TrainingType::INDIVIDUAL_TRAINING && $maxRegistrations !== 1)
+        {
+            throw new InvalidMaxRegistrationsException($maxRegistrations);
+        }
+        $this->maxRegistrations = $maxRegistrations;
     }
 }

@@ -23,13 +23,34 @@ class Api implements ApiInterface
     public function createTraining(CreateTrainingInput $input): string
     {
         //TODO: обработка исключений
-        return $this->trainingAppService->createTraining($input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType(), $input->isRepeatable());
+        return $this->trainingAppService->createTraining(
+            $input->getTitle(),
+            $input->getDescription(), 
+            $input->getStartDate(), 
+            $input->getEndDate(), 
+            $input->getHallId(), 
+            $input->getCourseId(), 
+            $input->getTrainerId(), 
+            $input->getType(), 
+            $input->isRepeatable(),
+            $input->getMaxRegistrations()
+        );
     }
 
     public function editTraining(EditTrainingInput $input): void
     {
         //TODO: обработка исключений
-        $this->trainingAppService->editTraining($input->getBaseId(), $input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType());
+        $this->trainingAppService->editTraining(
+            $input->getBaseId(), 
+            $input->getTitle(), 
+            $input->getDescription(), 
+            $input->getStartDate(), 
+            $input->getEndDate(), 
+            $input->getHallId(), 
+            $input->getCourseId(), 
+            $input->getTrainerId(), 
+            $input->getMaxRegistrations()
+        );
     }
 
     public function changeTrainingTrainer(string $trainingId, string $trainerId): void

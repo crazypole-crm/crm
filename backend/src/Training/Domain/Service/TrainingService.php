@@ -60,6 +60,7 @@ class TrainingService
         Uuid $trainerId,
         int $type,
         bool $isRepeatable,
+        ?int $maxRegistrations
     ): Uuid
     {
         $hall = $this->hallRepository->findHallById($hallId);
@@ -80,6 +81,7 @@ class TrainingService
             $courseId,
             $trainerId,
             $type,
+            $maxRegistrations
         );
         $intersectingTrainings = $this->trainingRepository->findIntersectingTrainingsByTrainerId($startDate, $endDate, $trainerId);
         if ($intersectingTrainings !== null)
@@ -106,6 +108,7 @@ class TrainingService
                     $courseId,
                     $trainerId,
                     $type,
+                    $maxRegistrations
                 );
                 $this->trainingRepository->add($training);
             }
@@ -122,6 +125,7 @@ class TrainingService
                 $courseId,
                 $trainerId,
                 $type,
+                $maxRegistrations
             );
             $this->trainingRepository->add($training);
         }
@@ -152,7 +156,7 @@ class TrainingService
         Uuid $hallId,
         Uuid $courseId,
         Uuid $trainerId,
-        int $type,
+        ?int $maxRegistrations = null
     ): void
     {
         $hall = $this->hallRepository->findHallById($hallId);
@@ -186,7 +190,10 @@ class TrainingService
         $baseTraining->setCourseId($courseId);
         $baseTraining->setHallId($hallId);
         $baseTraining->setTrainerId($trainerId);
-        $baseTraining->setType($type);
+        if ($maxRegistrations !== null)
+        {
+            $baseTraining->setMaxRegistrations($maxRegistrations);
+        }
         $i = 0;
         foreach ($trainings as $training)
         {
@@ -200,7 +207,10 @@ class TrainingService
             $training->setCourseId($courseId);
             $training->setHallId($hallId);
             $training->setTrainerId($trainerId);
-            $training->setType($type);
+            if ($maxRegistrations !== null)
+            {
+                $training->setMaxRegistrations($maxRegistrations);
+            }
             $i++;
         }
     }
@@ -262,7 +272,7 @@ class TrainingService
         $baseTraining = $this->baseTrainingRepository->findById($baseId);
         if ($baseTraining === null)
         {
-            throw new TrainingNotFoundException($baseTraining);
+            throw new TrainingNotFoundException($baseId);
         }
         $this->baseTrainingRepository->remove($baseTraining);
     }

@@ -16,5 +16,6 @@
         <field name="courseId" column="course_id" type="string"/>
         <field name="type" column="type" type="integer"/>
         <field name="isCanceled" column="is_canceled" type="boolean"/>
+        <field name="maxRegistrations" column="max_registrations" type="integer"/>
     </entity>
 </doctrine-mapping>
