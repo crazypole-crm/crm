@@ -248,6 +248,7 @@ function Content() {
 
 function EditUserPopup() {                                                                                                                                                                                                                                                                                                                                                                                          
     const editUserPopupOpened = useAtomWithSelector(editUserPopupAtom, x => x.opened)
+    const submitButtonLoading = useAtomWithSelector(editUserPopupAtom, x => x.submitButtonLoading)
     const handleCloseEditUserPopup = useAction(editUserPopupActions.close)
     const handleSubmitUser = useAction(editUserPopupActions.submit)
 
@@ -257,7 +258,11 @@ function EditUserPopup() {
         centered
         okText={'Сохранить'}
         cancelText={'Отмена'}
-        onOk={handleSubmitUser}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleSubmitUser,
+        }}
         onCancel={handleCloseEditUserPopup}
         width={774}
     >

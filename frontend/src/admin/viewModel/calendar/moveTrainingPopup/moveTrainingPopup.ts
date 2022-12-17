@@ -46,6 +46,13 @@ const [trainingEndTimeAtom, setTrainingEndTime] = declareAtomWithSetter<Time>('m
     on(open, (state, {endTime}) => endTime)
 ])
 
+const submitButtonLoadingAtom = declareAtom('moveTraining.submitButtonLoading', false, on => [
+    on(moveTraining, () => true),
+    on(moveTraining.done, () => false),
+    on(moveTraining.fail, () => false),
+    on(close, () => false),
+])
+
 const [repeatAtom, setRepeat] = declareAtomWithSetter('moveTrainingPopup.repeat', false)
 
 const submit = declareAction('moveTrainingPopup.submit',
@@ -85,6 +92,7 @@ const moveTrainingPopupAtom = combine({
     trainingStartTime: trainingStartTimeAtom,
     trainingEndTime: trainingEndTimeAtom,
     repeat: repeatAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const moveTrainingPopupActions = {

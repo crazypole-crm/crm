@@ -51,6 +51,7 @@ function Content() {
 
 function MoveTrainingPopup() {
     const calendarMoveTrainingPopupOpened = useAtomWithSelector(moveTrainingPopupAtom, x => x.opened)
+    const submitButtonLoading = useAtomWithSelector(moveTrainingPopupAtom, x => x.submitButtonLoading)
     const handleCloseMoveTrainingPopup = useAction(moveTrainingPopupActions.close)
     const handleCloseMoveTrainingSubmit = useAction(moveTrainingPopupActions.submit)
 
@@ -61,7 +62,11 @@ function MoveTrainingPopup() {
         okText={'Перенести'}
         cancelText={'Отмена'}
         onCancel={handleCloseMoveTrainingPopup}
-        onOk={handleCloseMoveTrainingSubmit}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleCloseMoveTrainingSubmit,
+        }}
     >
         <Content/>
     </Modal>

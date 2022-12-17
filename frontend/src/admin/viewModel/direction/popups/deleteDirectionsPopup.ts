@@ -9,6 +9,14 @@ const [openedAtom, setOpened] = declareAtomWithSetter('deleteDirections.opened',
     on(open, () => true),
     on(close, () => false),
     on(deleteDirections.done, () => false),
+    on(close, () => false),
+])
+
+const submitButtonLoadingAtom = declareAtom('deleteTraining.submitButtonLoading', false, on => [
+    on(deleteDirections, () => true),
+    on(deleteDirections.done, () => false),
+    on(deleteDirections.fail, () => false),
+    close,
 ])
 
 const deletingDirectionsIds = declareAtom<string[]>('deleteDirections.deletingDirectionsIds', [], on => [
@@ -25,6 +33,7 @@ const submit = declareAction('deleteDirections.submit',
 const deleteDirectionsPopupAtom = combine({
     opened: openedAtom,
     directionsIds: deletingDirectionsIds,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const deleteDirectionsPopupActions = {

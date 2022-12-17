@@ -29,6 +29,7 @@ function Content() {
 
 function DeleteHallsPopup() {                                                                                                                                                                                                                                                                                                                                                                                          
     const deleteHallPopupOpened = useAtomWithSelector(deleteHallsPopupAtom, x => x.opened)
+    const submitButtonLoading = useAtomWithSelector(deleteHallsPopupAtom, x => x.submitButtonLoading)
     const handleCloseDeleteHallPopup = useAction(deleteHallsPopupActions.close)
     const handleSubmitDelete = useAction(deleteHallsPopupActions.submit)
 
@@ -38,7 +39,11 @@ function DeleteHallsPopup() {
         centered
         okText={'Удалить'}
         cancelText={'Отмена'}
-        onOk={handleSubmitDelete}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleSubmitDelete,
+        }}
         onCancel={handleCloseDeleteHallPopup}
         width={430}
     >

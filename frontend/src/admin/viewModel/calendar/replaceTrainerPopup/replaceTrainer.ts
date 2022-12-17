@@ -25,6 +25,13 @@ const [trainerIdAtom, setTrainerId] = declareAtomWithSetter('replaceTrainerPopup
     on(open, (_, {trainerId}) => trainerId)
 ])
 
+const submitButtonLoadingAtom = declareAtom('replaceTrainer.submitButtonLoading', false, on => [
+    on(replaceTrainer, () => true),
+    on(replaceTrainer.done, () => false),
+    on(replaceTrainer.fail, () => false),
+    on(close, () => false),
+])
+
 const [repeatAtom, setRepeat] = declareAtomWithSetter('replaceTrainerPopup.repeat', false)
 
 const submit = declareAction('replaceTrainerPopup.submit',
@@ -50,6 +57,7 @@ const replaceTrainerPopupAtom = combine({
     trainingId: trainingIdAtom,
     trainerId: trainerIdAtom,
     repeat: repeatAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const replaceTrainerPopupActions = {

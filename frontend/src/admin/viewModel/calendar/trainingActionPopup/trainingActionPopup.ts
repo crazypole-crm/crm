@@ -26,6 +26,16 @@ const trainingDataAtom = declareAtom<TrainingData>('trainingActionPopup.training
     on(open, (_, trainingData) => ({...trainingData})),
 ])
 
+const submitButtonLoadingAtom = declareAtom('trainingActions.submitButtonLoading', false, on => [
+    on(deleteTraining, () => true),
+    on(deleteTraining.done, () => false),
+    on(deleteTraining.fail, () => false),
+    on(cancelTraining, () => true),
+    on(cancelTraining.done, () => false),
+    on(cancelTraining.fail, () => false),
+    on(close, () => false),
+])
+
 const submit = declareAction('trainingActionPopup.submit',
     (_, store) => {
         const mode = store.getState(modeAtom)
@@ -47,6 +57,7 @@ const trainingActionPopupAtom = combine({
     mode: modeAtom,
     trainingData: trainingDataAtom,
     opened: openedAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const trainingActionPopupActions = {
