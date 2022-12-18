@@ -1,7 +1,7 @@
 import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelector";
-import {useAction} from "@reatom/react";
+import {useAction, useAtom} from "@reatom/react";
 import {Modal, TimePicker} from "antd";
-import React, {useMemo} from "react";
+import React, {useMemo, useState} from "react";
 import {
     calendarSettingsPopupActions,
     calendarSettingsPopupAtom
@@ -10,6 +10,7 @@ import moment, {Moment} from "moment/moment";
 import {FieldBlock} from "../common/FieldBlock";
 import styles from './CalendarSettingsPopup.module.css'
 import {Time} from "../../../../viewModel/calendar/time";
+import {setDisabledTime, calendarSettingsDisabledTimeAtom } from "../../../../viewModel/calendar/calendartSettings/calendarSettings";
 
 function TimeStepBlock() {
     const timeStep = useAtomWithSelector(calendarSettingsPopupAtom, x => x.stepTime)
@@ -56,6 +57,9 @@ function PeriodTimeBlock() {
     const dayEndTime = useAtomWithSelector(calendarSettingsPopupAtom, x => x.dayEndTime)
     const handleSetDayStartTime = useAction(calendarSettingsPopupActions.setDayStartTime)
     const handleSetDayEndTime = useAction(calendarSettingsPopupActions.setDayEndTime)
+    const disabledTime = useAtom(calendarSettingsDisabledTimeAtom);
+    const addDisabledTime = useAction(setDisabledTime);
+    const [disabledMinutes, setDisabledMinutes] = useState<number[]>([])
 
     const momentStartTime = useMemo(() => moment({
         hour: dayStartTime.hour,
@@ -76,6 +80,48 @@ function PeriodTimeBlock() {
             })
         }
     }
+    const onChangeForDisabledTime = (value: Moment | null) => {
+        if (value) {
+            const date = value.toDate()
+            addDisabledTime({hour: date.getHours(), minute: date.getMinutes()});
+            if(date.getHours() > dayEndTime.hour){
+                handleSetDayEndTime({
+                    hour: date.getHours() + 1,
+                    minutes: 0,
+                });
+            } else if(date.getHours() == dayEndTime.hour){
+                if(date.getMinutes() >= dayEndTime.minutes){
+                    if(date.getMinutes() + 15 > 60){
+                        handleSetDayEndTime({
+                            hour: date.getHours() + 1,
+                            minutes: 0,
+                        });
+                    } else {
+                        handleSetDayEndTime({
+                            hour: date.getHours(),
+                            minutes: date.getMinutes() + 15,
+                        });
+                        setDisabledMinutes(disabledTime.disabledMinutes);
+                    }
+                } else {
+                    setDisabledMinutes(disabledTime.disabledMinutes)
+                }        
+            }
+        }
+    }
+
+    const getDisabledMinutes = (value: Moment | null) => {
+        if (value) {
+            const date = value.toDate()
+            if(disabledTime.disabledHours[disabledTime.disabledHours.length - 1] + 1 == date.getHours()){
+                setDisabledMinutes(disabledTime.disabledMinutes);
+            } else {
+                setDisabledMinutes([]);
+            }
+        } else {
+            setDisabledMinutes([]);
+        }
+    }
 
     return (
         <div className={styles.timePeriod}>
@@ -83,7 +129,7 @@ function PeriodTimeBlock() {
                 minuteStep={15}
                 value={momentStartTime}
                 format={'HH:mm'}
-                onSelect={value => onChange(value, handleSetDayStartTime)}
+                onSelect={value => {onChange(value, handleSetDayStartTime); onChangeForDisabledTime(value)}}
                 showNow={false}
             />
             -
@@ -91,8 +137,10 @@ function PeriodTimeBlock() {
                 minuteStep={15}
                 value={momentEndTime}
                 format={'HH:mm'}
-                onSelect={value => onChange(value, handleSetDayEndTime)}
+                onSelect={value => {onChange(value, handleSetDayEndTime); getDisabledMinutes(value)}}
                 showNow={false}
+                disabledHours={()=>disabledTime.disabledHours}
+                disabledMinutes={()=>disabledMinutes}
             />
         </div>
     )
