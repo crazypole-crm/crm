@@ -23,15 +23,37 @@ function DirectionNameInput() {
     />
 }
 
+function DirectionDescriptionInput() {
+    const directionDescriptionError = useAtomWithSelector(editDirectionPopupAtom, x => x.directionDescriptionError)
+    const directionDescription = useAtomWithSelector(editDirectionPopupAtom, x => x.directionDescription)
+    const handleSetDirectionDescription = useAction(editDirectionPopupActions.setDirectionDescription)
+
+    return <Input
+        value={directionDescription || ''}
+        status={directionDescriptionError ? 'error' : ''}
+        onChange={e => handleSetDirectionDescription(e.target.value)}
+        style={fieldStyle}
+    />
+}
+
 function Content() {
     const directionNameError = useAtomWithSelector(editDirectionPopupAtom, x => x.directionNameError)
+    const directionDescriptionError = useAtomWithSelector(editDirectionPopupAtom, x => x.directionDescriptionError)
 
     return (
-        <FieldBlock
-            title={'Название'}
-            content={<DirectionNameInput/>}
-            error={directionNameError}
-        />
+        <div>
+            <FieldBlock
+                title={'Название'}
+                content={<DirectionNameInput/>}
+                error={directionNameError}
+            />
+
+            <FieldBlock
+                title={'Описание'}
+                content={<DirectionDescriptionInput/>}
+                error={directionDescriptionError}
+            />
+        </div>
     )
 }
 

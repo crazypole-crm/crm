@@ -4,8 +4,6 @@ import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter";
 import { registrationAction } from "../../currentUser/actions/registration";
 import { setAuthPageMode } from "./authPageMode";
 import { validateRequiredField } from "./FieldErrorTypes";
-import {useAction} from "@reatom/react";
-import {loginFormDataActions} from "./loginFormData";
 
 const [emailAtom, setEmail] = declareAtomWithSetter('auth.registation.email', '', on => [
     on(setAuthPageMode, () => '')

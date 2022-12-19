@@ -1,9 +1,6 @@
 import {AuthenticationApi} from "../../api/authenticationApi";
 import {Toasts} from "../../common/notification/notifications";
 import {declareAsyncAction} from "../../core/reatom/declareAsyncAction";
-import {useAction} from "@reatom/react";
-import {registrationFormDataActions} from "../../auth/viewModel/registrationFormData";
-import {loginFormDataActions} from "../../auth/viewModel/loginFormData";
 import {loginAction} from "./login";
 
 
