@@ -39,6 +39,9 @@ const submitButtonLoadingAtom = declareAtom('trainingActions.submitButtonLoading
     on(cancelTraining, () => true),
     on(cancelTraining.done, () => false),
     on(cancelTraining.fail, () => false),
+    on(signUpToTraining, () => true),
+    on(signUpToTraining.done, () => false),
+    on(signUpToTraining.fail, () => false),
     on(close, () => false),
 ])
 

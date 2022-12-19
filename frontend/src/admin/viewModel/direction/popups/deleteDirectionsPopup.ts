@@ -16,7 +16,7 @@ const submitButtonLoadingAtom = declareAtom('deleteTraining.submitButtonLoading'
     on(deleteDirections, () => true),
     on(deleteDirections.done, () => false),
     on(deleteDirections.fail, () => false),
-    close,
+    on(close, () => false),
 ])
 
 const deletingDirectionsIds = declareAtom<string[]>('deleteDirections.deletingDirectionsIds', [], on => [
