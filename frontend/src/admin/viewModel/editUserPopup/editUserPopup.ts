@@ -26,6 +26,16 @@ const [openedAtom, setOpened] = declareAtomWithSetter('editUser.opened', false, 
     on(createUser.done, () => false),
 ])
 
+const submitButtonLoadingAtom = declareAtom('editUser.submitButtonLoading', false, on => [
+    on(createUser, () => true),
+    on(createUser.done, () => false),
+    on(createUser.fail, () => false),
+    on(updateUser, () => true),
+    on(updateUser.done, () => false),
+    on(updateUser.fail, () => false),
+    on(close, () => false),
+])
+
 const popupModeAtom = declareAtom<ModeType>('editUser.popupMode', 'edit', on => [
     on(open, (_, value) => value.mode)
 ])
@@ -211,6 +221,7 @@ const editUserPopupAtom = combine({
     userEmailError: userEmailErrorAtom,
     userNewPasswordError: userNewPasswordErrorAtom,
     userNewPasswordCheckError: userNewPasswordCheckErrorAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const editUserPopupActions = {

@@ -60,6 +60,7 @@ function Content() {
 function EditDirectionPopup() {                                                                                                                                                                                                                                                                                                                                                                                          
     const editDirectionPopupOpened = useAtomWithSelector(editDirectionPopupAtom, x => x.opened)
     const editDirectionPopupMode = useAtomWithSelector(editDirectionPopupAtom, x => x.popupMode)
+    const submitButtonLoading = useAtomWithSelector(editDirectionPopupAtom, x => x.submitButtonLoading)
     const handleCloseEditDirectionPopup = useAction(editDirectionPopupActions.close)
     const handleSubmitDirection = useAction(editDirectionPopupActions.submit)
 
@@ -69,7 +70,11 @@ function EditDirectionPopup() {
         centered
         okText={'Сохранить'}
         cancelText={'Отмена'}
-        onOk={handleSubmitDirection}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleSubmitDirection,
+        }}
         onCancel={handleCloseEditDirectionPopup}
         width={427}
     >

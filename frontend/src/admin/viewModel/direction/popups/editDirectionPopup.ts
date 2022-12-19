@@ -51,6 +51,16 @@ const [directionDescriptionErrorAtom, setDirectionDescriptionError] = declareAto
     on(open, () => false)
 ])
 
+const submitButtonLoadingAtom = declareAtom('editDirection.submitButtonLoading', false, on => [
+    on(createDirection, () => true),
+    on(createDirection.done, () => false),
+    on(createDirection.fail, () => false),
+    on(updateDirection, () => true),
+    on(updateDirection.done, () => false),
+    on(updateDirection.fail, () => false),
+    on(close, () => false),
+])
+
 const submit = declareAction('editDirection.submit',
     (_, store) => {
         const popupMode = store.getState(popupModeAtom)
@@ -91,6 +101,7 @@ const editDirectionPopupAtom = combine({
     directionNameError: directionNameErrorAtom,
     directionDescription: directionDescriptionAtom,
     directionDescriptionError: directionDescriptionErrorAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const editDirectionPopupActions = {

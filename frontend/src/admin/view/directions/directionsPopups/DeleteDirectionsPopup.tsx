@@ -28,8 +28,9 @@ function Content() {
     )
 }
 
-function DeleteDirectionsPopup() {                                                                                                                                                                                                                                                                                                                                                                                          
+function DeleteDirectionsPopup() {
     const deleteDirectionPopupOpened = useAtomWithSelector(deleteDirectionsPopupAtom, x => x.opened)
+    const submitButtonLoading = useAtomWithSelector(deleteDirectionsPopupAtom, x => x.submitButtonLoading)
     const directionsIds = useAtomWithSelector(deleteDirectionsPopupAtom, x => x.directionsIds)
     const handleCloseDeleteDirectionPopup = useAction(deleteDirectionsPopupActions.close)
     const handleSubmitDelete = useAction(submitDeleteDirectionsPopupActions.open)
@@ -44,7 +45,11 @@ function DeleteDirectionsPopup() {
         centered
         okText={'Удалить'}
         cancelText={'Отмена'}
-        onOk={handleOnOkClick}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleOnOkClick,
+        }}
         onCancel={handleCloseDeleteDirectionPopup}
         width={430}
     >

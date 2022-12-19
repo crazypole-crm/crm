@@ -51,6 +51,16 @@ const [hallCapacityErrorAtom, setHallCapacityError] = declareAtomWithSetter('edi
     on(open, () => false)
 ])
 
+const submitButtonLoadingAtom = declareAtom('editHall.submitButtonLoading', false, on => [
+    on(createHall, () => true),
+    on(createHall.done, () => false),
+    on(createHall.fail, () => false),
+    on(saveHall, () => true),
+    on(saveHall.done, () => false),
+    on(saveHall.fail, () => false),
+    on(close, () => false),
+])
+
 const submit = declareAction('editHall.submit',
     (_, store) => {
         const popupMode = store.getState(popupModeAtom)
@@ -91,7 +101,8 @@ const editHallPopupAtom = combine({
     hallName: hallNameAtom,
     hallCapacity: hallCapacityAtom,
     hallNameError: hallNameErrorAtom,
-    hallCapacityError: hallCapacityErrorAtom
+    hallCapacityError: hallCapacityErrorAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const editHallPopupActions = {

@@ -59,6 +59,7 @@ function Content() {
 function EditHallPopup() {                                                                                                                                                                                                                                                                                                                                                                                          
     const editHallPopupOpened = useAtomWithSelector(editHallPopupAtom, x => x.opened)
     const editHallPopupMode = useAtomWithSelector(editHallPopupAtom, x => x.popupMode)
+    const submitButtonLoading = useAtomWithSelector(editHallPopupAtom, x => x.submitButtonLoading)
     const handleCloseEditHallPopup = useAction(editHallPopupActions.close)
     const handleSubmitHall = useAction(editHallPopupActions.submit)
 
@@ -68,7 +69,11 @@ function EditHallPopup() {
         centered
         okText={'Сохранить'}
         cancelText={'Отмена'}
-        onOk={handleSubmitHall}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleSubmitHall,
+        }}
         onCancel={handleCloseEditHallPopup}
         width={427}
     >

@@ -13,6 +13,7 @@ function TrainingActionPopup() {
     const calendarTrainingActionPopupOpened = useAtomWithSelector(trainingActionPopupAtom, x => x.opened)
     const trainingData = useAtomWithSelector(trainingActionPopupAtom, x => x.trainingData)
     const mode = useAtomWithSelector(trainingActionPopupAtom, x => x.mode)
+    const submitButtonLoading = useAtomWithSelector(trainingActionPopupAtom, x => x.submitButtonLoading)
     const handleCloseTrainingActionPopup = useAction(trainingActionPopupActions.close)
     const handleSubmitTrainingAction = useAction(trainingActionPopupActions.submit)
 
@@ -35,7 +36,11 @@ function TrainingActionPopup() {
         okText={okButtonText}
         cancelText={'Отмена'}
         onCancel={handleCloseTrainingActionPopup}
-        onOk={handleSubmitTrainingAction}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleSubmitTrainingAction,
+        }}
     >
         <TrainingInfo trainingData={trainingData}/>
     </Modal>
