@@ -10,7 +10,6 @@ import {HttpStatus} from "../../../../core/http/HttpStatus";
 
 type CreateTrainingPayload = Omit<TrainingData, 'id' | 'baseId' | 'isCanceled' | 'availableRegistrationsCount'> & {
     isRepeatable: boolean,
-    maxRegistrationsCount: number,
 }
 
 const createTraining = declareAsyncAction<CreateTrainingPayload>(

@@ -6,9 +6,7 @@ import {lastLoadedPeriodAtom, loadTrainingsForPeriod} from "./loadTrainingsForPe
 import {Toasts} from "../../../../common/notification/notifications";
 import {verify} from "../../../../core/verify";
 
-type SaveTrainingPayload = Omit<TrainingData, 'isCanceled' | 'availableRegistrationsCount'> & {
-    maxRegistrationsCount: number,
-}
+type SaveTrainingPayload = Omit<TrainingData, 'isCanceled' | 'availableRegistrationsCount'>
 
 const saveTraining = declareAsyncAction<SaveTrainingPayload>(
     'saveTraining',

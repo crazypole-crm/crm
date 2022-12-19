@@ -13,8 +13,8 @@ type Api_TrainingData = {
     courseId: string,
     type: 'group' | 'individual',
     isCanceled: boolean,
-    availableRegistrationsCount: number,
-    maxRegistrationsCount: number,
+    availableRegistrationsCount?: number,
+    maxRegistrationsCount?: number,
 }
 
 function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_TrainingData[]> {
@@ -44,7 +44,6 @@ function getTrainingsForPeriod(startDate: Date, endDate: Date): Promise<Api_Trai
 
 type Api_CreateTrainingData = Omit<Api_TrainingData, 'trainingId' | 'baseTrainingId' | 'isCanceled' | 'availableRegistrationsCount'> & {
     isRepeatable: boolean,
-    maxRegistrationsCount: number
 }
 
 function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
@@ -80,9 +79,7 @@ function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
         })
 }
 
-type Api_EditTraining = Omit<Api_TrainingData, 'isCanceled' | 'availableRegistrationsCount'> & {
-    maxRegistrationsCount: number,
-}
+type Api_EditTraining = Omit<Api_TrainingData, 'isCanceled' | 'availableRegistrationsCount'>
 
 function editTraining(trainingData: Api_EditTraining): Promise<void> {
     return fetch('/edit/training', {

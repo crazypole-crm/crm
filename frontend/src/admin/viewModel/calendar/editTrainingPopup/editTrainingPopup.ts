@@ -106,8 +106,12 @@ const [trainingTrainerErrorAtom, setTrainingTrainerError] = declareAtomWithSette
     on(setTrainingTrainer, () => false)
 ])
 
+function convertCapacity(maxRegistrationsCount?: number) {
+    return maxRegistrationsCount || null
+}
+
 const [trainingCapacityAtom, setTrainingCapacity] = declareAtomWithSetter<number|null>('editTraining.trainingCapacity', null, on => [
-    on(open, (_, value) => value.mode === 'edit' ? value.trainingData.maxRegistrationsCount : null)
+    on(open, (_, value) => value.mode === 'edit' ? convertCapacity(value.trainingData.maxRegistrationsCount) : null)
 ])
 
 const [trainingCapacityErrorAtom, setTrainingCapacityError] = declareAtomWithSetter('editTraining.trainingCapacityError', false, on => [
@@ -153,45 +157,49 @@ const submit = declareAction('editTraining.submit',
         const trainingHallError = !trainingHall
         const trainingDirectionError = !trainingDirection
         const trainingTrainerError = !trainingTrainer
-        const trainingCapacityError = !trainingCapacity
+        const trainingCapacityError = type === 'grouped' && !trainingCapacity
 
         store.dispatch(setTrainingHallError(trainingHallError))
         store.dispatch(setTrainingDirectionError(trainingDirectionError))
         store.dispatch(setTrainingTrainerError(trainingTrainerError))
         store.dispatch(setTrainingCapacityError(trainingCapacityError))
 
-        if (trainingTrainerError || trainingHallError || trainingTrainerError || trainingCapacityError) {
+        if (trainingDirectionError || trainingHallError || trainingTrainerError || trainingCapacityError) {
             return
         }
 
         if (mode === 'create') {
             store.dispatch(createTraining({
-                type: type,
+                type,
                 date: trainingDate,
-                directionId: verify(trainingDirection),
-                hallId: verify(trainingHall),
-                trainerId: verify(trainingTrainer),
+                directionId: trainingDirection,
+                hallId: trainingHall,
+                trainerId: trainingTrainer,
                 timeStart: trainingStartTime,
                 timeEnd: trainingEndTime,
                 description: trainingDescription || undefined,
                 isRepeatable: repeatable,
-                maxRegistrationsCount: trainingCapacity,
+                maxRegistrationsCount: type === 'grouped'
+                    ? verify(trainingCapacity)
+                    : undefined,
             }))
         }
 
-        if (mode === 'edit') {
+        if (mode === 'edit' && trainingId) {
             store.dispatch(saveTraining({
                 type: type,
                 date: trainingDate,
-                directionId: verify(trainingDirection),
-                hallId: verify(trainingHall),
-                trainerId: verify(trainingTrainer),
+                directionId: trainingDirection,
+                hallId: trainingHall,
+                trainerId: trainingTrainer,
                 timeStart: trainingStartTime,
                 timeEnd: trainingEndTime,
                 description: trainingDescription || undefined,
-                id: verify(trainingId),
+                id: trainingId,
                 baseId: verify(baseId),
-                maxRegistrationsCount: trainingCapacity,
+                maxRegistrationsCount: type === 'grouped'
+                    ? verify(trainingCapacity)
+                    : undefined,
             }))
         }
     }

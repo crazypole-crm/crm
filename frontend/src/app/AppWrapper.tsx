@@ -11,12 +11,12 @@ import {calendarPageOpened} from "../admin/viewModel/calendar/calendaActions/loa
 const AppWrapper = withRouter(({history}) => {
     const isLoadingApp = useAtom(isLoadingAppAtom)
     const handleInitUserData = useAction(initUserDataAction)
-    const handleSetLastLoadedPeriod = useAction(calendarPageOpened)
+    const handleCalendarPageLoaded = useAction(calendarPageOpened)
 
     useLayoutEffect(() => {
         initRouterHistory(history)
-        setOnCalendarPageOpened(handleSetLastLoadedPeriod)
-    }, [history, handleSetLastLoadedPeriod])
+        setOnCalendarPageOpened(handleCalendarPageLoaded)
+    }, [history, handleCalendarPageLoaded])
 
     useEffect(() => {
       handleInitUserData()

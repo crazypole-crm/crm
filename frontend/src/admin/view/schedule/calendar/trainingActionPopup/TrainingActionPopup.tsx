@@ -23,8 +23,8 @@ function TrainingActionPopup() {
     })
 
     const okButtonText = getValueByCheckedKey(mode, {
-        'delete': 'Удалить',
-        'cancel': 'Отменить',
+        'delete': 'Удалить занятие',
+        'cancel': 'Отменить занятие',
         'record': 'Записаться на занятие',
     })
 
