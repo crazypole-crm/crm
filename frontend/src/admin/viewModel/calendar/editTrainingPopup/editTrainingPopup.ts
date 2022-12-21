@@ -219,7 +219,7 @@ const submit = declareAction('editTraining.submit',
                 timeStart: trainingStartTime,
                 timeEnd: trainingEndTime,
                 maxRegistrationsCount: type === 'grouped'
-                    ? trainingCapacity
+                    ? verify(trainingCapacity)
                     : undefined,
                 description: trainingDescription || undefined,
             })) {

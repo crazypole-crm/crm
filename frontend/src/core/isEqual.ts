@@ -1,4 +1,4 @@
-function isEqual(prevData: any, currData: any): boolean {
+function isEqual<T>(prevData: T, currData: T): boolean {
     return JSON.stringify(prevData) === JSON.stringify(currData)
 }
 
