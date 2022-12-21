@@ -9,7 +9,6 @@ import {loadAllUsersData, usersLoadingAtom} from "../../viewModel/users/loadUser
 
 function UsersLayout() {
     const [visibleCollumns, setVisibleCollumns] = useState<VisibleCollumsData>(getVisibleCollumnsFromLocalStorage())
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
     const users = useAtom(usersAtom)
     const usersLoading = useAtom(usersLoadingAtom)
 
@@ -31,14 +30,11 @@ function UsersLayout() {
     return (
         <div className={styles.layout}>
             <UsersTableCommandPanel
-                selectedRowKeys={selectedRowKeys}
                 visibleCollumns={visibleCollumns}
                 setVisibleCollumns={changeCollumnVisiblility}
             />
             <UsersTable
                 usersData={usersLoading ? null : Object.values(users)}
-                selectedRowKeys={selectedRowKeys}
-                setSelectedRowKeys={setSelectedRowKeys}
                 visibleCollumns={visibleCollumns}
             />
         </div>

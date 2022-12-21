@@ -12,6 +12,8 @@ import {
 } from "../../LayoutBlocksSize";
 import {CollumnIdType, COLLUMNS, TableUserNameType, VisibleCollumsData} from "./CollumnsData";
 import {UserData, UserRole} from "../../../viewModel/users/UserData";
+import { useAction, useAtom } from "@reatom/react";
+import { selectedUsersRowKeysAtom, setSelectedUsersRowKeys } from "../../../viewModel/users/selectedUsersRows";
 
 
 interface DataType {
@@ -53,15 +55,11 @@ function calcTableSize(windowHeight: number) {
 
 type UsersTableProps = {
     usersData: UserData[] | null,
-    selectedRowKeys: React.Key[],
-    setSelectedRowKeys: (value: React.Key[]) => void,
     visibleCollumns: VisibleCollumsData,
 }
 
 function UsersTable({
     usersData,
-    selectedRowKeys,
-    setSelectedRowKeys,
     visibleCollumns,
 }: UsersTableProps) {
     const windowRef = useRef(document.body)
@@ -89,22 +87,25 @@ function UsersTable({
 
     const tableHeight = useMemo(() => calcTableSize(windowHeight), [windowHeight])
 
+    const selectedUsersRowKeys = useAtom(selectedUsersRowKeysAtom)
+    const handleSetSelectedUsersRowKeys= useAction(setSelectedUsersRowKeys)
+
     const onRowClick = (record: DataType) => {
         return {
             onClick: () => {
-                if (selectedRowKeys.includes(record.key)) {
-                    setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.key))
+                if (selectedUsersRowKeys.includes(record.key)) {
+                    handleSetSelectedUsersRowKeys(selectedUsersRowKeys.filter(key => key !== record.key))
                 }
                 else {
-                    setSelectedRowKeys([...selectedRowKeys, record.key])
+                    handleSetSelectedUsersRowKeys([...selectedUsersRowKeys, record.key])
                 }
             }
         }
     }
 
     const rowSelection: TableRowSelection<DataType> = {
-        selectedRowKeys,
-        onChange: setSelectedRowKeys,
+        selectedRowKeys: selectedUsersRowKeys,
+        onChange: handleSetSelectedUsersRowKeys,
         selections: [
             Table.SELECTION_ALL,
             Table.SELECTION_INVERT,

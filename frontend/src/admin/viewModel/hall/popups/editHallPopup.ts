@@ -1,4 +1,5 @@
 import { combine, declareAction, declareAtom } from "@reatom/core"
+import { isEqual } from "../../../../core/isEqual"
 import { declareAtomWithSetter } from "../../../../core/reatom/declareAtomWithSetter"
 import { verify } from "../../../../core/verify"
 import { createHall } from "../createHall"
@@ -27,6 +28,17 @@ const [openedAtom, setOpened] = declareAtomWithSetter('editHall.opened', false, 
 
 const popupModeAtom = declareAtom<ModeType>('editHall.popupMode', 'edit', on => [
     on(open, (_, value) => value.mode)
+])
+
+function remapHallDataToPrevHallData(hallData: HallData) {
+    return {
+        name: hallData.name,
+        capacity: hallData.capacity,
+    }
+}
+
+const prevHallDataAtom = declareAtom<Omit<HallData, 'id'>|null>('editHall.prevHallData', null, on => [
+    on(open, (_, value) => (value.mode === 'edit' ? remapHallDataToPrevHallData(value.hallData) : null) || null)
 ])
 
 const hallIdAtom = declareAtom<string|null>('editHall.hallId', null, on => [
@@ -79,6 +91,15 @@ const submit = declareAction('editHall.submit',
         }
 
         if (popupMode === 'edit') {
+            const prevHallData =  store.getState(prevHallDataAtom)
+            if (isEqual(prevHallData, {
+                name: hallName,
+                capacity: +hallCapacity,
+            })) {
+                store.dispatch(close())
+                return
+            }
+            
             store.dispatch(saveHall({
                 id: verify(hallId),
                 name: hallName,
@@ -97,6 +118,7 @@ const submit = declareAction('editHall.submit',
 const editHallPopupAtom = combine({
     opened: openedAtom,
     popupMode: popupModeAtom,
+    prevHallData: prevHallDataAtom,
     hallId: hallIdAtom,
     hallName: hallNameAtom,
     hallCapacity: hallCapacityAtom,

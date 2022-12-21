@@ -1,6 +1,6 @@
 import {DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, SettingOutlined} from '@ant-design/icons'
 import {Button, Popover} from 'antd'
-import {useMemo, useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {SelectList, SelectListItemData} from '../../../../common/selectList/SelectList'
 import {optionalArray} from '../../../../core/array/array'
 import {COLLUMN_TO_TITLE_MAP, COLLUMS_IDS, DISABLED_COLLUMNS} from './userTableDataConsts'
@@ -15,6 +15,7 @@ import {authorizedCurrentUser} from "../../../../currentUser/currentUser";
 import {viewUserPopupActions} from "../../../viewModel/users/viewUserPopup/viewUserPopup";
 import {checkNever} from "../../../../core/checkNever";
 import {submitDeleteUsersPopupActions} from '../../../viewModel/users/submitDeleteUserPopup/submitDeleteUsersPopup'
+import { selectedUsersRowKeysAtom } from '../../../viewModel/users/selectedUsersRows'
 
 type UsersActionsButtonType = 'delete' | 'edit' | 'add' | 'view'
 
@@ -67,13 +68,11 @@ function CollumnsFilter({
 
 
 type UsersActionsButtonProps = {
-    selectedRowKeys: React.Key[],
     visibleCollumns: VisibleCollumsData,
     setVisibleCollumns: (id: CollumnIdType, checked: boolean) => void,
 }
 
 function UsersTableCommandPanel({
-    selectedRowKeys,
     setVisibleCollumns,
     visibleCollumns,
 }: UsersActionsButtonProps) {
@@ -84,21 +83,23 @@ function UsersTableCommandPanel({
     const handleOpenViewUserPopup = useAction(viewUserPopupActions.open)
     const handleOpenSubmitDeleteUserPopup = useAction(submitDeleteUsersPopupActions.open)
 
+    const selectedUsersRowKeys = useAtom(selectedUsersRowKeysAtom)
+
     const handleOnEditClick = () => {
         handleOpenEditUserPopup({
-            userData: users[selectedRowKeys[0]],
+            userData: users[(selectedUsersRowKeys as string[])[0]],
             mode: 'edit',
         })
     }
 
     const handleOnViewClick = () => {
         handleOpenViewUserPopup({
-            ...users[selectedRowKeys[0]]
+            ...users[(selectedUsersRowKeys as string[])[0]]
         })
     }
 
     const handleOnDeleteClick = () => {
-        handleOpenSubmitDeleteUserPopup(selectedRowKeys as string[])
+        handleOpenSubmitDeleteUserPopup(selectedUsersRowKeys as string[])
     }
 
     const handleOnAddClick = () => {
@@ -110,14 +111,14 @@ function UsersTableCommandPanel({
     const buttons: UsersActionsButtonType[] = useMemo(() => {
         const isAdmin = currentUser.role === 'admin'
         const isTrainer = currentUser.role === 'trainer'
-        const isOneSelectedCurrentUsers = selectedRowKeys.length === 1 && selectedRowKeys[0] === currentUser.id
+        const isOneSelectedCurrentUsers = selectedUsersRowKeys.length === 1 && selectedUsersRowKeys[0] === currentUser.id
         return optionalArray([
-            (isAdmin && !selectedRowKeys.length) && 'add',
-            (isAdmin && selectedRowKeys.length === 1) && 'edit',
-            (isAdmin && !!selectedRowKeys.length && !isOneSelectedCurrentUsers) && 'delete',
-            ((isAdmin || isTrainer) && selectedRowKeys.length === 1) && 'view',
+            (isAdmin && !selectedUsersRowKeys.length) && 'add',
+            (isAdmin && selectedUsersRowKeys.length === 1) && 'edit',
+            (isAdmin && !!selectedUsersRowKeys.length && !isOneSelectedCurrentUsers) && 'delete',
+            ((isAdmin || isTrainer) && selectedUsersRowKeys.length === 1) && 'view',
         ])
-    }, [selectedRowKeys, currentUser.role, currentUser.id])
+    }, [selectedUsersRowKeys, currentUser.role, currentUser.id])
 
     return (
         <div className={styles.commandPanel}>

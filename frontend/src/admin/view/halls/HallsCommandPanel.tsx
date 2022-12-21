@@ -14,10 +14,6 @@ import { deleteHallsPopupActions } from "../../viewModel/hall/popups/deleteHalls
 
 type HallsActionsButtonType = 'delete' | 'edit' | 'add' 
 
-function remapKeyListToStringList(list: React.Key[]): string[] {
-    return list.map((key) => key.toString())
-}
-
 function HallsTableCommandPanel() {
     const currentUser = useAtom(authorizedCurrentUser)
     const halls = useAtom(hallsAtom)
@@ -40,7 +36,7 @@ function HallsTableCommandPanel() {
     }
 
     const handleOnDeleteClick = () => {
-        handleOpenDeleteHallPopup(remapKeyListToStringList(selectedHallsRowKeys))
+        handleOpenDeleteHallPopup(selectedHallsRowKeys as string[])
     }
 
     const buttons: HallsActionsButtonType[] = useMemo(() => {

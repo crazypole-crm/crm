@@ -6,6 +6,7 @@ import {authorizedCurrentUser} from "../../../currentUser/currentUser";
 import {setCurrentUserInfo} from "../../../currentUser/actions/setCurrentUserInfo";
 import {createUser} from "../users/createUser";
 import {verify} from "../../../core/verify";
+import { isEqual } from "../../../core/isEqual";
 
 type ModeType = 'create' | 'edit'
 
@@ -40,6 +41,22 @@ const popupModeAtom = declareAtom<ModeType>('editUser.popupMode', 'edit', on => 
     on(open, (_, value) => value.mode)
 ])
 
+function remapUserDataToPrevUserData(userData: UserData) {
+    return {
+        email: userData.email,
+        role: userData.role,
+        phone: userData.phone || undefined,
+        firstName: userData.firstName || undefined,
+        lastName: userData.lastName || undefined,
+        middleName: userData.middleName || undefined,
+        birthDay: userData.birthDay || undefined,
+    }
+}
+
+const prevUserDataAtom = declareAtom<Omit<UserData, 'id'>|null>('editUser.prevUserData', null, on => [
+    on(open, (_, value) => (value.mode === 'edit' ? remapUserDataToPrevUserData(value.userData) : null) || null)
+])
+
 const userIdAtom = declareAtom<string|null>('editUser.userId', null, on => [
     on(open, (_, value) => value.mode === 'edit' ? value.userData.id : null)
 ])
@@ -69,7 +86,7 @@ const [userEmailAtom, setUserEmail] = declareAtomWithSetter<string|null>('editUs
 ])
 
 const [userRoleAtom, setUserRole] = declareAtomWithSetter<UserRole>('editUser.userRole', 'client', on => [
-    on(open, (_, value) => value.mode === 'edit' ? value.userData.role : 'client')
+    on(open, (_, value) => value.mode === 'edit' ? value.userData.role : _)
 ])
 
 const [userPhoneErrorAtom, setUserPhoneError] = declareAtomWithSetter('editUser.userPhoneError', '', on => [
@@ -82,9 +99,13 @@ const [userEmailErrorAtom, setUserEmailError] = declareAtomWithSetter('editUser.
     on(close, () => '')
 ])
 
-const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string>('editUser.userNewPassword', '')
+const [userNewPasswordAtom, setUserNewPassword] = declareAtomWithSetter<string>('editUser.userNewPassword', '', on => [
+    on(open, () => '')
+])
 
-const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<string>('editUser.userPasswordCheck', '')
+const [userPasswordCheckAtom, setUserPasswordCheck] = declareAtomWithSetter<string>('editUser.userPasswordCheck', '', on => [
+    on(open, () => '')
+])
 
 const [userNewPasswordErrorAtom, setUserNewPasswordError] = declareAtomWithSetter('editUser.userNewPasswordError', '', on => [
     on(setUserNewPassword, () => ''),
@@ -155,6 +176,20 @@ const submit = declareAction('editUser.submit',
         }
 
         if (popupMode === 'edit') {
+            const prevUserData =  store.getState(prevUserDataAtom)
+            if (isEqual(prevUserData, {
+                email: userEmail,
+                role: userRole,
+                phone: userPhone || undefined,
+                firstName: userFirstName || undefined,
+                lastName: userLastName || undefined,
+                middleName: userMiddleName || undefined,
+                birthDay: userBirthDay || undefined,
+            })) {
+                store.dispatch(close())
+                return
+            }
+            
             if (currentUserId === userId) {
                 store.dispatch(setCurrentUserInfo({
                     id: userId,
@@ -207,6 +242,7 @@ const submit = declareAction('editUser.submit',
 const editUserPopupAtom = combine({
     opened: openedAtom,
     popupMode: popupModeAtom,
+    prevUserData: prevUserDataAtom,
     userId: userIdAtom,
     userLastName: userLastNameAtom,
     userFirstName: userFirstNameAtom,

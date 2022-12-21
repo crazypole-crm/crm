@@ -14,10 +14,6 @@ import { selectedDirectionsRowKeysAtom } from "../../viewModel/direction/popups/
 
 type DirectionsActionsButtonType = 'delete' | 'edit' | 'add' 
 
-function remapKeyListToStringList(list: React.Key[]): string[] {
-    return list.map((key) => key.toString())
-}
-
 function DirectionsTableCommandPanel() {
     const currentUser = useAtom(authorizedCurrentUser)
     const directions = useAtom(directionsAtom)
@@ -40,7 +36,7 @@ function DirectionsTableCommandPanel() {
     }
 
     const handleOnDeleteClick = () => {
-        handleOpenDeleteDirectionPopup(remapKeyListToStringList(selectedDirectionsRowKeys))
+        handleOpenDeleteDirectionPopup(selectedDirectionsRowKeys as string[])
     }
 
     const buttons: DirectionsActionsButtonType[] = useMemo(() => {

@@ -5,6 +5,7 @@ import {Time} from "../time";
 import {createTraining} from "../calendaActions/createTraining";
 import {verify} from "../../../../core/verify";
 import {saveTraining} from "../calendaActions/saveTraining";
+import { isEqual } from "../../../../core/isEqual";
 
 type EditTrainingPopupMode = 'edit' | 'create'
 
@@ -29,6 +30,28 @@ const [openedAtom] = declareAtomWithSetter('editTraining', false, on => [
 
 const modeAtom = declareAtom<EditTrainingPopupMode>('editTraining.mode', 'create', on => [
     on(open, (_, {mode}) => mode)
+])
+
+type PrevTrainingData =  Omit<TrainingData, 'id' | 'baseId' | 'availableRegistrationsCount' | 'isCanceled'>
+
+function remapTrainingDataToPrevTrainingData(trainingData: TrainingData): PrevTrainingData {
+    return {
+        type: trainingData.type,
+        directionId: trainingData.directionId,
+        trainerId: trainingData.trainerId,
+        hallId: trainingData.hallId,
+        date: trainingData.date,
+        timeStart: trainingData.timeStart,
+        timeEnd: trainingData.timeEnd,
+        maxRegistrationsCount: trainingData.type === 'grouped'
+            ? trainingData.maxRegistrationsCount
+            : undefined,
+        description: trainingData.description || undefined,
+    }
+}
+
+const prevTrainingDataAtom = declareAtom<PrevTrainingData|null>('editTraining.prevTrainingData', null, on => [
+    on(open, (_, value) => (value.mode === 'edit' ? remapTrainingDataToPrevTrainingData(value.trainingData) : null) || null)
 ])
 
 const [typeAtom, setType] = declareAtomWithSetter<TrainingType>('editTraining.type', 'grouped', on => [
@@ -186,6 +209,24 @@ const submit = declareAction('editTraining.submit',
         }
 
         if (mode === 'edit' && trainingId) {
+            const prevTrainingData =  store.getState(prevTrainingDataAtom)
+            if (isEqual(prevTrainingData, {
+                type: type,
+                directionId: trainingDirection,
+                trainerId: trainingTrainer,
+                hallId: trainingHall,
+                date: trainingDate,
+                timeStart: trainingStartTime,
+                timeEnd: trainingEndTime,
+                maxRegistrationsCount: type === 'grouped'
+                    ? trainingCapacity
+                    : undefined,
+                description: trainingDescription || undefined,
+            })) {
+                store.dispatch(close())
+                return
+            }
+            
             store.dispatch(saveTraining({
                 type: type,
                 date: trainingDate,
@@ -208,6 +249,7 @@ const submit = declareAction('editTraining.submit',
 const editTrainingPopupAtom = combine({
     opened: openedAtom,
     mode: modeAtom,
+    prevTrainingData: prevTrainingDataAtom,
     trainingDate: trainingDateAtom,
     trainingStartTime: trainingStartTimeAtom,
     trainingEndTime: trainingEndTimeAtom,

@@ -1,4 +1,5 @@
 import { combine, declareAction, declareAtom } from "@reatom/core"
+import { isEqual } from "../../../../core/isEqual"
 import { declareAtomWithSetter } from "../../../../core/reatom/declareAtomWithSetter"
 import { verify } from "../../../../core/verify"
 import { createDirection } from "../createDirection"
@@ -27,6 +28,17 @@ const [openedAtom, setOpened] = declareAtomWithSetter('editDirection.opened', fa
 
 const popupModeAtom = declareAtom<ModeType>('editDirection.popupMode', 'edit', on => [
     on(open, (_, value) => value.mode)
+])
+
+function remapDirectionlDataToPrevDirectionData(directionData: DirectionData) {
+    return {
+        name: directionData.name,
+        description: directionData.description,
+    }
+}
+
+const prevDirectionDataAtom = declareAtom<Omit<DirectionData, 'id'>|null>('editDirection.prevDirectionName', null, on => [
+    on(open, (_, value) => (value.mode === 'edit' ? remapDirectionlDataToPrevDirectionData(value.directionData) : null) || null)
 ])
 
 const directionIdAtom = declareAtom<string|null>('editDirection.directionId', null, on => [
@@ -69,7 +81,7 @@ const submit = declareAction('editDirection.submit',
         const directionDescription = store.getState(directionDescriptionAtom)
 
         const directionNameError = !directionName
-        const  directionDescriptionError = !directionDescription
+        const directionDescriptionError = !directionDescription
 
         store.dispatch(setDirectionNameError(directionNameError))
         store.dispatch(setDirectionDescriptionError(directionDescriptionError))
@@ -78,6 +90,15 @@ const submit = declareAction('editDirection.submit',
         }
 
         if (popupMode === 'edit') {
+            const prevDirectionData =  store.getState(prevDirectionDataAtom)
+            if (isEqual(prevDirectionData, {
+                name: directionName,
+                description: directionDescription,
+            })) {
+                store.dispatch(close())
+                return
+            }
+
             store.dispatch(updateDirection({
                 id: verify(directionId),
                 name: directionName,
@@ -96,6 +117,7 @@ const submit = declareAction('editDirection.submit',
 const editDirectionPopupAtom = combine({
     opened: openedAtom,
     popupMode: popupModeAtom,
+    prevDirectionData: prevDirectionDataAtom,
     directionId: directionIdAtom,
     directionName: directionNameAtom,
     directionNameError: directionNameErrorAtom,
