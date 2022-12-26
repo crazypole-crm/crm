@@ -77,39 +77,17 @@ const calendarSettingsAction = {
     setStepTime,
 }
 
-type DisabledTime = {
-    disabledHours:  number[],
-    disabledMinutes: number[],
-};
+const setErrorTimeInStepBlock = declareAction<boolean>('calendarSettings.setErrorTimeInStepBlock');
 
-const getDisbledTime = (hour: number, minute: number, minuteStep: number):DisabledTime => {
-    const times: DisabledTime = {disabledHours: [], disabledMinutes: []}
-    if(minute + minuteStep >= 60){
-        for(let i = 0; i <= hour;  i++){
-            times.disabledHours.push(i)
-        }
-    } else {
-        for(let i = 0; i < hour;  i++){
-            times.disabledHours.push(i)
-        }
-        for(let i = 0; i <= minute;  i += minuteStep){
-            times.disabledMinutes.push(i);
-        }
-    }
-    return times
-};
-
-const setDisabledTime = declareAction<{hour: number, minute: number}>('calendarSettings.setDisabledTime');
-
-const calendarSettingsDisabledTimeAtom = declareAtom<DisabledTime>({disabledHours: getDisbledTime(getDefaultDayStartTime().hour, 0, 15).disabledHours, disabledMinutes:[]}, on => [
-    on(setDisabledTime, (state, {hour, minute}) => {
-        return getDisbledTime(hour, minute, 15);
+const errorTimeInStepBlockAtom = declareAtom<boolean>(false, on => [
+    on(setErrorTimeInStepBlock, (state, newState) => {
+        return newState;
     })
 ]);
 
 export {
     calendarSettingsAction,
     calendarSettingsAtom,
-    calendarSettingsDisabledTimeAtom,
-    setDisabledTime,
+    errorTimeInStepBlockAtom,
+    setErrorTimeInStepBlock,
 }

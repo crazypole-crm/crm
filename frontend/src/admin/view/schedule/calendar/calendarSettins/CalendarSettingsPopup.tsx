@@ -1,7 +1,7 @@
 import {useAtomWithSelector} from "../../../../../core/reatom/useAtomWithSelector";
 import {useAction, useAtom} from "@reatom/react";
 import {Modal, TimePicker} from "antd";
-import React, {useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import {
     calendarSettingsPopupActions,
     calendarSettingsPopupAtom
@@ -10,7 +10,7 @@ import moment, {Moment} from "moment/moment";
 import {FieldBlock} from "../common/FieldBlock";
 import styles from './CalendarSettingsPopup.module.css'
 import {Time} from "../../../../viewModel/calendar/time";
-import {setDisabledTime, calendarSettingsDisabledTimeAtom } from "../../../../viewModel/calendar/calendartSettings/calendarSettings";
+import {setErrorTimeInStepBlock, errorTimeInStepBlockAtom } from "../../../../viewModel/calendar/calendartSettings/calendarSettings";
 
 function TimeStepBlock() {
     const timeStep = useAtomWithSelector(calendarSettingsPopupAtom, x => x.stepTime)
@@ -55,11 +55,10 @@ function TimeStepBlock() {
 function PeriodTimeBlock() {
     const dayStartTime = useAtomWithSelector(calendarSettingsPopupAtom, x => x.dayStartTime)
     const dayEndTime = useAtomWithSelector(calendarSettingsPopupAtom, x => x.dayEndTime)
+    const timeError = useAtom(errorTimeInStepBlockAtom);
     const handleSetDayStartTime = useAction(calendarSettingsPopupActions.setDayStartTime)
-    const handleSetDayEndTime = useAction(calendarSettingsPopupActions.setDayEndTime)
-    const disabledTime = useAtom(calendarSettingsDisabledTimeAtom);
-    const addDisabledTime = useAction(setDisabledTime);
-    const [disabledMinutes, setDisabledMinutes] = useState<number[]>([])
+    const handleSetDayEndTime = useAction(calendarSettingsPopupActions.setDayEndTime)   
+    const setTimeError = useAction(setErrorTimeInStepBlock);
 
     const momentStartTime = useMemo(() => moment({
         hour: dayStartTime.hour,
@@ -71,77 +70,52 @@ function PeriodTimeBlock() {
         minute: dayEndTime.minutes,
     }), [dayEndTime])
 
-    const onChange = (value: Moment | null, setter: (value: Time) => void) => {
+    const onChange = (value: Moment | null, setter: (value: Time) => void, isEndTime: boolean) => {
         if (value) {
-            const date = value.toDate()
+            setTimeError(false);
+            const date = value.toDate();
+            checkTimeError(value, isEndTime);
             setter({
                 hour: date.getHours(),
                 minutes: date.getMinutes(),
-            })
+            })    
         }
     }
-    const onChangeForDisabledTime = (value: Moment | null) => {
+    const checkTimeError = (value: Moment | null, isEndTime: boolean) => {
         if (value) {
             const date = value.toDate()
-            addDisabledTime({hour: date.getHours(), minute: date.getMinutes()});
-            if(date.getHours() > dayEndTime.hour){
-                handleSetDayEndTime({
-                    hour: date.getHours() + 1,
-                    minutes: 0,
-                });
-            } else if(date.getHours() == dayEndTime.hour){
-                if(date.getMinutes() >= dayEndTime.minutes){
-                    if(date.getMinutes() + 15 > 60){
-                        handleSetDayEndTime({
-                            hour: date.getHours() + 1,
-                            minutes: 0,
-                        });
-                    } else {
-                        handleSetDayEndTime({
-                            hour: date.getHours(),
-                            minutes: date.getMinutes() + 15,
-                        });
-                        setDisabledMinutes(disabledTime.disabledMinutes);
-                    }
-                } else {
-                    setDisabledMinutes(disabledTime.disabledMinutes)
-                }        
+            if(!isEndTime && date.getHours() > dayEndTime.hour || (date.getHours() === dayEndTime.hour && date.getMinutes() >= dayEndTime.minutes)){
+                setTimeError(true);
+            } else if(isEndTime && date.getHours() < dayStartTime.hour || (date.getHours() === dayStartTime.hour && date.getMinutes() <= dayStartTime.minutes)){
+                setTimeError(true);
             }
-        }
-    }
-
-    const getDisabledMinutes = (value: Moment | null) => {
-        if (value) {
-            const date = value.toDate()
-            if(disabledTime.disabledHours[disabledTime.disabledHours.length - 1] + 1 == date.getHours()){
-                setDisabledMinutes(disabledTime.disabledMinutes);
-            } else {
-                setDisabledMinutes([]);
-            }
-        } else {
-            setDisabledMinutes([]);
         }
     }
 
     return (
         <div className={styles.timePeriod}>
             <TimePicker
+                status={timeError?'error':''}
                 minuteStep={15}
                 value={momentStartTime}
                 format={'HH:mm'}
-                onSelect={value => {onChange(value, handleSetDayStartTime); onChangeForDisabledTime(value)}}
+                onSelect={value => {onChange(value, handleSetDayStartTime, false)}}
                 showNow={false}
+                allowClear={false}
             />
             -
             <TimePicker
+                status={timeError?'error':''}
                 minuteStep={15}
                 value={momentEndTime}
                 format={'HH:mm'}
-                onSelect={value => {onChange(value, handleSetDayEndTime); getDisabledMinutes(value)}}
+                onSelect={value => {onChange(value, handleSetDayEndTime, true)}}
                 showNow={false}
-                disabledHours={()=>disabledTime.disabledHours}
-                disabledMinutes={()=>disabledMinutes}
+                allowClear={false}
             />
+            <div className={styles.errorMessage}>
+                {timeError?'Неверный промежуток':''}
+            </div>
         </div>
     )
 }
@@ -153,7 +127,7 @@ function Content() {
                 title={'Временной шаг'}
                 content={<TimeStepBlock/>}
             />
-            <FieldBlock
+            <FieldBlock  
                 title={'Временная сетка'}
                 content={<PeriodTimeBlock/>}
             />
@@ -165,6 +139,7 @@ function CalendarSettingsPopup() {
     const calendarSettingsPopupOpened = useAtomWithSelector(calendarSettingsPopupAtom, x => x.opened)
     const handleCloseSettingsPopup = useAction(calendarSettingsPopupActions.close)
     const handleSubmit = useAction(calendarSettingsPopupActions.submit)
+    const timeError = useAtom(errorTimeInStepBlockAtom);
 
     return <Modal
         title={'Настройки календаря'}
@@ -174,6 +149,7 @@ function CalendarSettingsPopup() {
         cancelText={'Отмена'}
         onOk={handleSubmit}
         onCancel={handleCloseSettingsPopup}
+        okButtonProps={{ disabled: timeError}}
     >
         <Content/>
     </Modal>
