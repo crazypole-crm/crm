@@ -72,6 +72,7 @@ function CollapsedBlock({
 function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const location = useLocation()
+    console.log('location', location.pathname)
 
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
@@ -106,7 +107,7 @@ function Sidebar() {
                 onClick={onClick}
                 mode="inline"
                 items={items}
-                defaultSelectedKeys={[getDefaultSelectedSection(location.pathname)]}
+                selectedKeys={[getDefaultSelectedSection(location.pathname)]}
                 inlineCollapsed={collapsed}
                 className={styles.menu}
             />

@@ -7,6 +7,7 @@ import {TrainingData} from "../TrainingData";
 import {getValueByCheckedKey} from "../../../../core/getValueByCheckedKey";
 import {DatePeriod} from "../DatePeriod";
 import {Toasts} from "../../../../common/notification/notifications";
+import { calendarPageOpened } from "../../common/onPageOpened";
 
 type LoadTrainingsForPeriodPayload = {
     startDate: Date,
@@ -82,8 +83,6 @@ const loadTrainingsForPeriod = declareAsyncAction<LoadTrainingsForPeriodPayload,
             .catch(() => Toasts.error('При загрузке занятий произошла ошибка'))
     }
 )
-
-const calendarPageOpened = declareAction('calendarPageOpened')
 
 const lastLoadedPeriodAtom = declareAtom<DatePeriod | null>('lastLoadedPeriod', null, on => [
     on(loadTrainingsForPeriod.done, (_, value) => value),
