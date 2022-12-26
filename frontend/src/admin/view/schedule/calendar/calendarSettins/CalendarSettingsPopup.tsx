@@ -72,24 +72,27 @@ function PeriodTimeBlock() {
 
     const onChange = (value: Moment | null, setter: (value: Time) => void, isEndTime: boolean) => {
         if (value) {
-            setTimeError(false);
-            const date = value.toDate();
-            checkTimeError(value, isEndTime);
+            setTimeError(false)
+            const date = value.toDate()
+            checkTimeError(value, isEndTime)          
             setter({
                 hour: date.getHours(),
                 minutes: date.getMinutes(),
-            })    
+            })  
         }
     }
     const checkTimeError = (value: Moment | null, isEndTime: boolean) => {
         if (value) {
             const date = value.toDate()
-            if(!isEndTime && date.getHours() > dayEndTime.hour || (date.getHours() === dayEndTime.hour && date.getMinutes() >= dayEndTime.minutes)){
+            if(!isEndTime && (date.getHours() > dayEndTime.hour || (date.getHours() === dayEndTime.hour && date.getMinutes() >= dayEndTime.minutes))){
                 setTimeError(true);
-            } else if(isEndTime && date.getHours() < dayStartTime.hour || (date.getHours() === dayStartTime.hour && date.getMinutes() <= dayStartTime.minutes)){
+            } else if(isEndTime && (date.getHours() < dayStartTime.hour || (date.getHours() === dayStartTime.hour && date.getMinutes() <= dayStartTime.minutes))){
                 setTimeError(true);
+            } else {
+                setTimeError(false);
             }
         }
+        
     }
 
     return (
