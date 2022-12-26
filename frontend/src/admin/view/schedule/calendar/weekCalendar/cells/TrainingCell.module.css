@@ -31,6 +31,14 @@
     margin-top: 5px;
 }
 
+.cancelWarning {
+    color: #FF4D4F;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+}
+
 .cell:hover .plus {
     display: flex;
 }

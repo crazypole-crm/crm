@@ -186,7 +186,7 @@ function Content() {
             />
             <TrainingType />
             {type === 'grouped' && <FieldBlock
-                title={'Колличество мест'}
+                title={'Количество мест'}
                 content={<TrainingCapacity />}
                 error={trainingCapacityError}
             />}

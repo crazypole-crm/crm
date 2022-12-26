@@ -236,7 +236,9 @@ function TrainingCalendarCell({
                 onEdit()
                 break
             case "client":
-                onRecordTraining()
+                if (!trainingData.isCanceled) {
+                    onRecordTraining()
+                }
                 break
         }
     }
@@ -261,6 +263,7 @@ function TrainingCalendarCell({
             <div className={styles.trainerName}>
                 {getTrainerName(trainer.firstName, trainer.lastName)}
             </div>
+            {(trainingData.isCanceled) && <span className={styles.cancelWarning}>Отмена занятия</span>}
         </div>
 
     return (
