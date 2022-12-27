@@ -3,8 +3,9 @@ import { deleteTraining } from "../calendaActions/deleteTraining";
 import {TrainingData} from "../TrainingData";
 import {cancelTraining} from "../calendaActions/cancelTraining";
 import {signUpToTraining} from "../calendaActions/signUpToTraining";
+import { unsubscribeTraining } from "../../registrations/popups/unsubscribeTraining";
 
-type ModeType = 'record' | 'cancel' | 'delete'
+type ModeType = 'record' | 'cancel' | 'delete' | 'unsubscribe'
 
 type OpenPayload = TrainingData & {
     mode: ModeType,
@@ -22,6 +23,8 @@ const openedAtom = declareAtom('trainingActionPopup.opened', false, on => [
     on(signUpToTraining.fail, () => false),
     on(cancelTraining.done, () => false),
     on(cancelTraining.fail, () => false),
+    on(unsubscribeTraining.done, () => false),
+    on(unsubscribeTraining.fail, () => false),
 ])
 
 const modeAtom = declareAtom<ModeType>('trainingActionPopup.modeAtom', 'record', on => [
@@ -42,6 +45,9 @@ const submitButtonLoadingAtom = declareAtom('trainingActions.submitButtonLoading
     on(signUpToTraining, () => true),
     on(signUpToTraining.done, () => false),
     on(signUpToTraining.fail, () => false),
+    on(unsubscribeTraining, () => true),
+    on(unsubscribeTraining.done, () => false),
+    on(unsubscribeTraining.fail, () => false),
     on(close, () => false),
 ])
 
@@ -58,6 +64,9 @@ const submit = declareAction('trainingActionPopup.submit',
         }
         else if (mode === 'delete') {
             store.dispatch(deleteTraining(baseId))
+        }
+        else if (mode === 'unsubscribe') {
+            store.dispatch(unsubscribeTraining(id))
         }
     }
 )

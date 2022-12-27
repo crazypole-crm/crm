@@ -15,6 +15,7 @@ class CreateTrainingInput
         private string $trainerId,
         private int $type,
         private bool $isRepeatable,
+        private ?int $maxRegistrations
     ){}
 
     /**
@@ -87,5 +88,10 @@ class CreateTrainingInput
     public function isRepeatable(): bool
     {
         return $this->isRepeatable;
+    }
+
+    public function getMaxRegistrations(): ?int
+    {
+        return $this->maxRegistrations;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Training\App\Query;
 
 use App\Training\App\Data\CourseData;
 use App\Training\App\Data\HallData;
+use App\Training\App\Data\RegistrationData;
 use App\Training\App\Data\TrainingData;
 
 interface TrainingQueryServiceInterface
@@ -32,4 +33,18 @@ interface TrainingQueryServiceInterface
      * @return HallData[]
      */
     public function listHalls(): array;
+
+    /**
+     * @param string $trainingId
+     * @return RegistrationData[]
+     */
+    public function listRegistrationsByTrainingId(string $trainingId): array;
+
+    public function countTrainingRegistrations(string $trainingId): int;
+
+    /**
+     * @param string $userId
+     * @return RegistrationData[]
+     */
+    public function listRegistrationsByUserId(string $userId): array;
 }

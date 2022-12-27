@@ -28,6 +28,12 @@ const [dayEndTimeAtom, setDayEndTime] = declareAtomWithSetter<Time>('calendarSet
     on(open, (_, {dayEndTime}) => dayEndTime)
 ])
 
+const [periodTimeErrorAtom, setPeriodTimeError] = declareAtomWithSetter('calendarSettingsPopup.periodTimeError', false, on => [
+    on(close, () => false),
+    on(setDayStartTime, () => false),
+    on(setDayEndTime, () => false),
+])
+
 const [stepTimeAtom, setStepTime] = declareAtomWithSetter<Time>('calendarSettingsPopup.stepTime', DEFAULT_TIME, on => [
     on(open, (_, {stepTime}) => stepTime)
 ])
@@ -37,6 +43,17 @@ const submit = declareAction('calendarSettingsPopup.submit',
         const dayStartTime = store.getState(dayStartTimeAtom)
         const dayEndTime = store.getState(dayEndTimeAtom)
         const stepTime = store.getState(stepTimeAtom)
+
+        if (dayStartTime.hour > dayEndTime.hour
+            || (dayStartTime.hour === dayEndTime.hour && dayStartTime.minutes > dayEndTime.minutes)) {
+            store.dispatch(setPeriodTimeError(true))
+        }
+
+        const periodTimeError = store.getState(periodTimeErrorAtom)
+
+        if (periodTimeError) {
+            return
+        }
 
         store.dispatch(calendarSettingsAction.setDayStartTime(dayStartTime))
         store.dispatch(calendarSettingsAction.setDayEndTime(dayEndTime))
@@ -51,6 +68,7 @@ const calendarSettingsPopupAtom = combine({
     dayEndTime: dayEndTimeAtom,
     stepTime: stepTimeAtom,
     opened: openedAtom,
+    periodTimeError: periodTimeErrorAtom,
 })
 
 const calendarSettingsPopupActions = {
@@ -59,6 +77,7 @@ const calendarSettingsPopupActions = {
     setDayStartTime,
     setDayEndTime,
     setStepTime,
+    setPeriodTimeError,
     submit,
 }
 

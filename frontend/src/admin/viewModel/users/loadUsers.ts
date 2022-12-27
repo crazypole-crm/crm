@@ -46,9 +46,9 @@ const loadAbsentUsers = declareAsyncAction<Array<string>, Array<UserData>>('load
     }
 )
 
-const loadAllUsersData = declareAsyncAction<void, Array<UserData>>('loadAllUsers',
-    (_, store) => {
-        return UsersApi.getAllUsersData()
+const loadUsersImpl = declareAsyncAction<() => Promise<Array<Api_UsersData>>, Array<UserData>>('loadUsersImpl',
+    (loadFn, store) => {
+        return loadFn()
             .then(usersData => {
                 handleUsersData(store, usersData, users => store.dispatch(usersActions.setNewUsers(users)))
                 return Promise.resolve(usersData)
@@ -60,10 +60,25 @@ const loadAllUsersData = declareAsyncAction<void, Array<UserData>>('loadAllUsers
     }
 )
 
+const loadAllUsersData = declareAsyncAction<void, Array<UserData>>('loadAllUsers',
+    (_, store) => {
+        return dispatchAsyncAction(store, loadUsersImpl, UsersApi.getAllUsersData)
+    }
+)
+
+const loadAllTrainers = declareAsyncAction<void, Array<UserData>>('loadAllTrainers',
+    (_, store) => {
+        return dispatchAsyncAction(store, loadUsersImpl, UsersApi.getAllTrainers)
+    }
+)
+
 const [usersLoadingAtom] = declareAtomWithSetter('usersLoading', false, on => [
     on(loadUsers, () => true),
     on(loadUsers.done, () => false),
     on(loadUsers.fail, () => false),
+    on(loadAllTrainers, () => true),
+    on(loadAllTrainers.done, () => false),
+    on(loadAllTrainers.fail, () => false),
     on(loadAllUsersData, () => true),
     on(loadAllUsersData.done, () => false),
     on(loadAllUsersData.fail, () => false),
@@ -74,4 +89,5 @@ export {
     usersLoadingAtom,
     loadAbsentUsers,
     loadAllUsersData,
+    loadAllTrainers,
 }

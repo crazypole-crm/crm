@@ -54,6 +54,7 @@ function TimeStepBlock() {
 function PeriodTimeBlock() {
     const dayStartTime = useAtomWithSelector(calendarSettingsPopupAtom, x => x.dayStartTime)
     const dayEndTime = useAtomWithSelector(calendarSettingsPopupAtom, x => x.dayEndTime)
+    const periodTimeError = useAtomWithSelector(calendarSettingsPopupAtom, x => x.periodTimeError)
     const handleSetDayStartTime = useAction(calendarSettingsPopupActions.setDayStartTime)
     const handleSetDayEndTime = useAction(calendarSettingsPopupActions.setDayEndTime)
 
@@ -80,20 +81,29 @@ function PeriodTimeBlock() {
     return (
         <div className={styles.timePeriod}>
             <TimePicker
+                status={periodTimeError ? 'error' : ''}
                 minuteStep={15}
                 value={momentStartTime}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, handleSetDayStartTime)}
                 showNow={false}
+                allowClear={false}
             />
             -
             <TimePicker
+                status={periodTimeError ? 'error' : ''}
                 minuteStep={15}
                 value={momentEndTime}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, handleSetDayEndTime)}
                 showNow={false}
+                allowClear={false}
             />
+            {
+                periodTimeError && <div className={styles.errorMessage}>
+                    {'Неправильный период времени'}
+                </div>
+            }
         </div>
     )
 }

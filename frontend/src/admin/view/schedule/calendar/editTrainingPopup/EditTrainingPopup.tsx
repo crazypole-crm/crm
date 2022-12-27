@@ -132,6 +132,7 @@ function Content() {
     const trainingDirectionError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingDirectionError)
     const trainingHallError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingHallError)
     const trainingTrainerError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingTrainerError)
+    const trainingPeriodTimeError = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingPeriodTimeError)
     const trainingTrainer = useAtomWithSelector(editTrainingPopupAtom, x => x.trainingTrainer)
     const repeatable = useAtomWithSelector(editTrainingPopupAtom, x => x.repeatable)
     const type = useAtomWithSelector(editTrainingPopupAtom, x => x.type)
@@ -163,6 +164,7 @@ function Content() {
                     setTrainingStartTime={handleTrainingStartTime}
                     trainingEndTime={trainingEndTime}
                     trainingStartTime={trainingStartTime}
+                    periodError={trainingPeriodTimeError}
                 />}
             />
             <FieldBlock
@@ -186,7 +188,7 @@ function Content() {
             />
             <TrainingType />
             {type === 'grouped' && <FieldBlock
-                title={'Колличество мест'}
+                title={'Количество мест'}
                 content={<TrainingCapacity />}
                 error={trainingCapacityError}
             />}

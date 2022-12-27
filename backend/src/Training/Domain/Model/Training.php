@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Training\Domain\Model;
 
 use App\Common\Domain\Uuid;
+use App\Training\Domain\Exception\InvalidMaxRegistrationsException;
 
 class Training
 {
@@ -18,6 +19,7 @@ class Training
     private string $trainerId;
     private int $type;
     private bool $isCanceled = false;
+    private int $maxRegistrations;
 
     public function __construct(
         Uuid $baseTrainingId,
@@ -30,6 +32,7 @@ class Training
         Uuid $courseId,
         Uuid $trainerId,
         int $type,
+        ?int $maxRegistrations
     )
     {
         $this->baseId = (string)$baseTrainingId;
@@ -43,6 +46,19 @@ class Training
         $this->courseId = (string)$courseId;
         $this->trainerId = (string)$trainerId;
         $this->type = $type;
+        if ($type === TrainingType::INDIVIDUAL_TRAINING)
+        {
+            if ($maxRegistrations !== null)
+            {
+                throw new InvalidMaxRegistrationsException($maxRegistrations);
+            }
+
+            $this->maxRegistrations = 1;
+        }
+        else 
+        {
+            $this->maxRegistrations = $maxRegistrations;
+        }
     }
 
     public function getBaseId(): Uuid
@@ -153,6 +169,20 @@ class Training
     public function setIsCanceled(bool $isCanceled): void
     {
         $this->isCanceled = $isCanceled;
+    }
+
+    public function getMaxRegistrations(): int
+    {
+        return $this->maxRegistrations;
+    }
+
+    public function setMaxRegistrations(int $maxRegistrations): void
+    {
+        if ($this->type === TrainingType::INDIVIDUAL_TRAINING && $maxRegistrations !== 1)
+        {
+            throw new InvalidMaxRegistrationsException($maxRegistrations);
+        }
+        $this->maxRegistrations = $maxRegistrations;
     }
 
     private function assertEndDateValid(\DateTimeImmutable $endDate, \DateTimeImmutable $startDate): void

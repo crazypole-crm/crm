@@ -105,6 +105,11 @@ const [trainingEndTimeAtom, setTrainingEndTime] = declareAtomWithSetter<Time>('e
     })
 ])
 
+const [trainingPeriodTimeErrorAtom, setTrainingPeriodTimeError] = declareAtomWithSetter('editTraining.trainingPeriodTimeError', false, on => [
+    on(setTrainingEndTime, () => false),
+    on(setTrainingStartTime, () => false),
+])
+
 const [trainingDirectionAtom, setTrainingDirection] = declareAtomWithSetter<string|null>('editTraining.trainingDirection', null, on => [
     on(open, (_, value) => value.mode === 'edit' ? value.trainingData.directionId : null)
 ])
@@ -181,13 +186,16 @@ const submit = declareAction('editTraining.submit',
         const trainingDirectionError = !trainingDirection
         const trainingTrainerError = !trainingTrainer
         const trainingCapacityError = type === 'grouped' && !trainingCapacity
+        const trainingPeriodTimeError = trainingStartTime.hour > trainingEndTime.hour
+            || (trainingStartTime.hour === trainingEndTime.hour && trainingStartTime.minutes > trainingEndTime.minutes)
 
         store.dispatch(setTrainingHallError(trainingHallError))
         store.dispatch(setTrainingDirectionError(trainingDirectionError))
         store.dispatch(setTrainingTrainerError(trainingTrainerError))
         store.dispatch(setTrainingCapacityError(trainingCapacityError))
+        store.dispatch(setTrainingPeriodTimeError(trainingPeriodTimeError))
 
-        if (trainingDirectionError || trainingHallError || trainingTrainerError || trainingCapacityError) {
+        if (trainingDirectionError || trainingHallError || trainingTrainerError || trainingCapacityError || trainingPeriodTimeError) {
             return
         }
 
@@ -262,6 +270,7 @@ const editTrainingPopupAtom = combine({
     trainingCapacity: trainingCapacityAtom,
     trainingCapacityError: trainingCapacityErrorAtom,
     trainingDescription: trainingDescriptionAtom,
+    trainingPeriodTimeError: trainingPeriodTimeErrorAtom,
     type: typeAtom,
     repeatable: repeatableAtom,
     trainingId: trainingIdAtom,

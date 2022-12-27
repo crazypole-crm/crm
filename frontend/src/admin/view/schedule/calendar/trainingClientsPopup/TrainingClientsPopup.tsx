@@ -14,7 +14,6 @@ import {clientsAtom} from "../../../../viewModel/users/users";
 import styles from './TrainingClientsPopup.module.css'
 import {Preloader} from "../../../../../common/preloader/Preloader";
 import {recordToTrainingPopupActions} from "../../../../viewModel/calendar/recordToTrainingPopup/recordToTrainingPopup";
-import {trainingActionPopupActions} from "../../../../viewModel/calendar/trainingActionPopup/trainingActionPopup";
 
 interface DataType {
     key: string;
@@ -24,21 +23,22 @@ interface DataType {
 
 const COLUMNS: ColumnsType<DataType> = [
     {
+        title: 'Посещаемость',
+        dataIndex: 'attendance',
+        render: (attendance, record: DataType) => <AttendanceCell value={attendance} registrationId={record.key}/>,
+        width: 132
+    },
+    {
         title: 'Клиент',
         dataIndex: 'name',
         render: name => name,
         defaultSortOrder: 'ascend'
     },
     {
-        title: 'Посещаемость',
-        dataIndex: 'attendance',
-        render: (attendance, record: DataType) => <AttendanceCell value={attendance} registrationId={record.key}/>,
-        width: 135
-    },
-    {
         title: '',
         dataIndex: 'delete',
-        render: (_, record: DataType) => <DeleteRegistrationCell registrationId={record.key} />
+        render: (_, record: DataType) => <DeleteRegistrationCell registrationId={record.key} />,
+        width: 100,
     }
 ];
 
@@ -54,8 +54,8 @@ function AttendanceCell({
     const handleMarkClientAttendance = useAction(clientsTrainingPopupActions.markClientAttendance)
 
     return <Checkbox
-        value={value}
-        onChange={e => handleMarkClientAttendance({registrationId, attendance: e.target.value})}
+        checked={value}
+        onChange={e => handleMarkClientAttendance({registrationId, attendance: !value})}
     />
 }
 
@@ -99,9 +99,6 @@ function RegistrationsTable() {
     return <Table
         columns={COLUMNS}
         dataSource={data || []}
-        scroll={{
-            y: 600,
-        }}
         pagination={false}
         showSorterTooltip={false}
     />
@@ -111,7 +108,7 @@ function RegistrationTableWrapper() {
     const registrationsData = useAtomWithSelector(clientsTrainingPopupAtom, x => x.registrationsData)
     const trainingId = useAtomWithSelector(clientsTrainingPopupAtom, x => x.trainingId)
     const handleOpenRecordToTrainingPopup = useAction(recordToTrainingPopupActions.open)
-    const handleCloseTrainingClientsPopup = useAction(trainingActionPopupActions.close)
+    const handleCloseTrainingClientsPopup = useAction(clientsTrainingPopupActions.close)
 
     if (!registrationsData.length) {
         return <Empty
@@ -127,6 +124,7 @@ function RegistrationTableWrapper() {
                     handleCloseTrainingClientsPopup()
                     handleOpenRecordToTrainingPopup({
                         trainingId,
+                        fromClientsPopup: true,
                     })
                 }}
             >
@@ -154,12 +152,15 @@ function ContentWrapper() {
 
 function TrainingClientsPopup() {
     const calendarClientsTrainingPopupOpened = useAtomWithSelector(clientsTrainingPopupAtom, x => x.opened)
+    const handleClosePopup = useAction(clientsTrainingPopupActions.close)
 
     return <Modal
         title={'Записанные клиенты'}
         open={calendarClientsTrainingPopupOpened}
         centered
         footer={null}
+        onCancel={handleClosePopup}
+        width={620}
     >
         <ContentWrapper />
     </Modal>

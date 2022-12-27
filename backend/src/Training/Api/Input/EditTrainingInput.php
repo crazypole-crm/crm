@@ -15,7 +15,7 @@ class EditTrainingInput
         private string $hallId,
         private string $courseId,
         private string $trainerId,
-        private int $type,
+        private ?int $maxRegistrations,
     ){}
 
     /**
@@ -93,8 +93,8 @@ class EditTrainingInput
     /**
      * @return int
      */
-    public function getType(): int
+    public function getMaxRegistrations(): ?int
     {
-        return $this->type;
+        return $this->maxRegistrations;
     }
 }

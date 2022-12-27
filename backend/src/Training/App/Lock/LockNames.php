@@ -9,6 +9,7 @@ class LockNames
     private const HALL_ID_LOCK_NAME = 'hall_lock_';
     private const COURSE_ID_LOCK_NAME = 'course_lock_';
     private const TRAINER_ID_LOCK_NAME = 'trainer_lock_';
+    private const REGISTRATION_ID_LOCK_NAME = 'registration_lock_';
 
     public static function getTrainingLock(string $trainingId): string
     {
@@ -50,5 +51,10 @@ class LockNames
         }
 
         return $result;
+    }
+
+    public static function getRegistrationLock(string $registrationId): string
+    {
+        return self::REGISTRATION_ID_LOCK_NAME . $registrationId;
     }
 }

@@ -32,12 +32,34 @@ class TrainingAppService
         $this->blockingOperatorExecutor = $blockingOperatorExecutor;
     }
 
-    public function createTraining(string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $hallId, string $courseId, string $trainerId, int $type, bool $isRepeatable): string
+    public function createTraining(
+        string $title, 
+        ?string $description, 
+        \DateTimeImmutable $startDate, 
+        \DateTimeImmutable $endDate, 
+        string $hallId, 
+        string $courseId, 
+        string $trainerId, 
+        int $type, 
+        bool $isRepeatable,
+        ?int $maxRegistrations    
+    ): string
     {
         return (string)$this->transaction->execute(
-            function () use ($title, $startDate, $endDate, $hallId, $description, $courseId, $trainerId, $type, $isRepeatable): Uuid
+            function () use ($title, $startDate, $endDate, $hallId, $description, $courseId, $trainerId, $type, $isRepeatable, $maxRegistrations): Uuid
             {
-                return $this->eventService->createTraining($title, $description, $startDate, $endDate, new Uuid($hallId), new Uuid($courseId), new Uuid($trainerId), $type, $isRepeatable);
+                return $this->eventService->createTraining(
+                    $title, 
+                    $description,
+                    $startDate, 
+                    $endDate, 
+                    new Uuid($hallId), 
+                    new Uuid($courseId), 
+                    new Uuid($trainerId), 
+                    $type, 
+                    $isRepeatable,
+                    $maxRegistrations
+                );
             }
         );
     }
@@ -54,13 +76,33 @@ class TrainingAppService
      * @param int $type
      * @return string
      */
-    public function editTraining(string $baseTrainingId, string $title, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, string $hallId, string $courseId, string $trainerId, int $type): string
+    public function editTraining(
+        string $baseTrainingId, 
+        string $title, 
+        ?string $description, 
+        \DateTimeImmutable $startDate, 
+        \DateTimeImmutable $endDate, 
+        string $hallId, 
+        string $courseId, 
+        string $trainerId, 
+        ?int $maxRegistrations
+    ): string
     {
         $operation = $this->blockingOperatorExecutor->execute(
             [LockNames::getTrainingLock($baseTrainingId)],
-            function () use ($baseTrainingId, $title, $startDate, $endDate, $hallId, $description, $courseId, $trainerId, $type): void
+            function () use ($baseTrainingId, $title, $startDate, $endDate, $hallId, $description, $courseId, $trainerId, $maxRegistrations): void
             {
-                $this->eventService->editTrainingByBase(new Uuid($baseTrainingId), $title, $description, $startDate, $endDate, new Uuid($hallId), new Uuid($courseId), new Uuid($trainerId), $type);
+                $this->eventService->editTrainingByBase(
+                    new Uuid($baseTrainingId), 
+                    $title, 
+                    $description, 
+                    $startDate, 
+                    $endDate, 
+                    new Uuid($hallId), 
+                    new Uuid($courseId), 
+                    new Uuid($trainerId), 
+                    $maxRegistrations
+                );
             }
         );
         return (string)$this->transaction->execute($operation);
@@ -213,5 +255,34 @@ class TrainingAppService
                 return new Uuid($string);
             }, $strings
         );
+    }
+
+    public function createRegistration(string $trainingId, string $userId): string
+    {
+        return $this->transaction->execute(function() use ($trainingId, $userId) {
+            return (string)$this->eventService->createRegistration(
+                new Uuid($trainingId), 
+                new Uuid ($userId)
+            );
+        });
+    }
+
+    public function changeRegistrationStatus(string $registrationId, int $status): void
+    {
+        $operation = $this->blockingOperatorExecutor->execute(
+            [LockNames::getRegistrationLock((string)$registrationId)],
+            function () use ($registrationId, $status)
+            {
+                $this->eventService->changeRegistrationStatus(new Uuid($registrationId), $status);
+            }
+        );
+        $this->transaction->execute($operation);
+    }
+
+    public function removeRegistration(string $registrationId): void
+    {
+        $this->transaction->execute(function() use ($registrationId) {
+            $this->eventService->removeRegistration(new Uuid($registrationId));
+        });
     }
 }

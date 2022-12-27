@@ -23,13 +23,34 @@ class Api implements ApiInterface
     public function createTraining(CreateTrainingInput $input): string
     {
         //TODO: обработка исключений
-        return $this->trainingAppService->createTraining($input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType(), $input->isRepeatable());
+        return $this->trainingAppService->createTraining(
+            $input->getTitle(),
+            $input->getDescription(), 
+            $input->getStartDate(), 
+            $input->getEndDate(), 
+            $input->getHallId(), 
+            $input->getCourseId(), 
+            $input->getTrainerId(), 
+            $input->getType(), 
+            $input->isRepeatable(),
+            $input->getMaxRegistrations()
+        );
     }
 
     public function editTraining(EditTrainingInput $input): void
     {
         //TODO: обработка исключений
-        $this->trainingAppService->editTraining($input->getBaseId(), $input->getTitle(), $input->getDescription(), $input->getStartDate(), $input->getEndDate(), $input->getHallId(), $input->getCourseId(), $input->getTrainerId(), $input->getType());
+        $this->trainingAppService->editTraining(
+            $input->getBaseId(), 
+            $input->getTitle(), 
+            $input->getDescription(), 
+            $input->getStartDate(), 
+            $input->getEndDate(), 
+            $input->getHallId(), 
+            $input->getCourseId(), 
+            $input->getTrainerId(), 
+            $input->getMaxRegistrations()
+        );
     }
 
     public function changeTrainingTrainer(string $trainingId, string $trainerId): void
@@ -107,5 +128,35 @@ class Api implements ApiInterface
     public function createCourse(string $name): string
     {
         return $this->trainingAppService->createCourse($name);
+    }
+
+    public function createRegistration(string $trainingId, string $userId): string
+    {
+        return $this->trainingAppService->createRegistration($trainingId, $userId);
+    }
+
+    public function changeRegistrationStatus(string $registrationId, int $status): void
+    {
+        $this->trainingAppService->changeRegistrationStatus($registrationId, $status);
+    }
+
+    public function removeRegistration(string $registrationId): void
+    {
+        $this->trainingAppService->removeRegistration($registrationId);
+    }
+
+    public function listRegistrationsByTrainingId(string $trainingId): array
+    {
+        return $this->trainingQueryService->listRegistrationsByTrainingId($trainingId);
+    }
+
+    public function listRegistrationsByUserId(string $userId): array
+    {
+        return $this->trainingQueryService->listRegistrationsByUserId($userId);
+    }
+
+    public function countTrainingRegistrations(string $trainingId): int
+    {
+        return $this->trainingQueryService->countTrainingRegistrations($trainingId);
     }
 }

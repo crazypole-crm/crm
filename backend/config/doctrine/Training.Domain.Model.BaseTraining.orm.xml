@@ -12,5 +12,6 @@
         <field name="hallId" column="hall_id" type="string"/>
         <field name="courseId" column="course_id" type="string"/>
         <field name="type" column="type" type="integer"/>
+        <field name="maxRegistrations" column="max_registrations" type="integer"/>
     </entity>
 </doctrine-mapping>

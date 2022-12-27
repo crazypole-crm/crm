@@ -203,5 +203,10 @@ export type {
 }
 
 export {
+    getFilterItems,
+    getValidTrainings,
+    getFilteredTrainings,
+    calculateWeekStartDate,
+    getPeriod,
     Calendar,
 }

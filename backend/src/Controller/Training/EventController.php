@@ -43,7 +43,18 @@ class EventController extends AbstractController
             $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
             $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
             $type = $this->convertTrainingType($requestData['type']);
-            $input = new CreateTrainingInput("", $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['trainerId'], $type, $requestData['isRepeatable']);
+            $input = new CreateTrainingInput(
+                "", 
+                $requestData['description'] ?? null, 
+                $startDate, 
+                $endDate, 
+                $requestData['hallId'], 
+                $requestData['courseId'], 
+                $requestData['trainerId'], 
+                $type, 
+                $requestData['isRepeatable'],
+                $requestData['maxRegistrationsCount'] ?? null
+            );
             $trainingId = $this->eventApi->createTraining($input);
             return new Response(json_encode(['trainingId' => $trainingId]), Response::HTTP_OK);
         }
@@ -78,8 +89,17 @@ class EventController extends AbstractController
             $userId = $this->securityContext->getAuthenticatedUserId();
             $startDate = (new \DateTimeImmutable())->setTimestamp($requestData['startDate'] / 1000);
             $endDate = (new \DateTimeImmutable())->setTimestamp($requestData['endDate'] / 1000);
-            $type = $this->convertTrainingType($requestData['type']);
-            $input = new EditTrainingInput($requestData['baseId'], $requestData['trainingId'],"", $requestData['description'] ?? null, $startDate, $endDate, $requestData['hallId'], $requestData['courseId'], $requestData['trainerId'], $type);
+            $input = new EditTrainingInput(
+                $requestData['baseId'], 
+                $requestData['trainingId'],
+                "", 
+                $requestData['description'] ?? null, 
+                $startDate, 
+                $endDate, 
+                $requestData['hallId'], 
+                $requestData['courseId'], 
+                $requestData['trainerId'], 
+                $requestData['maxRegistrationsCount'] ?? null);
             $this->eventApi->editTraining($input);
 
             return new Response(null, Response::HTTP_OK);
@@ -400,6 +420,102 @@ class EventController extends AbstractController
             $userId = $this->securityContext->getAuthenticatedUserId();
             $courseId = $this->eventApi->createCourse($requestData['name']);
             return new Response(json_encode(['courseId' => $courseId]), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/training/{trainingId}/registration/add")
+     */
+    public function createRegistration(Request $request, string $trainingId): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $userId = $requestData['userId'];
+            $registrationId = $this->eventApi->createRegistration($trainingId, $userId);
+            return new Response(json_encode(['registrationId' => $registrationId]), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/training/registration/{registrationId}/changeStatus")
+     */
+    public function changeRegistrationStatus(Request $request, string $registrationId): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $status = $requestData['status'];
+            $this->eventApi->changeRegistrationStatus($registrationId, $status);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/training/registration/{registrationId}/remove")
+     */
+    public function removeRegistration(string $registrationId): Response
+    {
+        try
+        {
+            $this->eventApi->removeRegistration($registrationId);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /** @Route("/training/{trainingId}/registration/list") */
+    public function listTrainingRegistrations(string $trainingId): Response
+    {
+        try
+        {
+            $registrations = $this->eventApi->listRegistrationsByTrainingId($trainingId);
+            return new Response(json_encode($registrations, JSON_THROW_ON_ERROR), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /** @Route("/training/registration/cur-user") */
+    public function listCurrentUserRegistrations(): Response
+    {
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $registrations = $this->eventApi->listRegistrationsByUserId($userId);
+            return new Response(json_encode($registrations, JSON_THROW_ON_ERROR), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**  @Route("/training/{trainingId}/registration/register")*/
+    public function createCurUserRegistration(string $trainingId): Response
+    {
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $registrationId = $this->eventApi->createRegistration($trainingId, $userId);
+            return new Response(json_encode(['registrationId' => $registrationId]), Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)
         {
