@@ -1,5 +1,5 @@
 #!/bin/sh
 
-bin/console doctrine:migrations:migrate
+bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 docker-php-entrypoint
 php-fpm
