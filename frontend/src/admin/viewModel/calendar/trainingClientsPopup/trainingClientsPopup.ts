@@ -1,25 +1,19 @@
 import {combine, declareAction, declareAtom} from "@reatom/core";
 import {declareAtomWithSetter} from "../../../../core/reatom/declareAtomWithSetter";
-import {Api_TrainingRegistrations, CalendarApi} from "../../../../api/calendarApi";
+import {CalendarApi} from "../../../../api/calendarApi";
 import {declareAsyncAction} from "../../../../core/reatom/declareAsyncAction";
 import {Toasts} from "../../../../common/notification/notifications";
+import {remapApiRegistrationDataToModel} from "../../registrations/remapping";
 
 type RegistrationData = {
     id: string,
     userId: string,
+    trainingId: string,
     attended: boolean,
 }
 
 type OpenPayload = {
     id: string,
-}
-
-function remapApiRegistrationDataToModel(apiRegistrationsData: Array<Api_TrainingRegistrations>): Array<RegistrationData> {
-    return apiRegistrationsData.map(registration => ({
-        id: registration.id,
-        userId: registration.userId,
-        attended: !!registration.status,
-    }))
 }
 
 const open = declareAsyncAction<OpenPayload>('clientTrainingPopup.open',

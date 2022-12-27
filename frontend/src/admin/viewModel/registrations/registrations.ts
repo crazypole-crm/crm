@@ -1,5 +1,5 @@
 import {declareMapAtom} from "../../../core/reatom/declareMapAtom";
-import { TrainingData } from "../calendar/TrainingData";
+import {RegistrationData} from "../calendar/trainingClientsPopup/trainingClientsPopup";
 
 const {
     atom: registrationsAtom,
@@ -8,9 +8,9 @@ const {
     removeItems: removeRegistration,
     removeAllItems: clearRegistrations,
     setNewItems: setNewRegistrations,
-} = declareMapAtom<TrainingData>(
+} = declareMapAtom<RegistrationData>(
     'registrations',
-    registration => registration.id,
+    registration => registration.trainingId,
 )
 
 const registrationsActions = {

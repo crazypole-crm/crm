@@ -1,21 +1,17 @@
-import { declareAtom } from "@reatom/core"
-import { RegistrationsApi } from "../../../api/registrationsApi"
-import { Toasts } from "../../../common/notification/notifications"
-import { declareAsyncAction } from "../../../core/reatom/declareAsyncAction"
-import { remapApiTrainingDataToTrainingData } from "../calendar/calendaActions/loadTrainingsForPeriod"
-import { registrationsActions } from "./registrations"
+import {declareAtom} from "@reatom/core"
+import {Toasts} from "../../../common/notification/notifications"
+import {declareAsyncAction} from "../../../core/reatom/declareAsyncAction"
+import {registrationsActions} from "./registrations"
+import {CalendarApi} from "../../../api/calendarApi";
+import {remapApiRegistrationDataToModel} from "./remapping"
 
-type LoadRegistrationsForPeriodPayload = {
-    userId: string,
-    startDate: Date,
-    endDate: Date,
-}
-
-const loadRegistrations = declareAsyncAction<LoadRegistrationsForPeriodPayload>('registrations.load',
-    ({userId, startDate, endDate}, store) => {
-        return RegistrationsApi.getUserRegistrationsForPeriod(userId, startDate, endDate)
+const loadRegistrations = declareAsyncAction<void>('registrations.load',
+    (_, store) => {
+        return CalendarApi.getUserRegistrations()
             .then(registrations => {
-                store.dispatch(registrationsActions.setNewRegistrations(remapApiTrainingDataToTrainingData(registrations)))
+                const remappedRegistrations = remapApiRegistrationDataToModel(registrations)
+                console.log('remappedRegistrations', remappedRegistrations)
+                store.dispatch(registrationsActions.setNewRegistrations(remappedRegistrations))
             })
             .catch(() => {
                 Toasts.error('При получении списка записей произошла ошибка')

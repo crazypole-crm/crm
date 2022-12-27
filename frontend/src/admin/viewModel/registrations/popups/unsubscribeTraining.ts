@@ -1,11 +1,13 @@
 import { CalendarApi } from "../../../../api/calendarApi"
 import { Toasts } from "../../../../common/notification/notifications"
 import { declareAsyncAction } from "../../../../core/reatom/declareAsyncAction"
-import { registrationsActions } from "../registrations"
+import {registrationsActions, registrationsAtom} from "../registrations"
 
 const unsubscribeTraining = declareAsyncAction<string>(
     'unsubscribeTraining',
-    (registrationId, store) => {
+    (trainingId, store) => {
+        const registrations = store.getState(registrationsAtom)
+        const registrationId = registrations[trainingId].id
         return CalendarApi.removeTrainingRegistrationStatus(registrationId)
             .then(() => {
                 Toasts.success('Запись на занятие отменена')

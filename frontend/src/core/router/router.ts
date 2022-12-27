@@ -3,7 +3,7 @@ import {HallsLayout} from "../../admin/view/halls/HallsLayout";
 import {ScheduleLayoutWrapper} from "../../admin/view/schedule/ScheduleLayoutWrapper";
 import {UsersLayout} from "../../admin/view/users/UsersLayout";
 import {DirectionsLayout} from "../../admin/view/directions/DirectionsLayout";
-import { RegistrationsLayout } from "../../admin/view/registrations/RegistrationsLayout";
+import {RegistrationsLayoutWrapper} from "../../admin/view/registrations/RegistrationsLayoutWrapper";
 
 const AUTH = '/auth'
 const ADMIN = '/admin'
@@ -162,7 +162,7 @@ const adminRoutes = [
 
 const clientRoutes = [
     {path: generateScheduleUrl(), component: ScheduleLayoutWrapper},
-    {path: generateRegistrtionsUrl(), component: RegistrationsLayout}
+    {path: generateRegistrtionsUrl(), component: RegistrationsLayoutWrapper}
 ]
 
 export {

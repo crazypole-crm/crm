@@ -1,66 +1,68 @@
-import { useAction, useAtom } from "@reatom/react"
-import { List } from "antd"
-import { useEffect, useMemo, useState } from "react"
-import { authorizedCurrentUser } from "../../../currentUser/currentUser"
-import { directionsAtom } from "../../viewModel/direction/directions"
-import { loadDirections } from "../../viewModel/direction/loadDirections"
-import { hallsAtom } from "../../viewModel/hall/halls"
-import { loadHalls } from "../../viewModel/hall/loadHalls"
-import { loadRegistrations, registrationsLoadingAtom } from "../../viewModel/registrations/loadRegistrations"
-import { registrationsAtom } from "../../viewModel/registrations/registrations"
-import { loadAllUsersData } from "../../viewModel/users/loadUsers"
-import { trainersAtom } from "../../viewModel/users/users"
-import { CalendarSidePanel } from "../calendarSidePanel/CalendarSidePanel"
-import { calculateWeekStartDate, getFilteredTrainings, getFilterItems, getValidTrainings } from "../schedule/Calendar"
-import { RegistrationsListItem } from "./RegistrationsListItem"
+import {useAction, useAtom} from "@reatom/react"
+import {List} from "antd"
+import {useEffect, useMemo, useState} from "react"
+import {directionsAtom} from "../../viewModel/direction/directions"
+import {hallsAtom} from "../../viewModel/hall/halls"
+import {registrationsAtom} from "../../viewModel/registrations/registrations"
+import {trainersAtom} from "../../viewModel/users/users"
+import {CalendarSidePanel} from "../calendarSidePanel/CalendarSidePanel"
+import {
+    calculateWeekStartDate,
+    getFilteredTrainings,
+    getFilterItems,
+    getPeriod,
+    getValidTrainings
+} from "../schedule/Calendar"
+import {RegistrationsListItem} from "./RegistrationsListItem"
 import styles from './RegistrationsLayout.module.css'
+import {trainingsAtom} from "../../viewModel/calendar/trainings";
+import {
+    lastLoadedPeriodAtom,
+    loadTrainingsForPeriod,
+    trainingsLoadingAtom
+} from "../../viewModel/calendar/calendaActions/loadTrainingsForPeriod";
+import {TrainingData} from "../../viewModel/calendar/TrainingData";
+import {MapItems} from "../../../core/reatom/declareMapAtom";
+import {RegistrationData} from "../../viewModel/calendar/trainingClientsPopup/trainingClientsPopup";
 
-function setStartPeriodTime(startPeriod: Date) {
-    startPeriod.setHours(8)
-    startPeriod.setMinutes(0)
-    startPeriod.setMilliseconds(0)
-    startPeriod.setSeconds(0)
-}
-
-function getEndPeriod(startPeriod: Date): Date {
-    const endPeriod = new Date(startPeriod)
-    endPeriod.setDate(endPeriod.getDate() + 6)
-    endPeriod.setHours(23)
-    endPeriod.setMinutes(0)
-    endPeriod.setMilliseconds(0)
-    endPeriod.setSeconds(0)
-    return endPeriod
+function getCurrentUserTrainings(trainings: MapItems<TrainingData>, registrations: MapItems<RegistrationData>): TrainingData[] {
+    return Object.values(trainings).filter(trainingData => {
+        return !!registrations[trainingData.id]
+    })
 }
 
 function RegistrationsLayout() {
-    const authorizedUser = useAtom(authorizedCurrentUser)
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([])
     const registrations = useAtom(registrationsAtom)
-    const registrationsLoading = useAtom(registrationsLoadingAtom)
     const halls = useAtom(hallsAtom)
     const directions = useAtom(directionsAtom)
     const trainers = useAtom(trainersAtom)
-    const handleLoadRegistrations = useAction(loadRegistrations)
+    const trainings = useAtom(trainingsAtom)
+    const lastLoadedPeriod = useAtom(lastLoadedPeriodAtom)
+    const trainingsLoading = useAtom(trainingsLoadingAtom)
+    const handleLoadTrainings = useAction(loadTrainingsForPeriod)
 
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([])
-
-    const startPeriod = useMemo(() => calculateWeekStartDate(selectedDate, 'week'), [selectedDate])
-
-    useEffect(() => {
-        setStartPeriodTime(startPeriod)
-        const endPeriod = getEndPeriod(startPeriod)
-        handleLoadRegistrations({userId: authorizedUser.id, startDate: startPeriod, endDate: endPeriod})
-    }, [handleLoadRegistrations, authorizedUser, startPeriod])
-
-    const handleLoadDirection = useAction(loadDirections)
-    const handleLoadHalls = useAction(loadHalls)
-    const handleLoadAllUsers = useAction(loadAllUsersData)
+    const weekDateStart = useMemo(() => calculateWeekStartDate(selectedDate, 'week'), [selectedDate])
 
     useEffect(() => {
-        handleLoadDirection()
-        handleLoadHalls()
-        handleLoadAllUsers()
-    }, [handleLoadDirection, handleLoadHalls, handleLoadAllUsers])
+        const period = getPeriod('week', weekDateStart, {
+            dayEndTime: {
+                minutes: 59,
+                hour: 23,
+            },
+            dayStartTime: {
+                minutes: 0,
+                hour: 0,
+            },
+        })
+
+        if (!lastLoadedPeriod
+            || period.startDate.getTime() !== lastLoadedPeriod.startDate.getTime()
+            || period.endDate.getTime() !== lastLoadedPeriod.endDate.getTime()) {
+            handleLoadTrainings(period)
+        }
+    }, [selectedDate, weekDateStart, handleLoadTrainings, lastLoadedPeriod])
     
 
     const filtersList = useMemo(() => getFilterItems(
@@ -69,7 +71,8 @@ function RegistrationsLayout() {
         trainers
     ), [directions, halls, trainers])
 
-    const validTrainings = useMemo(() => getValidTrainings(Object.values(registrations), trainers, directions, halls), [registrations, trainers, directions, halls])
+    const currentUserTrainings = useMemo(() => getCurrentUserTrainings(trainings, registrations), [trainings, registrations])
+    const validTrainings = useMemo(() => getValidTrainings(currentUserTrainings, trainers, directions, halls), [currentUserTrainings, trainers, directions, halls])
     const filteredTrainings = useMemo(() => getFilteredTrainings(validTrainings, filtersList, selectedFilters), [validTrainings, filtersList, selectedFilters])
 
     return (
@@ -86,8 +89,11 @@ function RegistrationsLayout() {
                 header={<div className={styles.listTitle}>Мои записи</div>}
                 bordered
                 itemLayout="horizontal"
-                loading={registrationsLoading}
+                loading={trainingsLoading}
                 dataSource={filteredTrainings}
+                locale={{
+                    emptyText: 'Записей в этот период нет'
+                }}
                 renderItem={(item) => (
                     <List.Item>
                         <RegistrationsListItem trainingData={item} />

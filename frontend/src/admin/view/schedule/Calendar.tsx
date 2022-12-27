@@ -207,5 +207,6 @@ export {
     getValidTrainings,
     getFilteredTrainings,
     calculateWeekStartDate,
+    getPeriod,
     Calendar,
 }
