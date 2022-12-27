@@ -479,7 +479,7 @@ class EventController extends AbstractController
         }
     }
 
-    /** @Route("/training/{trainingId}/registrations/list") */
+    /** @Route("/training/{trainingId}/registration/list") */
     public function listTrainingRegistrations(string $trainingId): Response
     {
         try
