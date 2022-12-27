@@ -56,6 +56,26 @@ function getAllUsersData(): Promise<Array<Api_UsersData>> {
         })
 }
 
+function getAllTrainers(): Promise<Array<Api_UsersData>> {
+    return fetch('/user/trainers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            switch (response.status) {
+                case HttpStatus.OK:
+                    return Promise.resolve(response.json())
+                case HttpStatus.UNAUTHORIZED:
+                    goToUrl(Router.Auth.url())
+                    return Promise.reject(response)
+                default:
+                    return Promise.reject(response)
+            }
+        })
+}
+
 type Api_EditUserData = {
     id: string,
     email: string,
@@ -151,6 +171,7 @@ const UsersApi = {
     editUser,
     createUser,
     deleteUsers,
+    getAllTrainers,
 }
 
 export type {

@@ -6,7 +6,8 @@ import {calendarLoadingAtom} from "../../viewModel/calendar/calendarLoading";
 import styles from './ScheduleLayoutWrapper.module.css'
 import {Preloader} from "../../../common/preloader/Preloader";
 import {Calendar} from "./Calendar";
-import {loadAllUsersData} from "../../viewModel/users/loadUsers";
+import {loadAllTrainers, loadAllUsersData} from "../../viewModel/users/loadUsers";
+import {authorizedCurrentUser} from "../../../currentUser/currentUser";
 
 function ScheduleLayout() {
     return (
@@ -17,16 +18,20 @@ function ScheduleLayout() {
 }
 
 function ScheduleLayoutWrapper() {
+    const isClient = useAtom(authorizedCurrentUser, x => x.role === 'client', [])
     const calendarLoading = useAtom(calendarLoadingAtom)
     const handleLoadDirection = useAction(loadDirections)
     const handleLoadHalls = useAction(loadHalls)
+    const handleLoadAllTrainers = useAction(loadAllTrainers)
     const handleLoadAllUsers = useAction(loadAllUsersData)
 
     useEffect(() => {
         handleLoadDirection()
         handleLoadHalls()
-        handleLoadAllUsers()
-    }, [handleLoadDirection, handleLoadHalls, handleLoadAllUsers])
+        isClient
+            ? handleLoadAllTrainers()
+            : handleLoadAllUsers()
+    }, [handleLoadDirection, isClient, handleLoadHalls, handleLoadAllTrainers, handleLoadAllUsers])
 
     return (
         <div className={styles.calendarLayoutWrapper}>

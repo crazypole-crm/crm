@@ -1,3 +1,7 @@
+.wrapper {
+    width: 620px;
+}
+
 .contentWrapper {
     min-height: 300px;
 }

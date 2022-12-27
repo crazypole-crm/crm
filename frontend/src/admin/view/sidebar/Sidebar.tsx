@@ -72,7 +72,6 @@ function CollapsedBlock({
 function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const location = useLocation()
-    console.log('location', location.pathname)
 
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);

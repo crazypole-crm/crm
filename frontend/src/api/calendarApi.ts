@@ -61,6 +61,7 @@ function createTraining(trainingData: Api_CreateTrainingData): Promise<void> {
             courseId: trainingData.courseId,
             trainerId: trainingData.trainerId,
             isRepeatable: trainingData.isRepeatable,
+            maxRegistrationsCount: trainingData.maxRegistrationsCount,
         }),
     })
         .then(response => {
@@ -97,6 +98,7 @@ function editTraining(trainingData: Api_EditTraining): Promise<void> {
             hallId: trainingData.hallId,
             courseId: trainingData.courseId,
             trainerId: trainingData.trainerId,
+            maxRegistrationsCount: trainingData.maxRegistrationsCount,
         }),
     })
         .then(response => {
@@ -302,7 +304,7 @@ function createRegistration(trainingId: string, userId: string): Promise<void> {
 }
 
 function signUpToTraining(trainingId: string) {
-    return fetch(`/training/${trainingId}/registration/add`, {
+    return fetch(`/training/${trainingId}/registration/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

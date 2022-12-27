@@ -23,7 +23,7 @@ function remapApiRegistrationDataToModel(apiRegistrationsData: Array<Api_Trainin
 }
 
 const open = declareAsyncAction<OpenPayload>('clientTrainingPopup.open',
-    ({id}, store) => {
+    async ({id}, store) => {
         return CalendarApi.getTrainingRegistrations(id)
             .then(apiRegistrationsData => {
                 const registrations = remapApiRegistrationDataToModel(apiRegistrationsData)
@@ -50,6 +50,7 @@ const markClientAttendance = declareAsyncAction<{registrationId: string, attenda
         const status = attendance ? 1 : 0
         const registrationsDataBeforeChange = store.getState(registrationsDataAtom)
         store.dispatch(markClientAttendanceImpl({registrationId, attendance}))
+
         return CalendarApi.changeTrainingRegistrationStatus(registrationId, status)
             .catch(() => {
                 Toasts.error('При отметке пользователя произошла ошибка')

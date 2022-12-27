@@ -1,5 +1,5 @@
 import {Api_TrainingData, CalendarApi} from "../../../../api/calendarApi";
-import {declareAction, declareAtom} from "@reatom/core";
+import {declareAtom} from "@reatom/core";
 import {declareAsyncAction} from "../../../../core/reatom/declareAsyncAction";
 import {trainingsActions} from "../trainings";
 import {Time} from "../time";
@@ -7,7 +7,7 @@ import {TrainingData} from "../TrainingData";
 import {getValueByCheckedKey} from "../../../../core/getValueByCheckedKey";
 import {DatePeriod} from "../DatePeriod";
 import {Toasts} from "../../../../common/notification/notifications";
-import { calendarPageOpened } from "../../common/onPageOpened";
+import {calendarPageOpened} from "../../common/onPageOpened";
 
 type LoadTrainingsForPeriodPayload = {
     startDate: Date,

@@ -2,18 +2,35 @@ import {combine, declareAction, declareAtom} from "@reatom/core";
 import {declareAtomWithSetter} from "../../../../core/reatom/declareAtomWithSetter";
 import {createRegistration} from "../calendaActions/createRegistration";
 import {verify} from "../../../../core/verify";
+import {clientsTrainingPopupActions} from "../trainingClientsPopup/trainingClientsPopup";
+import {dispatchAsyncAction} from "../../../../core/reatom/dispatchAsyncAction";
 
 
 type OpenPayload = {
     trainingId: string,
+    fromClientsPopup?: boolean,
 }
 
 const open = declareAction<OpenPayload>('recordToTrainingPopup.open')
-const close = declareAction('recordToTrainingPopup.close')
+const close = declareAction('recordToTrainingPopup.close',
+    (_, store) => {
+        const trainingId = store.getState(trainingIdAtom)
+        const fromClientsPopup = store.getState(fromClientsPopupAtom)
+        if (fromClientsPopup) {
+            store.dispatch(clientsTrainingPopupActions.open({
+                id: trainingId,
+            }))
+        }
+    }
+)
 
 const openedAtom = declareAtom('recordToTrainingPopup.opened', false, on => [
     on(open, () => true),
     on(close, () => false),
+])
+
+const fromClientsPopupAtom = declareAtom('recordToTrainingPopup.fromClientsPopupAtom', false, on => [
+    on(open, (_, {fromClientsPopup = false}) => fromClientsPopup)
 ])
 
 const trainingIdAtom = declareAtom('recordToTrainingPopup.trainingId', '', on => [
@@ -47,10 +64,11 @@ const submit = declareAction('recordToTrainingPopup.submit',
             return
         }
 
-        store.dispatch(createRegistration({
+        dispatchAsyncAction(store, createRegistration, {
             trainingId,
             userId: verify(selectedUserId),
-        }))
+        })
+            .then(() => store.dispatch(close()))
     }
 )
 
@@ -60,6 +78,7 @@ const recordToTrainingPopupAtom = combine({
     selectedUserId: selectedUserIdAtom,
     selectedUserIdError: selectedUserIdErrorAtom,
     submitButtonLoading: submitButtonLoadingAtom,
+    fromClientsPopup: fromClientsPopupAtom,
 })
 
 const recordToTrainingPopupActions = {

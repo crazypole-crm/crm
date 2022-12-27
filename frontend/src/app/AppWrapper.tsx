@@ -28,7 +28,7 @@ const AppWrapper = withRouter(({history}) => {
         setOnUsersPageOpened(handleUsersPageLoaded)
         setOnHallsPageOpened(handleHallsPageLoaded)
         setOnDirectionsPageOpened(handleDirectionsPageLoaded)
-    }, [history, handleCalendarPageLoaded])
+    }, [history, handleCalendarPageLoaded, handleUsersPageLoaded, handleHallsPageLoaded, handleDirectionsPageLoaded])
 
     useEffect(() => {
       handleInitUserData()
