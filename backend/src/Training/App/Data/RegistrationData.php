@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Training\App\Data;
 
-class RegistrationData
+class RegistrationData implements \JsonSerializable
 {
     public function __construct(
         private string $id,
@@ -31,5 +31,15 @@ class RegistrationData
     public function getStatus(): int
     {
         return $this->status;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'trainingId' => $this->trainingId,
+            'userId' => $this->userId,
+            'status' => $this->status
+        ];
     }
 }

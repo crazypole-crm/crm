@@ -139,6 +139,7 @@ class TrainingQueryService implements TrainingQueryServiceInterface
     {
         $qb = $this->conn->createQueryBuilder();
         $qb->from('training_registration', 'tr');
+        $this->addTrainingRegistrationFieldSelect($qb, 'tr');
         $qb->where($qb->expr()->eq('tr.' . RegistrationTable::TRAINING_ID, ':trainingId'));
         $qb->setParameter('trainingId', $trainingId);
 
@@ -155,6 +156,7 @@ class TrainingQueryService implements TrainingQueryServiceInterface
     {
         $qb = $this->conn->createQueryBuilder();
         $qb->from('training_registration', 'tr');
+        $this->addTrainingRegistrationFieldSelect($qb, 'tr');
         $qb->where($qb->expr()->eq('tr.' . RegistrationTable::USER_ID, ':userId'));
         $qb->setParameter('userId', $userId);
 
@@ -195,5 +197,13 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         $qb->addSelect($alias . '.' . TrainingTable::IS_CANCELED . ' AS ' . TrainingTable::IS_CANCELED);
         $qb->addSelect("bt.start_date AS " . TrainingTable::BASE_TRAINING_START_DATE);
         $qb->addSelect("IF(t.trainer_id = bt.trainer_id, 0, 1) AS " . TrainingTable::IS_TRAINER_REPLACE);
+    }
+
+    private function addTrainingRegistrationFieldSelect(QueryBuilder $qb, string $alias): void
+    {
+        $qb->addSelect($alias . '.' . RegistrationTable::ID . ' AS ' . RegistrationTable::ID);
+        $qb->addSelect($alias . '.' . RegistrationTable::TRAINING_ID . ' AS ' . RegistrationTable::TRAINING_ID);
+        $qb->addSelect($alias . '.' . RegistrationTable::USER_ID . ' AS ' . RegistrationTable::USER_ID);
+        $qb->addSelect($alias . '.' . RegistrationTable::STATUS . ' AS ' . RegistrationTable::STATUS);
     }
 }
