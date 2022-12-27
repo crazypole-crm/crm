@@ -1,5 +1,5 @@
 import {Api_TrainingData, CalendarApi} from "../../../../api/calendarApi";
-import {declareAction, declareAtom} from "@reatom/core";
+import {declareAtom} from "@reatom/core";
 import {declareAsyncAction} from "../../../../core/reatom/declareAsyncAction";
 import {trainingsActions} from "../trainings";
 import {Time} from "../time";
@@ -95,6 +95,7 @@ const trainingsLoadingAtom = declareAtom('trainingsLoading', false, on => [
 ])
 
 export {
+    remapApiTrainingDataToTrainingData,
     loadTrainingsForPeriod,
     calendarPageOpened,
     trainingsLoadingAtom,

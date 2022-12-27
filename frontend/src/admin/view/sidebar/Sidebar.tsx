@@ -1,10 +1,12 @@
-import {BlockOutlined, CalendarOutlined, MenuFoldOutlined, NodeIndexOutlined, TeamOutlined} from "@ant-design/icons";
+import {BlockOutlined, CalendarOutlined, MenuFoldOutlined, NodeIndexOutlined, ReadOutlined, TeamOutlined} from "@ant-design/icons";
 import {Menu, MenuProps} from "antd";
 import {useState} from "react";
 import {useLocation} from "react-router-dom";
 import {Router} from "../../../core/router/router";
 import styles from './Sidebar.module.css'
 import {getStylesWithMods} from "../../../core/styles/getStylesWithMods";
+import { useAtom } from "@reatom/react";
+import { authorizedCurrentUser } from "../../../currentUser/currentUser";
 
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -25,11 +27,16 @@ function getItem(
     } as MenuItem;
 }
 
-const items: MenuItem[] = [
+const adminItems: MenuItem[] = [
     getItem('Календарь', 'calendar', <CalendarOutlined/>),
     getItem('Пользователи', 'users-list', <TeamOutlined/>),
     getItem('Направления', 'directions-list', <NodeIndexOutlined />),
     getItem('Залы', 'halls-list', <BlockOutlined />),
+];
+
+const clientItems: MenuItem[] = [
+    getItem('Календарь', 'calendar', <CalendarOutlined/>),
+    getItem('Мои записи', 'registrations-list', <ReadOutlined/>),
 ];
 
 function getDefaultSelectedSection(path: string): string {
@@ -42,6 +49,8 @@ function getDefaultSelectedSection(path: string): string {
             return 'directions-list'
         case Router.Halls.url():
             return 'halls-list'
+        case Router.Registrations.url():
+            return 'registrations-list'
     }
     return ''
 }
@@ -70,6 +79,7 @@ function CollapsedBlock({
 }
 
 function Sidebar() {
+    const authorizedUser = useAtom(authorizedCurrentUser)
     const [collapsed, setCollapsed] = useState(false);
     const location = useLocation()
     console.log('location', location.pathname)
@@ -92,6 +102,9 @@ function Sidebar() {
             case 'halls-list':
                 Router.Halls.open()
                 break
+            case 'registrations-list':
+                Router.Registrations.open()
+                break
         }
     };
 
@@ -106,7 +119,7 @@ function Sidebar() {
             <Menu
                 onClick={onClick}
                 mode="inline"
-                items={items}
+                items={authorizedUser.role !== 'client' ? adminItems : clientItems}
                 selectedKeys={[getDefaultSelectedSection(location.pathname)]}
                 inlineCollapsed={collapsed}
                 className={styles.menu}

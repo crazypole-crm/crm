@@ -4,14 +4,16 @@ import {withRouter} from "react-router-dom";
 import {Preloader} from "../common/preloader/Preloader";
 import {
     initRouterHistory,
-    setOnCalendarPageOpened, setOnDirectionsPageOpened,
+    setOnCalendarPageOpened,
+    setOnDirectionsPageOpened,
     setOnHallsPageOpened,
-    setOnUsersPageOpened
+    setOnUsersPageOpened,
+    setOnRegistrationsPageOpened
 } from "../core/router/router";
 import {initUserDataAction} from "../currentUser/actions/initUser";
 import {App} from "./App";
 import {isLoadingAppAtom} from "./isAppLoading";
-import {calendarPageOpened} from "../admin/viewModel/common/onPageOpened";
+import {calendarPageOpened, registrationsPageOpened} from "../admin/viewModel/common/onPageOpened";
 import {directionsPageOpened, hallsPageOpened, usersPageOpened} from "../admin/viewModel/common/onPageOpened";
 
 const AppWrapper = withRouter(({history}) => {
@@ -21,6 +23,7 @@ const AppWrapper = withRouter(({history}) => {
     const handleUsersPageLoaded = useAction(usersPageOpened)
     const handleHallsPageLoaded = useAction(hallsPageOpened)
     const handleDirectionsPageLoaded = useAction(directionsPageOpened)
+    const handleRegistrationsPageLoaded = useAction(registrationsPageOpened)
 
     useLayoutEffect(() => {
         initRouterHistory(history)
@@ -28,7 +31,8 @@ const AppWrapper = withRouter(({history}) => {
         setOnUsersPageOpened(handleUsersPageLoaded)
         setOnHallsPageOpened(handleHallsPageLoaded)
         setOnDirectionsPageOpened(handleDirectionsPageLoaded)
-    }, [history, handleCalendarPageLoaded])
+        setOnRegistrationsPageOpened(handleRegistrationsPageLoaded)
+    }, [history, handleCalendarPageLoaded, handleRegistrationsPageLoaded])
 
     useEffect(() => {
       handleInitUserData()

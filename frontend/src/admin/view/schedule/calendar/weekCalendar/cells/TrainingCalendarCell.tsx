@@ -302,4 +302,6 @@ function TrainingCalendarCell({
 
 export {
     TrainingCalendarCell,
+    getDurationString,
+    getTrainerName,
 }
