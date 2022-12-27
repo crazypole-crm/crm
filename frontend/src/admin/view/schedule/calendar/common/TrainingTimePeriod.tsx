@@ -16,6 +16,7 @@ type TrainingTimePeriodProps = {
     trainingEndTime: Time,
     setTrainingStartTime: (value: Time) => void,
     setTrainingEndTime: (value: Time) => void,
+    periodError?: boolean,
 }
 
 function TrainingTimePeriod({
@@ -23,6 +24,7 @@ function TrainingTimePeriod({
     setTrainingEndTime,
     trainingStartTime,
     setTrainingStartTime,
+    periodError = false,
 }: TrainingTimePeriodProps) {
 
     const momentTimeStart = useMemo(() => moment({
@@ -91,6 +93,7 @@ function TrainingTimePeriod({
     return (
         <div className={styles.timePeriod}>
             <TimePicker
+                status={periodError ? 'error' : ''}
                 value={momentTimeStart}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, setTrainingStartTime)}
@@ -99,9 +102,11 @@ function TrainingTimePeriod({
                     disabledMinutes: () => disabledStartTime.disabledMinutes,
                 })}
                 showNow={false}
+                allowClear={false}
             />
             -
             <TimePicker
+                status={periodError ? 'error' : ''}
                 value={momentTimeEnd}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, setTrainingEndTime)}
@@ -110,7 +115,13 @@ function TrainingTimePeriod({
                     disabledMinutes: () => disabledEndTime.disabledMinutes,
                 })}
                 showNow={false}
+                allowClear={false}
             />
+            {
+                periodError && <div className={styles.errorMessage}>
+                    {'Неправильный период времени'}
+                </div>
+            }
         </div>
     )
 }

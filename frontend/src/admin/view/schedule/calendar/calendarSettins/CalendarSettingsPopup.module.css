@@ -2,4 +2,11 @@
     display: flex;
     gap: 8px;
     align-items: center;
+    position: relative;
+}
+
+.errorMessage {
+    color: #ff4d4f;
+    position: absolute;
+    bottom: -25px;
 }
