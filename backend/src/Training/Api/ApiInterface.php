@@ -49,4 +49,10 @@ interface ApiInterface
     public function changeRegistrationStatus(string $registrationId, int $status): void;
 
     public function removeRegistration(string $registrationId): void;
+
+    public function listRegistrationsByTrainingId(string $trainingId): array;
+
+    public function listRegistrationsByUserId(string $userId): array;
+
+    public function countTrainingRegistrations(string $trainingId): int;
 }

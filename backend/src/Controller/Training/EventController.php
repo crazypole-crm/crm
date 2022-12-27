@@ -479,6 +479,50 @@ class EventController extends AbstractController
         }
     }
 
+    /** @Route("/training/{trainingId}/registrations/list") */
+    public function listTrainingRegistrations(string $trainingId): Response
+    {
+        try
+        {
+            $registrations = $this->eventApi->listRegistrationsByTrainingId($trainingId);
+            return new Response(json_encode($registrations, JSON_THROW_ON_ERROR), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /** @Route("/training/registration/cur-user") */
+    public function listCurrentUserRegistrations(): Response
+    {
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $registrations = $this->eventApi->listRegistrationsByUserId($userId);
+            return new Response(json_encode($registrations, JSON_THROW_ON_ERROR), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**  @Route("/training/{trainingId}/registration/register")*/
+    public function createCurUserRegistration(string $trainingId): Response
+    {
+        try
+        {
+            $userId = $this->securityContext->getAuthenticatedUserId();
+            $registrationId = $this->eventApi->createRegistration($trainingId, $userId);
+            return new Response(json_encode(['registrationId' => $registrationId]), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
     private function convertTrainingType(string $type): int
     {
         return match ($type)

@@ -144,4 +144,19 @@ class Api implements ApiInterface
     {
         $this->trainingAppService->removeRegistration($registrationId);
     }
+
+    public function listRegistrationsByTrainingId(string $trainingId): array
+    {
+        return $this->trainingQueryService->listRegistrationsByTrainingId($trainingId);
+    }
+
+    public function listRegistrationsByUserId(string $userId): array
+    {
+        return $this->trainingQueryService->listRegistrationsByUserId($userId);
+    }
+
+    public function countTrainingRegistrations(string $trainingId): int
+    {
+        return $this->trainingQueryService->countTrainingRegistrations($trainingId);
+    }
 }

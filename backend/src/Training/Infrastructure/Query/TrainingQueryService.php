@@ -7,10 +7,12 @@ use App\Training\App\Data\TrainingData;
 use App\Training\App\Query\ListTrainingSpecification;
 use App\Training\App\Query\TrainingQueryServiceInterface;
 use App\Training\Infrastructure\Query\Hydrator\CourseDataHydrator;
+use App\Training\Infrastructure\Query\Hydrator\RegistrationDataHydrator;
 use App\Training\Infrastructure\Query\Hydrator\TrainingDataHydrator;
 use App\Training\Infrastructure\Query\Table\CourseTable;
 use App\Training\Infrastructure\Query\Hydrator\HallDataHydrator;
 use App\Training\Infrastructure\Query\Table\HallTable;
+use App\Training\Infrastructure\Query\Table\RegistrationTable;
 use App\Training\Infrastructure\Query\Table\TrainingTable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -22,18 +24,21 @@ class TrainingQueryService implements TrainingQueryServiceInterface
     private TrainingDataHydrator $hydrator;
     private CourseDataHydrator $courseDataHydrator;
     private HallDataHydrator $hallDataHydrator;
+    private RegistrationDataHydrator $registrationHydrator;
 
     public function __construct(
         EntityManagerInterface $em,
         TrainingDataHydrator $hydrator,
         CourseDataHydrator $courseDataHydrator,
         HallDataHydrator $hallDataHydrator,
+        RegistrationDataHydrator $registrationHydrator
     )
     {
         $this->conn = $em->getConnection();
         $this->hydrator = $hydrator;
         $this->courseDataHydrator = $courseDataHydrator;
         $this->hallDataHydrator = $hallDataHydrator;
+        $this->registrationHydrator = $registrationHydrator;
     }
 
     public function listTrainings(ListTrainingSpecification $spec): array
@@ -128,6 +133,51 @@ class TrainingQueryService implements TrainingQueryServiceInterface
             $result[] = $this->hallDataHydrator->hydrateRow($row);
         }
         return $result;
+    }
+
+    public function listRegistrationsByTrainingId(string $trainingId): array
+    {
+        $qb = $this->conn->createQueryBuilder();
+        $qb->from('training_registration', 'tr');
+        $qb->where($qb->expr()->eq('tr.' . RegistrationTable::TRAINING_ID, ':trainingId'));
+        $qb->setParameter('trainingId', $trainingId);
+
+        $stmt = $qb->executeQuery()->fetchAllAssociative();
+        $result = [];
+        foreach ($stmt as $row)
+        {
+            $result[] = $this->registrationHydrator->hydrateRow($row);
+        }
+        return $result;
+    }
+
+    public function listRegistrationsByUserId(string $userId): array
+    {
+        $qb = $this->conn->createQueryBuilder();
+        $qb->from('training_registration', 'tr');
+        $qb->where($qb->expr()->eq('tr.' . RegistrationTable::USER_ID, ':userId'));
+        $qb->setParameter('userId', $userId);
+
+        $stmt = $qb->executeQuery()->fetchAllAssociative();
+        $result = [];
+        foreach ($stmt as $row)
+        {
+            $result[] = $this->registrationHydrator->hydrateRow($row);
+        }
+        return $result;
+    }
+
+
+    public function countTrainingRegistrations(string $trainingId): int
+    {
+        $qb = $this->conn->createQueryBuilder();
+        $qb->from('training_registration', 'tr');
+        $qb->select('count(tr.' . RegistrationTable::ID . ') as registrations_count');
+        $qb->where($qb->expr()->eq('tr.' . RegistrationTable::TRAINING_ID, ':trainingId'));
+        $qb->setParameter('trainingId', $trainingId);
+
+        $row = $qb->executeQuery()->fetchAssociative();
+        return $row['registrations_count'];
     }
 
     private function addTrainingFieldSelect(QueryBuilder $qb, string $alias = 't'): void
