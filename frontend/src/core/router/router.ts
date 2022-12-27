@@ -97,10 +97,38 @@ function setOnCalendarPageOpened(handler: () => void) {
     onCalendarPageOpened = handler
 }
 
+let onUsersPageOpened: (() => void) | null = null
+
+function setOnUsersPageOpened(handler: () => void) {
+    onUsersPageOpened = handler
+}
+
+let onHallsPageOpened: (() => void) | null = null
+
+function setOnHallsPageOpened(handler: () => void) {
+    onHallsPageOpened = handler
+}
+
+let onDirectionsPageOpened: (() => void) | null = null
+
+function setOnDirectionsPageOpened(handler: () => void) {
+    onDirectionsPageOpened = handler
+}
+
 function onLocationChanged(location: Location) {
     switch (location.pathname) {
         case Router.Schedule.url():
             onCalendarPageOpened && onCalendarPageOpened()
+            break
+        case Router.UsersList.url():
+            onUsersPageOpened && onUsersPageOpened()
+            break
+        case Router.Halls.url():
+            onHallsPageOpened && onHallsPageOpened()
+            break
+        case Router.Directions.url():
+            onDirectionsPageOpened && onDirectionsPageOpened()
+            break
     }
 }
 
@@ -117,7 +145,12 @@ const clientRoutes = [
 
 export {
     initRouterHistory,
+
     setOnCalendarPageOpened,
+    setOnHallsPageOpened,
+    setOnDirectionsPageOpened,
+    setOnUsersPageOpened,
+
     Router,
     adminRoutes,
     clientRoutes

@@ -5,7 +5,8 @@ import { Router } from "../core/router/router";
 
 type Api_Direction = {
     courseId: string,
-    name: string
+    name: string,
+    description: string
 }
 
 function getDirections(): Promise<DirectionData[]> {
@@ -60,6 +61,7 @@ function editDirection(directionData: Api_Direction): Promise<void> {
         body: JSON.stringify({
             name: directionData.name,
             courseId: directionData.courseId,
+            description: directionData.description
         }),
     })
         .then(response => {

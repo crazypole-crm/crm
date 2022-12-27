@@ -10,6 +10,7 @@ const updateDirection = declareAsyncAction<DirectionData>(
         return DirectionsApi.editDirection({
             courseId: directionData.id,
             name: directionData.name,
+            description: directionData.description
         })
             .then(() => {
                 Toasts.success('Направление успешно изменено')

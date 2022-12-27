@@ -9,6 +9,7 @@ const {
     removeItems: removeUsers,
     updateItem: updateUser,
     setNewItems: setNewUsers,
+    removeAllItems: clearUsers,
 } = declareMapAtom<UserData>(
     'usersAtom',
     user => user.id,
@@ -22,6 +23,7 @@ const usersActions = {
     updateUser,
     updateUsers,
     setNewUsers,
+    clearUsers,
 }
 
 export {

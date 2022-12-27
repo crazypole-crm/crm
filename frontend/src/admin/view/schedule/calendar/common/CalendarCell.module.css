@@ -3,6 +3,6 @@
     border-radius: 10px;
     display: flex;
     flex: 1 0 0;
-    box-shadow: 0 2px 0 #F0F0F0;
+    box-shadow: 0 0 1px rgb(66 72 78 / 16%), 0 2px 2px rgb(66 72 78 / 8%), 0 0 4px rgb(66 72 78 / 12%);
     align-items: stretch;
 }

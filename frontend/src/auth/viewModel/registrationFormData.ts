@@ -1,9 +1,9 @@
-import { Atom, combine, declareAction, declareAtom, map } from "@reatom/core";
-import { ButtonState } from "../../common/button/ButtonState";
-import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter";
-import { registrationAction } from "../../currentUser/actions/registration";
-import { setAuthPageMode } from "./authPageMode";
-import { validateRequiredField } from "./FieldErrorTypes";
+import {Atom, combine, declareAction, declareAtom, map} from "@reatom/core";
+import {ButtonState} from "../../common/button/ButtonState";
+import {declareAtomWithSetter} from "../../core/reatom/declareAtomWithSetter";
+import {registrationAction} from "../../currentUser/actions/registration";
+import {setAuthPageMode} from "./authPageMode";
+import {validateRequiredField} from "./FieldErrorTypes";
 
 const [emailAtom, setEmail] = declareAtomWithSetter('auth.registation.email', '', on => [
     on(setAuthPageMode, () => '')
@@ -88,6 +88,7 @@ const submit = declareAction('auth.registation.submit',
             email,
             password,
         }))
+
     }
 )
 

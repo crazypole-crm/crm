@@ -15,15 +15,31 @@ const deletingHallsIds = declareAtom<string[]>('deleteHalls.deletingHallsIds', [
     on(open, (_, value) => value)
 ])
 
+const submitButtonLoadingAtom = declareAtom('deleteHalls.submitButtonLoading', false, on => [
+    on(deleteHalls, () => true),
+    on(deleteHalls.done, () => false),
+    on(deleteHalls.fail, () => false),
+    on(close, () => false),
+])
+
+const submit = declareAction('deleteHalls.submit',
+    (_, store) => {
+        const hallsIds = store.getState(deletingHallsIds)
+        store.dispatch(deleteHalls(hallsIds))
+    }
+)
+
 const deleteHallsPopupAtom = combine({
     opened: openedAtom,
     hallsIds: deletingHallsIds,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const deleteHallsPopupActions = {
     setOpened,
     open,
     close,
+    submit,
 }
 
 export {

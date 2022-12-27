@@ -5,6 +5,7 @@ import {Time} from "../time";
 import {createTraining} from "../calendaActions/createTraining";
 import {verify} from "../../../../core/verify";
 import {saveTraining} from "../calendaActions/saveTraining";
+import { isEqual } from "../../../../core/isEqual";
 
 type EditTrainingPopupMode = 'edit' | 'create'
 
@@ -31,19 +32,30 @@ const modeAtom = declareAtom<EditTrainingPopupMode>('editTraining.mode', 'create
     on(open, (_, {mode}) => mode)
 ])
 
-const [typeAtom, setType] = declareAtomWithSetter<TrainingType>('editTraining.type', 'grouped', on => [
-    on(open, (_, value) => value.mode === 'edit' ? value.trainingData.type : 'grouped')
+type PrevTrainingData =  Omit<TrainingData, 'id' | 'baseId' | 'availableRegistrationsCount' | 'isCanceled'>
+
+function remapTrainingDataToPrevTrainingData(trainingData: TrainingData): PrevTrainingData {
+    return {
+        type: trainingData.type,
+        directionId: trainingData.directionId,
+        trainerId: trainingData.trainerId,
+        hallId: trainingData.hallId,
+        date: trainingData.date,
+        timeStart: trainingData.timeStart,
+        timeEnd: trainingData.timeEnd,
+        maxRegistrationsCount: trainingData.type === 'grouped'
+            ? trainingData.maxRegistrationsCount
+            : undefined,
+        description: trainingData.description || undefined,
+    }
+}
+
+const prevTrainingDataAtom = declareAtom<PrevTrainingData|null>('editTraining.prevTrainingData', null, on => [
+    on(open, (_, value) => (value.mode === 'edit' ? remapTrainingDataToPrevTrainingData(value.trainingData) : null) || null)
 ])
 
-const [individualClientAtom, setIndividualClient] = declareAtomWithSetter<string|null>('editTraining.individualClient', null, on => [
-    on(open, (_, value) => {
-        if (value.mode === 'edit') {
-            if (value.trainingData.type === 'individual') {
-                return null
-            }
-        }
-        return null
-    })
+const [typeAtom, setType] = declareAtomWithSetter<TrainingType>('editTraining.type', 'grouped', on => [
+    on(open, (_, value) => value.mode === 'edit' ? value.trainingData.type : 'grouped')
 ])
 
 const trainingIdAtom = declareAtom<string | null>('editTraining.trainingId', null, on => [
@@ -117,8 +129,12 @@ const [trainingTrainerErrorAtom, setTrainingTrainerError] = declareAtomWithSette
     on(setTrainingTrainer, () => false)
 ])
 
+function convertCapacity(maxRegistrationsCount?: number) {
+    return maxRegistrationsCount || null
+}
+
 const [trainingCapacityAtom, setTrainingCapacity] = declareAtomWithSetter<number|null>('editTraining.trainingCapacity', null, on => [
-    on(open, (_, value) => value.mode === 'edit' ? value.trainingData.maxRegistrationsCount : null)
+    on(open, (_, value) => value.mode === 'edit' ? convertCapacity(value.trainingData.maxRegistrationsCount) : null)
 ])
 
 const [trainingCapacityErrorAtom, setTrainingCapacityError] = declareAtomWithSetter('editTraining.trainingCapacityError', false, on => [
@@ -164,45 +180,67 @@ const submit = declareAction('editTraining.submit',
         const trainingHallError = !trainingHall
         const trainingDirectionError = !trainingDirection
         const trainingTrainerError = !trainingTrainer
-        const trainingCapacityError = !trainingCapacity
+        const trainingCapacityError = type === 'grouped' && !trainingCapacity
 
         store.dispatch(setTrainingHallError(trainingHallError))
         store.dispatch(setTrainingDirectionError(trainingDirectionError))
         store.dispatch(setTrainingTrainerError(trainingTrainerError))
         store.dispatch(setTrainingCapacityError(trainingCapacityError))
 
-        if (trainingTrainerError || trainingHallError || trainingTrainerError || trainingCapacityError) {
+        if (trainingDirectionError || trainingHallError || trainingTrainerError || trainingCapacityError) {
             return
         }
 
         if (mode === 'create') {
             store.dispatch(createTraining({
-                type: type,
+                type,
                 date: trainingDate,
-                directionId: verify(trainingDirection),
-                hallId: verify(trainingHall),
-                trainerId: verify(trainingTrainer),
+                directionId: trainingDirection,
+                hallId: trainingHall,
+                trainerId: trainingTrainer,
                 timeStart: trainingStartTime,
                 timeEnd: trainingEndTime,
                 description: trainingDescription || undefined,
                 isRepeatable: repeatable,
-                maxRegistrationsCount: trainingCapacity,
+                maxRegistrationsCount: type === 'grouped'
+                    ? verify(trainingCapacity)
+                    : undefined,
             }))
         }
 
-        if (mode === 'edit') {
+        if (mode === 'edit' && trainingId) {
+            const prevTrainingData =  store.getState(prevTrainingDataAtom)
+            if (isEqual(prevTrainingData, {
+                type: type,
+                directionId: trainingDirection,
+                trainerId: trainingTrainer,
+                hallId: trainingHall,
+                date: trainingDate,
+                timeStart: trainingStartTime,
+                timeEnd: trainingEndTime,
+                maxRegistrationsCount: type === 'grouped'
+                    ? verify(trainingCapacity)
+                    : undefined,
+                description: trainingDescription || undefined,
+            })) {
+                store.dispatch(close())
+                return
+            }
+            
             store.dispatch(saveTraining({
                 type: type,
                 date: trainingDate,
-                directionId: verify(trainingDirection),
-                hallId: verify(trainingHall),
-                trainerId: verify(trainingTrainer),
+                directionId: trainingDirection,
+                hallId: trainingHall,
+                trainerId: trainingTrainer,
                 timeStart: trainingStartTime,
                 timeEnd: trainingEndTime,
                 description: trainingDescription || undefined,
-                id: verify(trainingId),
+                id: trainingId,
                 baseId: verify(baseId),
-                maxRegistrationsCount: trainingCapacity,
+                maxRegistrationsCount: type === 'grouped'
+                    ? verify(trainingCapacity)
+                    : undefined,
             }))
         }
     }
@@ -211,6 +249,7 @@ const submit = declareAction('editTraining.submit',
 const editTrainingPopupAtom = combine({
     opened: openedAtom,
     mode: modeAtom,
+    prevTrainingData: prevTrainingDataAtom,
     trainingDate: trainingDateAtom,
     trainingStartTime: trainingStartTimeAtom,
     trainingEndTime: trainingEndTimeAtom,
@@ -224,7 +263,6 @@ const editTrainingPopupAtom = combine({
     trainingCapacityError: trainingCapacityErrorAtom,
     trainingDescription: trainingDescriptionAtom,
     type: typeAtom,
-    individualClient: individualClientAtom,
     repeatable: repeatableAtom,
     trainingId: trainingIdAtom,
     baseId: baseIdAtom,
@@ -243,7 +281,6 @@ const editTrainingPopupActions = {
     setTrainingDescription,
     setTrainingCapacity,
     setType,
-    setIndividualClient,
     setRepeatable,
     submit,
 }

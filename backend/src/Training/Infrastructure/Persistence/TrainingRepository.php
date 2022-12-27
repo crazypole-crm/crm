@@ -6,11 +6,11 @@ namespace App\Training\Infrastructure\Persistence;
 use App\Common\Domain\Uuid;
 use App\Training\Domain\Model\Training;
 use App\Training\Domain\Model\TrainingRepositoryInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
-use function Doctrine\ORM\QueryBuilder;
 
 class TrainingRepository implements TrainingRepositoryInterface
 {
@@ -44,30 +44,30 @@ class TrainingRepository implements TrainingRepositoryInterface
         return $this->repo->findBy(['hallId' => $this->convertUuidsToStrings($hallIds)]);
     }
 
-    public function findIntersectingTrainingsByTrainerId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $trainerId): ?int
+    public function findIntersectingTrainingsByTrainerId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $trainerId): bool
     {
         $qb = $this->repo->createQueryBuilder('t');
         $qb->where(
             $qb->expr()->orX(
                 $qb->expr()->andX(
-                    $qb->expr()->gte('t.startDate', ':startDate'),
-                    $qb->expr()->lte('t.startDate', ':endDate')
+                    't.startDate >= :startDate',
+                    't.startDate <= :endDate'
                 ),
                 $qb->expr()->andX(
-                    $qb->expr()->gte('t.endDate', ':startDate'),
-                    $qb->expr()->lte('t.endDate', ':endDate')
+                    't.endDate >= :startDate',
+                    't.endDate <= :endDate'
                 )
             )
         );
         $qb->andWhere($qb->expr()->eq('t.trainerId', ':trainerId'));
-        $qb->setParameter('startDate', $startDate);
-        $qb->setParameter('endDate', $endDate);
-        $qb->setParameter('trainerId', $trainerId);
+        $qb->setParameter('startDate', $startDate, Types::DATETIME_IMMUTABLE);
+        $qb->setParameter('endDate', $endDate, Types::DATETIME_IMMUTABLE);
+        $qb->setParameter('trainerId', (string)$trainerId);
 
-        return $qb->getQuery()->getFirstResult();
+        return $qb->getQuery()->setMaxResults(1)->getOneOrNullResult() !== null;
     }
 
-    public function findIntersectingTrainingsByHallId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $hallId): ?int
+    public function findIntersectingTrainingsByHallId(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, Uuid $hallId): bool
     {
         $qb = $this->repo->createQueryBuilder('t');
         $qb->where(
@@ -83,11 +83,11 @@ class TrainingRepository implements TrainingRepositoryInterface
             )
         );
         $qb->andWhere($qb->expr()->eq('t.hallId', ':hallId'));
-        $qb->setParameter('startDate', $startDate);
-        $qb->setParameter('endDate', $endDate);
-        $qb->setParameter('hallId', $hallId);
+        $qb->setParameter('startDate', $startDate, Types::DATETIME_IMMUTABLE);
+        $qb->setParameter('endDate', $endDate, Types::DATETIME_IMMUTABLE);
+        $qb->setParameter('hallId', (string)$hallId);
 
-        return $qb->getQuery()->getFirstResult();
+        return $qb->getQuery()->setMaxResults(1)->getOneOrNullResult() !== null;
     }
 
     public function findAllByCourseIds(array $courseIds): array

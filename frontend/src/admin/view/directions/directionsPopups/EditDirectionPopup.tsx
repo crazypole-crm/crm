@@ -23,21 +23,44 @@ function DirectionNameInput() {
     />
 }
 
+function DirectionDescriptionInput() {
+    const directionDescriptionError = useAtomWithSelector(editDirectionPopupAtom, x => x.directionDescriptionError)
+    const directionDescription = useAtomWithSelector(editDirectionPopupAtom, x => x.directionDescription)
+    const handleSetDirectionDescription = useAction(editDirectionPopupActions.setDirectionDescription)
+
+    return <Input
+        value={directionDescription || ''}
+        status={directionDescriptionError ? 'error' : ''}
+        onChange={e => handleSetDirectionDescription(e.target.value)}
+        style={fieldStyle}
+    />
+}
+
 function Content() {
     const directionNameError = useAtomWithSelector(editDirectionPopupAtom, x => x.directionNameError)
+    const directionDescriptionError = useAtomWithSelector(editDirectionPopupAtom, x => x.directionDescriptionError)
 
     return (
-        <FieldBlock
-            title={'Название'}
-            content={<DirectionNameInput/>}
-            error={directionNameError}
-        />
+        <div>
+            <FieldBlock
+                title={'Название'}
+                content={<DirectionNameInput/>}
+                error={directionNameError}
+            />
+
+            <FieldBlock
+                title={'Описание'}
+                content={<DirectionDescriptionInput/>}
+                error={directionDescriptionError}
+            />
+        </div>
     )
 }
 
 function EditDirectionPopup() {                                                                                                                                                                                                                                                                                                                                                                                          
     const editDirectionPopupOpened = useAtomWithSelector(editDirectionPopupAtom, x => x.opened)
     const editDirectionPopupMode = useAtomWithSelector(editDirectionPopupAtom, x => x.popupMode)
+    const submitButtonLoading = useAtomWithSelector(editDirectionPopupAtom, x => x.submitButtonLoading)
     const handleCloseEditDirectionPopup = useAction(editDirectionPopupActions.close)
     const handleSubmitDirection = useAction(editDirectionPopupActions.submit)
 
@@ -47,7 +70,11 @@ function EditDirectionPopup() {
         centered
         okText={'Сохранить'}
         cancelText={'Отмена'}
-        onOk={handleSubmitDirection}
+        okButtonProps={{
+            loading: submitButtonLoading,
+            type: 'primary',
+            onClick: handleSubmitDirection,
+        }}
         onCancel={handleCloseEditDirectionPopup}
         width={427}
     >

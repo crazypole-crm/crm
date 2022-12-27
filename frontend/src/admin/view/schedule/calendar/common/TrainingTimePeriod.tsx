@@ -94,8 +94,10 @@ function TrainingTimePeriod({
                 value={momentTimeStart}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, setTrainingStartTime)}
-                disabledHours={() => disabledStartTime.disabledHours}
-                disabledMinutes={() => disabledStartTime.disabledMinutes}
+                disabledTime={() => ({
+                    disabledHours: () => disabledStartTime.disabledHours,
+                    disabledMinutes: () => disabledStartTime.disabledMinutes,
+                })}
                 showNow={false}
             />
             -
@@ -103,8 +105,10 @@ function TrainingTimePeriod({
                 value={momentTimeEnd}
                 format={'HH:mm'}
                 onSelect={value => onChange(value, setTrainingEndTime)}
-                disabledHours={() => disabledEndTime.disabledHours}
-                disabledMinutes={() => disabledEndTime.disabledMinutes}
+                disabledTime={() => ({
+                    disabledHours: () => disabledEndTime.disabledHours,
+                    disabledMinutes: () => disabledEndTime.disabledMinutes,
+                })}
                 showNow={false}
             />
         </div>

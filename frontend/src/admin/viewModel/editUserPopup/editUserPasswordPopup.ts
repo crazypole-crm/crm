@@ -12,7 +12,7 @@ type OpenPayload = {
 }
 
 const open = declareAction<OpenPayload>('editUserPassword.open')
-const close = declareAction('editUser.close')
+const close = declareAction('editUserPassword.close')
 
 const [openedAtom, setOpened] = declareAtomWithSetter('editUserPassword.opened', false, on => [
     on(open, () => true),

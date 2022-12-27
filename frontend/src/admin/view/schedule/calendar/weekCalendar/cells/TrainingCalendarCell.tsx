@@ -45,7 +45,6 @@ function getFreePlaces(availablePlaceCount: number) {
         return 'Все места заняты'
     }
     const lastDigit = Number(String(availablePlaceCount)[String(availablePlaceCount).length - 1])
-    console.log('lastDigit', lastDigit)
     if (lastDigit === 0) {
         return `Свободно ${availablePlaceCount} мест`
     }
@@ -237,7 +236,9 @@ function TrainingCalendarCell({
                 onEdit()
                 break
             case "client":
-                onRecordTraining()
+                if (!trainingData.isCanceled) {
+                    onRecordTraining()
+                }
                 break
         }
     }
@@ -262,6 +263,7 @@ function TrainingCalendarCell({
             <div className={styles.trainerName}>
                 {getTrainerName(trainer.firstName, trainer.lastName)}
             </div>
+            {(trainingData.isCanceled) && <span className={styles.cancelWarning}>Отмена занятия</span>}
         </div>
 
     return (

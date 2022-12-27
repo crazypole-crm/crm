@@ -43,7 +43,7 @@ function TitleField() {
     const handleSetTitle = useAction(sendCustomNotificationPopupActions.setTitle)
 
     return <Input
-        placeholder="Зоголовок"
+        placeholder="Заголовок"
         value={title}
         onChange={e => handleSetTitle(e.target.value)}
     />

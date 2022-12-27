@@ -1,4 +1,5 @@
 import { combine, declareAction, declareAtom } from "@reatom/core"
+import { isEqual } from "../../../../core/isEqual"
 import { declareAtomWithSetter } from "../../../../core/reatom/declareAtomWithSetter"
 import { verify } from "../../../../core/verify"
 import { createDirection } from "../createDirection"
@@ -29,6 +30,17 @@ const popupModeAtom = declareAtom<ModeType>('editDirection.popupMode', 'edit', o
     on(open, (_, value) => value.mode)
 ])
 
+function remapDirectionlDataToPrevDirectionData(directionData: DirectionData) {
+    return {
+        name: directionData.name,
+        description: directionData.description,
+    }
+}
+
+const prevDirectionDataAtom = declareAtom<Omit<DirectionData, 'id'>|null>('editDirection.prevDirectionName', null, on => [
+    on(open, (_, value) => (value.mode === 'edit' ? remapDirectionlDataToPrevDirectionData(value.directionData) : null) || null)
+])
+
 const directionIdAtom = declareAtom<string|null>('editDirection.directionId', null, on => [
     on(open, (_, value) => value.mode === 'edit' ? value.directionData.id : null)
 ])
@@ -42,29 +54,61 @@ const [directionNameErrorAtom, setDirectionNameError] = declareAtomWithSetter('e
     on(open, () => false)
 ])
 
+const [directionDescriptionAtom, setDirectionDescription] = declareAtomWithSetter<string|null>('editDirection.directionDescription', null, on => [
+    on(open, (_, value) => value.mode === 'edit' ? value.directionData.description : null)
+])
+
+const [directionDescriptionErrorAtom, setDirectionDescriptionError] = declareAtomWithSetter('editDirection.directionDescriptionError', false, on => [
+    on(setDirectionDescription, () => false),
+    on(open, () => false)
+])
+
+const submitButtonLoadingAtom = declareAtom('editDirection.submitButtonLoading', false, on => [
+    on(createDirection, () => true),
+    on(createDirection.done, () => false),
+    on(createDirection.fail, () => false),
+    on(updateDirection, () => true),
+    on(updateDirection.done, () => false),
+    on(updateDirection.fail, () => false),
+    on(close, () => false),
+])
+
 const submit = declareAction('editDirection.submit',
     (_, store) => {
         const popupMode = store.getState(popupModeAtom)
         const directionId = store.getState(directionIdAtom)
         const directionName = store.getState(directionNameAtom)
+        const directionDescription = store.getState(directionDescriptionAtom)
 
         const directionNameError = !directionName
+        const directionDescriptionError = !directionDescription
 
         store.dispatch(setDirectionNameError(directionNameError))
-
-        if (directionNameError) {
+        store.dispatch(setDirectionDescriptionError(directionDescriptionError))
+        if (directionNameError || directionDescriptionError) {
             return
         }
 
         if (popupMode === 'edit') {
+            const prevDirectionData =  store.getState(prevDirectionDataAtom)
+            if (isEqual(prevDirectionData, {
+                name: directionName,
+                description: directionDescription,
+            })) {
+                store.dispatch(close())
+                return
+            }
+
             store.dispatch(updateDirection({
                 id: verify(directionId),
                 name: directionName,
+                description: directionDescription
             }))
         }
         else {
             store.dispatch(createDirection({
                 name: directionName,
+                description: directionDescription
             }))
         }
     }
@@ -73,9 +117,13 @@ const submit = declareAction('editDirection.submit',
 const editDirectionPopupAtom = combine({
     opened: openedAtom,
     popupMode: popupModeAtom,
+    prevDirectionData: prevDirectionDataAtom,
     directionId: directionIdAtom,
     directionName: directionNameAtom,
     directionNameError: directionNameErrorAtom,
+    directionDescription: directionDescriptionAtom,
+    directionDescriptionError: directionDescriptionErrorAtom,
+    submitButtonLoading: submitButtonLoadingAtom,
 })
 
 const editDirectionPopupActions = {
@@ -84,6 +132,8 @@ const editDirectionPopupActions = {
     close,
     setDirectionName,
     setDirectionNameError,
+    setDirectionDescription,
+    setDirectionDescriptionError,
     submit,
 }
 

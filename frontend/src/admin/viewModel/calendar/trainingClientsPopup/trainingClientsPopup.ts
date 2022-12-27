@@ -39,6 +39,10 @@ const openedAtom = declareAtom('clientTrainingPopup.opened', false, on => [
     on(close, () => false),
 ])
 
+const trainingIdAtom = declareAtom('clientTrainingPopup.trainingId', '', on => [
+    on(open, (_, {id}) => id),
+])
+
 const markClientAttendanceImpl =  declareAction<{registrationId: string, attendance: boolean}>('clientTrainingPopup.markClientAttendanceImpl')
 
 const markClientAttendance = declareAsyncAction<{registrationId: string, attendance: boolean}>('clientTrainingPopup.markClientAttendance',
@@ -90,6 +94,7 @@ const popupLoadingAtom = declareAtom<boolean>('clientTrainingPopup.popupLoading'
 const clientsTrainingPopupAtom = combine({
     opened: openedAtom,
     registrationsData: registrationsDataAtom,
+    trainingId: trainingIdAtom,
     popupLoading: popupLoadingAtom,
 })
 

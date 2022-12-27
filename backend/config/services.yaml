@@ -42,6 +42,9 @@ services:
         class: App\Common\Infrastructure\Event\MessageDispatcher
         calls:
             - [ subscribe, [ '@App\Training\App\Event\Integration\User\UserRemovedEventHandler' ] ]
+            - [ subscribe, [ '@App\Notification\App\Event\Integration\Training\TrainingCanceledEventHandler' ] ]
+            - [ subscribe, [ '@App\Notification\App\Event\Integration\Training\TrainingTrainerChangedEventHandler' ] ]
+            - [ subscribe, [ '@App\Notification\App\Event\Integration\Training\TrainingRescheduledEventHandler' ] ]
 
     App\Controller\Event\MessagingController:
         arguments:

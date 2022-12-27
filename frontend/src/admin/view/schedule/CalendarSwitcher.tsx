@@ -38,7 +38,6 @@ function CalendarSwitcher({
         <div className={styles.switcherContainer}>
             <Button
                 type={'link'}
-                ghost
                 shape={'circle'}
                 icon={<SettingOutlined />}
                 onClick={() => handleOpenCalendarSettingsPopup({
