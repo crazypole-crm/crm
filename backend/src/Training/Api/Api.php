@@ -129,4 +129,19 @@ class Api implements ApiInterface
     {
         return $this->trainingAppService->createCourse($name);
     }
+
+    public function createRegistration(string $trainingId, string $userId): string
+    {
+        return $this->trainingAppService->createRegistration($trainingId, $userId);
+    }
+
+    public function changeRegistrationStatus(string $registrationId, int $status): void
+    {
+        $this->trainingAppService->changeRegistrationStatus($registrationId, $status);
+    }
+
+    public function removeRegistration(string $registrationId): void
+    {
+        $this->trainingAppService->removeRegistration($registrationId);
+    }
 }

@@ -427,6 +427,58 @@ class EventController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/training/{trainingId}/registration/add")
+     */
+    public function createRegistration(Request $request, string $trainingId): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $userId = $requestData['userId'];
+            $registrationId = $this->eventApi->createRegistration($trainingId, $userId);
+            return new Response(json_encode(['registrationId' => $registrationId]), Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/training/registration/{registrationId}/changeStatus")
+     */
+    public function changeRegistrationStatus(Request $request, string $registrationId): Response
+    {
+        $requestData = json_decode($request->getContent(), true);
+        try
+        {
+            $status = $requestData['status'];
+            $this->eventApi->changeRegistrationStatus($registrationId, $status);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @Route("/training/registration/{registrationId}/remove")
+     */
+    public function removeRegistration(string $registrationId): Response
+    {
+        try
+        {
+            $this->eventApi->removeRegistration($registrationId);
+            return new Response(null, Response::HTTP_OK);
+        }
+        catch (UserNotAuthenticated $e)
+        {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
     private function convertTrainingType(string $type): int
     {
         return match ($type)

@@ -9,6 +9,8 @@ use App\Common\Domain\UuidGenerator;
 use App\Training\Domain\Exception\CourseNotFoundException;
 use App\Training\Domain\Exception\HallAlreadyHasTrainingAtThisTimeException;
 use App\Training\Domain\Exception\HallNotFoundException;
+use App\Training\Domain\Exception\NoAvailableRegistrationsException;
+use App\Training\Domain\Exception\RegistrationNotFoundException;
 use App\Training\Domain\Exception\TrainerAlreadyHaveTrainingAtThisTimeException;
 use App\Training\Domain\Exception\TrainingNotFoundException;
 use App\Training\Domain\Model\BaseTraining;
@@ -21,6 +23,8 @@ use App\Training\Domain\Model\Event\TrainingsRemovedEvent;
 use App\Training\Domain\Model\Event\TrainingTrainerChangedEvent;
 use App\Training\Domain\Model\Hall;
 use App\Training\Domain\Model\HallRepositoryInterface;
+use App\Training\Domain\Model\Registration;
+use App\Training\Domain\Model\RegistrationRepositoryInterface;
 use App\Training\Domain\Model\Training;
 use App\Training\Domain\Model\TrainingRepositoryInterface;
 
@@ -33,6 +37,7 @@ class TrainingService
         private HallRepositoryInterface $hallRepository,
         private CourseRepositoryInterface $courseRepository,
         private BaseTrainingRepositoryInterface $baseTrainingRepository,
+        private RegistrationRepositoryInterface $registrationRepository,
         private EventDispatcherInterface $dispatcher,
     )
     {
@@ -378,6 +383,52 @@ class TrainingService
             throw new CourseNotFoundException($id);
         }
         $course->setName($name);
+    }
+
+    public function createRegistration(Uuid $trainingId, Uuid $userId): Uuid
+    {
+        $registration = new Registration(
+            new Uuid(UuidGenerator::generateUuid()),
+            $trainingId,
+            $userId
+        );
+
+        $training = $this->trainingRepository->findById($trainingId);
+        if ($training === null)
+        {
+            throw new TrainingNotFoundException($trainingId);
+        }
+        
+        $registrationsCount = $this->registrationRepository->countRegistrationsByTrainingId($trainingId);
+        if ($registrationsCount >= $training->getMaxRegistrations())
+        {
+            throw new NoAvailableRegistrationsException($training->getId());
+        }
+
+        $this->registrationRepository->add($registration);
+        return $registration->getId();
+    }
+
+    public function removeRegistration(Uuid $registrationId): void
+    {
+        $registration = $this->registrationRepository->findOneById($registrationId);
+        if ($registration === null)
+        {
+            throw new RegistrationNotFoundException($registrationId);
+        }
+
+        $this->registrationRepository->remove($registration);
+    }
+
+    public function changeRegistrationStatus(Uuid $registrationId, int $status): void
+    {
+        $registration = $this->registrationRepository->findOneById($registrationId);
+        if ($registration === null)
+        {
+            throw new RegistrationNotFoundException($registrationId);
+        }
+
+        $registration->setStatus($status);
     }
 
     /**

@@ -43,4 +43,10 @@ interface ApiInterface
     public function listHalls(): array;
 
     public function createCourse(string $name): string;
+
+    public function createRegistration(string $trainingId, string $userId): string;
+
+    public function changeRegistrationStatus(string $registrationId, int $status): void;
+
+    public function removeRegistration(string $registrationId): void;
 }

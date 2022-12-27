@@ -256,4 +256,33 @@ class TrainingAppService
             }, $strings
         );
     }
+
+    public function createRegistration(string $trainingId, string $userId): string
+    {
+        return $this->transaction->execute(function() use ($trainingId, $userId) {
+            return (string)$this->eventService->createRegistration(
+                new Uuid($trainingId), 
+                new Uuid ($userId)
+            );
+        });
+    }
+
+    public function changeRegistrationStatus(string $registrationId, int $status): void
+    {
+        $operation = $this->blockingOperatorExecutor->execute(
+            [LockNames::getRegistrationLock((string)$registrationId)],
+            function () use ($registrationId, $status)
+            {
+                $this->eventService->changeRegistrationStatus(new Uuid($registrationId), $status);
+            }
+        );
+        $this->transaction->execute($operation);
+    }
+
+    public function removeRegistration(string $registrationId): void
+    {
+        $this->transaction->execute(function() use ($registrationId) {
+            $this->eventService->removeRegistration(new Uuid($registrationId));
+        });
+    }
 }
