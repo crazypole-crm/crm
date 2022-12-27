@@ -7,9 +7,12 @@ import { unsubscribeTraining } from "../../registrations/popups/unsubscribeTrain
 
 type ModeType = 'record' | 'cancel' | 'delete' | 'unsubscribe'
 
-type OpenPayload = TrainingData & {
-    mode: ModeType,
-}
+type OpenPayload = TrainingData & ({
+    mode: 'record' | 'cancel' | 'delete' ,
+} | {
+    mode: 'unsubscribe',
+    registrationId: string
+})
 
 const open = declareAction<OpenPayload>('trainingActionPopup.open')
 const close = declareAction('trainingActionPopup.close')
@@ -35,6 +38,10 @@ const trainingDataAtom = declareAtom<TrainingData>('trainingActionPopup.training
     on(open, (_, trainingData) => ({...trainingData})),
 ])
 
+const registrationIdAtom = declareAtom<string|null>('trainingActionPopup.registrationIdAtom', null, on => [
+    on(open, (_, value) => value.mode === 'unsubscribe' ? value.registrationId : null),
+])
+
 const submitButtonLoadingAtom = declareAtom('trainingActions.submitButtonLoading', false, on => [
     on(deleteTraining, () => true),
     on(deleteTraining.done, () => false),
@@ -55,6 +62,7 @@ const submit = declareAction('trainingActionPopup.submit',
     (_, store) => {
         const mode = store.getState(modeAtom)
         const {baseId, id} = store.getState(trainingDataAtom)
+        const registrationId = store.getState(registrationIdAtom)
 
         if (mode === 'record') {
             store.dispatch(signUpToTraining(id))
@@ -65,8 +73,8 @@ const submit = declareAction('trainingActionPopup.submit',
         else if (mode === 'delete') {
             store.dispatch(deleteTraining(baseId))
         }
-        else if (mode === 'unsubscribe') {
-            store.dispatch(unsubscribeTraining(id))
+        else if (registrationId && mode === 'unsubscribe') {
+            store.dispatch(unsubscribeTraining(registrationId))
         }
     }
 )
@@ -74,6 +82,7 @@ const submit = declareAction('trainingActionPopup.submit',
 const trainingActionPopupAtom = combine({
     mode: modeAtom,
     trainingData: trainingDataAtom,
+    registrationId: registrationIdAtom,
     opened: openedAtom,
     submitButtonLoading: submitButtonLoadingAtom,
 })

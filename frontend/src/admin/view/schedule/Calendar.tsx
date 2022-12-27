@@ -130,7 +130,6 @@ function getValidTrainings(trainings: TrainingData[], trainers: Array<UserData>,
     })
 }
 
-
 function Calendar() {
     const [calendarType, setCalendarType] = useState<CalendarType>('week')
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
@@ -204,8 +203,6 @@ export type {
 
 export {
     getFilterItems,
-    getValidTrainings,
-    getFilteredTrainings,
     calculateWeekStartDate,
     Calendar,
 }

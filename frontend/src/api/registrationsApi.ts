@@ -1,12 +1,9 @@
-import { Api_TrainingData, CalendarApi } from "./calendarApi";
+import { remapApiTrainingDataToTrainingData } from "../admin/viewModel/calendar/calendaActions/loadTrainingsForPeriod";
+import { TrainingData } from "../admin/viewModel/calendar/TrainingData";
+import { UserRegistrationData } from "../admin/viewModel/registrations/UserRegistrationData";
+import { CalendarApi } from "./calendarApi";
 
-type RegistrationData = {
-    registrationId: string,
-    trainingId: string,
-    userId: string
- }
-
-const mockRegistrations: RegistrationData[] = [
+const mockRegistrations = [
     {
         registrationId: '1',
         trainingId: '3f27fa59-3850-4a3b-b05a-007abb18a8be',
@@ -19,12 +16,18 @@ const mockRegistrations: RegistrationData[] = [
     }
 ]
 
-function getUserRegistrationsForPeriod(userId: string, startDate: Date, endDate: Date): Promise<Api_TrainingData[]> {
+function getUserRegistrationsForPeriod(userId: string, startDate: Date, endDate: Date): Promise<UserRegistrationData[]> {
     return CalendarApi.getTrainingsForPeriod(startDate, endDate)
         .then ((allTrainings) => {
             const userRegisrtations = mockRegistrations.filter((registration) => registration.userId === userId)
-            const userTrainingsIds = userRegisrtations.map((registration) => registration.trainingId)
-            const userTrainings = allTrainings.filter((training) => userTrainingsIds.includes(training.trainingId))
+            const allRemappedTrainings = remapApiTrainingDataToTrainingData(allTrainings)
+            const userTrainings = userRegisrtations.map((registration) => {
+                const training = allRemappedTrainings.find((training) => training.id === registration.trainingId)
+                return {
+                    id: registration.registrationId,
+                    trainingData: training || {} as TrainingData,
+                }
+            })
             return Promise.resolve(userTrainings)
         })
 }

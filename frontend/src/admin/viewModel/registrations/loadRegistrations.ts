@@ -15,7 +15,7 @@ const loadRegistrations = declareAsyncAction<LoadRegistrationsForPeriodPayload>(
     ({userId, startDate, endDate}, store) => {
         return RegistrationsApi.getUserRegistrationsForPeriod(userId, startDate, endDate)
             .then(registrations => {
-                store.dispatch(registrationsActions.setNewRegistrations(remapApiTrainingDataToTrainingData(registrations)))
+                store.dispatch(registrationsActions.setNewRegistrations(registrations))
             })
             .catch(() => {
                 Toasts.error('При получении списка записей произошла ошибка')

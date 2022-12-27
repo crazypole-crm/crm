@@ -11,9 +11,15 @@ import { registrationsAtom } from "../../viewModel/registrations/registrations"
 import { loadAllUsersData } from "../../viewModel/users/loadUsers"
 import { trainersAtom } from "../../viewModel/users/users"
 import { CalendarSidePanel } from "../calendarSidePanel/CalendarSidePanel"
-import { calculateWeekStartDate, getFilteredTrainings, getFilterItems, getValidTrainings } from "../schedule/Calendar"
+import { calculateWeekStartDate, getFilterItems } from "../schedule/Calendar"
 import { RegistrationsListItem } from "./RegistrationsListItem"
 import styles from './RegistrationsLayout.module.css'
+import { UserRegistrationData } from "../../viewModel/registrations/UserRegistrationData"
+import { UserData } from "../../viewModel/users/UserData"
+import { MapItems } from "../../../core/reatom/declareMapAtom"
+import { DirectionData } from "../../viewModel/direction/DirectionData"
+import { HallData } from "../../viewModel/hall/HallData"
+import { FilterData } from "../../viewModel/filterPanel/FilterData"
 
 function setStartPeriodTime(startPeriod: Date) {
     startPeriod.setHours(8)
@@ -30,6 +36,32 @@ function getEndPeriod(startPeriod: Date): Date {
     endPeriod.setMilliseconds(0)
     endPeriod.setSeconds(0)
     return endPeriod
+}
+
+function getValidTrainings(trainings: UserRegistrationData[], trainers: Array<UserData>, directions: MapItems<DirectionData>, halls: MapItems<HallData>) {
+    return trainings.filter(training => {
+        const trainer = trainers.find(trainer => trainer.id === training.trainingData.trainerId)
+        const direction = directions[training.trainingData.directionId]
+        const hall = halls[training.trainingData.hallId]
+
+        return !!trainer && !!direction && !!hall
+    })
+}
+
+function getFilteredTrainings(trainings: UserRegistrationData[], filtersList: FilterData[], selectedFilters: string[]) {
+    if (!selectedFilters.length) {
+        return trainings
+    }
+    return trainings.filter(training => {
+        return filtersList.every(filter => {
+            const currFilters = filter.items.filter(item => selectedFilters.includes(item.id))
+            if (currFilters.length) 
+                return currFilters.some(currFilter => {
+                    return [training.trainingData.hallId, training.trainingData.trainerId, training.trainingData.directionId].includes(currFilter.id)
+                })
+            return true
+        })
+    })
 }
 
 function RegistrationsLayout() {
@@ -88,9 +120,9 @@ function RegistrationsLayout() {
                 itemLayout="horizontal"
                 loading={registrationsLoading}
                 dataSource={filteredTrainings}
-                renderItem={(item) => (
+                renderItem={(registrationData) => (
                     <List.Item>
-                        <RegistrationsListItem trainingData={item} />
+                        <RegistrationsListItem registrationData={registrationData} />
                     </List.Item>
                 )}
             />
