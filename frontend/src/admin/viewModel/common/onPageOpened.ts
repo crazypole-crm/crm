@@ -2,6 +2,7 @@ import {declareAction} from "@reatom/core"
 import {usersActions} from "../users/users";
 import {hallsActions} from "../hall/halls";
 import {directionsActions} from "../direction/directions";
+import { registrationsActions } from "../registrations/registrations";
 
 
 const calendarPageOpened = declareAction('calendarPageOpened')
@@ -18,9 +19,14 @@ const directionsPageOpened = declareAction('directionsPageOpened', (_, store) =>
     store.dispatch(directionsActions.clearDirections())
 })
 
+const registrationsPageOpened = declareAction('registrationsPageOpened', (_, store) => {
+    store.dispatch(registrationsActions.clearRegistrations())
+})
+
 export {
     calendarPageOpened,
     usersPageOpened,
     hallsPageOpened,
-    directionsPageOpened
+    directionsPageOpened,
+    registrationsPageOpened
 }

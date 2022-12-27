@@ -61,7 +61,7 @@ function AdminLayout() {
         <div className={styles.layout}>
             <AdminHeader />
             <div className={styles.contentRow}>
-                {authorizedUser.role !== 'client' && <Sidebar/>}
+                <Sidebar/>
                 <div className={styles.content}>
                     <Switch>
                         {authorizedUser.role !== 'client'

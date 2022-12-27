@@ -21,12 +21,14 @@ function TrainingActionPopup() {
         'delete': 'Удалить занятие',
         'cancel': 'Отменить занятие',
         'record': 'Записаться на занятие',
+        'unsubscribe': 'Информация о занятии',
     })
 
     const okButtonText = getValueByCheckedKey(mode, {
         'delete': 'Удалить занятие',
         'cancel': 'Отменить занятие',
         'record': 'Записаться на занятие',
+        'unsubscribe': 'Отписаться от занятия',
     })
 
     return <Modal

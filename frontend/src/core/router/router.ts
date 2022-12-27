@@ -3,6 +3,7 @@ import {HallsLayout} from "../../admin/view/halls/HallsLayout";
 import {ScheduleLayoutWrapper} from "../../admin/view/schedule/ScheduleLayoutWrapper";
 import {UsersLayout} from "../../admin/view/users/UsersLayout";
 import {DirectionsLayout} from "../../admin/view/directions/DirectionsLayout";
+import { RegistrationsLayout } from "../../admin/view/registrations/RegistrationsLayout";
 
 const AUTH = '/auth'
 const ADMIN = '/admin'
@@ -10,6 +11,7 @@ const USERS_LIST = '/users-list'
 const SCHEDULE = '/schedule'
 const DIRECTIONS = '/courses'
 const HALLS = '/halls'
+const REGISTRATIONS = '/registrations'
 
 let RouterHistory: History|null = null
 
@@ -63,6 +65,12 @@ function generateHallsUrl() {
 function openHalls(push: boolean = false) {
     replaceUrl(generateHallsUrl(), push)
 }
+function generateRegistrtionsUrl() {
+    return `${ADMIN}${REGISTRATIONS}`
+}
+function openRegistrtions(push: boolean = false) {
+    replaceUrl(generateRegistrtionsUrl(), push)
+}
 
 const Router = {
     Auth: {
@@ -88,6 +96,10 @@ const Router = {
     Halls: {
         open: openHalls,
         url: generateHallsUrl,
+    },
+    Registrations: {
+        open: openRegistrtions,
+        url: generateRegistrtionsUrl,
     }
 }
 
@@ -115,6 +127,12 @@ function setOnDirectionsPageOpened(handler: () => void) {
     onDirectionsPageOpened = handler
 }
 
+let onRegistrationsPageOpened: (() => void) | null = null
+
+function setOnRegistrationsPageOpened(handler: () => void) {
+    onRegistrationsPageOpened = handler
+}
+
 function onLocationChanged(location: Location) {
     switch (location.pathname) {
         case Router.Schedule.url():
@@ -129,6 +147,9 @@ function onLocationChanged(location: Location) {
         case Router.Directions.url():
             onDirectionsPageOpened && onDirectionsPageOpened()
             break
+        case Router.Registrations.url():
+            onRegistrationsPageOpened && onRegistrationsPageOpened()
+            break
     }
 }
 
@@ -140,16 +161,17 @@ const adminRoutes = [
 ]
 
 const clientRoutes = [
-    {path: generateScheduleUrl(), component: ScheduleLayoutWrapper}
+    {path: generateScheduleUrl(), component: ScheduleLayoutWrapper},
+    {path: generateRegistrtionsUrl(), component: RegistrationsLayout}
 ]
 
 export {
     initRouterHistory,
-
     setOnCalendarPageOpened,
     setOnHallsPageOpened,
     setOnDirectionsPageOpened,
     setOnUsersPageOpened,
+    setOnRegistrationsPageOpened,
 
     Router,
     adminRoutes,

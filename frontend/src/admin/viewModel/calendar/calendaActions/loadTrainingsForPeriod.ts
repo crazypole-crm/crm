@@ -95,6 +95,7 @@ const trainingsLoadingAtom = declareAtom('trainingsLoading', false, on => [
 ])
 
 export {
+    remapApiTrainingDataToTrainingData,
     loadTrainingsForPeriod,
     calendarPageOpened,
     trainingsLoadingAtom,
