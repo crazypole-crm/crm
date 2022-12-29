@@ -5,9 +5,11 @@ namespace App\Controller\Training;
 
 use App\Common\Exception\UserNotAuthenticated;
 use App\Common\Security\SecurityContextInterface;
+use App\Controller\Training\Response\Data\TrainingWithAvailableRegistrationsData;
 use App\Training\Api\ApiInterface;
 use App\Training\Api\Input\CreateTrainingInput;
 use App\Training\Api\Input\EditTrainingInput;
+use App\Training\App\Data\TrainingData;
 use App\Training\App\Query\ListTrainingInput;
 use App\Training\Domain\Exception\HallAlreadyHasTrainingAtThisTimeException;
 use App\Training\Domain\Exception\TrainerAlreadyHaveTrainingAtThisTimeException;
@@ -347,7 +349,9 @@ class EventController extends AbstractController
                     (new \DateTimeImmutable())->setTimestamp($endDate === null ? null : (int)$endDate / 1000),
                     $trainingIds)
             );
-            return new Response(json_encode($trainings, JSON_THROW_ON_ERROR), Response::HTTP_OK);
+            $trainingsWithAvailableRegistrations = $this->buildTrainingsWithAvailableRegistrations($trainings);
+            $responseData = json_encode($trainingsWithAvailableRegistrations, JSON_THROW_ON_ERROR);
+            return new Response($responseData, Response::HTTP_OK);
         }
         catch (UserNotAuthenticated $e)
         {
@@ -530,5 +534,29 @@ class EventController extends AbstractController
             'group' => TrainingType::GROUP_TRAINING,
             'individual' => TrainingType::INDIVIDUAL_TRAINING,
         };
+    }
+
+    /**
+     * @param TrainingData[] $trainings
+     * @return TrainingWithAvailableRegistrationsData[]
+     */
+    private function buildTrainingsWithAvailableRegistrations(array $trainings): array
+    {
+        $trainingIds = array_map(function (TrainingData $training) {
+            return $training->getTrainingId();
+        }, $trainings);
+
+        $registrationsCountMap = $this->eventApi->getTrainingRegistrationsCountMap($trainingIds);
+
+        $callback = function (TrainingData $training) use ($registrationsCountMap) {
+            $registrationsCount = $registrationsCountMap[$training->getTrainingId()] ?? 0;
+            $availableRegistrations = $training->getMaxRegistrations() - $registrationsCount;
+
+            return new TrainingWithAvailableRegistrationsData(
+                $training,
+                $availableRegistrations
+            );
+        };
+        return array_map($callback, $trainings);
     }
 }

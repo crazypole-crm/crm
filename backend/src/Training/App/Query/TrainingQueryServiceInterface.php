@@ -47,4 +47,10 @@ interface TrainingQueryServiceInterface
      * @return RegistrationData[]
      */
     public function listRegistrationsByUserId(string $userId): array;
+
+    /**
+     * @param string[] $trainingIds
+     * @return array<string, int>
+     */
+    public function getTrainingRegistrationsCountMap(array $trainingIds): array;
 }

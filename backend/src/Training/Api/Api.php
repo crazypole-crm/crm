@@ -159,4 +159,9 @@ class Api implements ApiInterface
     {
         return $this->trainingQueryService->countTrainingRegistrations($trainingId);
     }
+
+    public function getTrainingRegistrationsCountMap(array $trainingIds): array
+    {
+        return $this->trainingQueryService->getTrainingRegistrationsCountMap($trainingIds);
+    }
 }

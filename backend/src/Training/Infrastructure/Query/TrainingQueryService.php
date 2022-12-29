@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Training\Infrastructure\Query;
 
+use App\Common\Infrastructure\Query\TypeConverter;
 use App\Training\App\Data\TrainingData;
 use App\Training\App\Query\ListTrainingSpecification;
 use App\Training\App\Query\TrainingQueryServiceInterface;
@@ -174,12 +175,33 @@ class TrainingQueryService implements TrainingQueryServiceInterface
     {
         $qb = $this->conn->createQueryBuilder();
         $qb->from('training_registration', 'tr');
-        $qb->select('count(tr.' . RegistrationTable::ID . ') as registrations_count');
+        $qb->select('count(tr.' . RegistrationTable::ID . ') AS registrations_count');
         $qb->where($qb->expr()->eq('tr.' . RegistrationTable::TRAINING_ID, ':trainingId'));
         $qb->setParameter('trainingId', $trainingId);
 
         $row = $qb->executeQuery()->fetchAssociative();
         return $row['registrations_count'];
+    }
+
+    public function getTrainingRegistrationsCountMap(array $trainingIds): array
+    {
+        $qb = $this->conn->createQueryBuilder();
+        $qb->from('training_registration', 'tr');
+        $qb->addSelect('tr.' . RegistrationTable::TRAINING_ID . ' AS ' . RegistrationTable::TRAINING_ID);
+        $qb->addSelect('COUNT(tr.' . RegistrationTable::ID . ') AS registrations_count');
+        $qb->where($qb->expr()->in('tr.' . RegistrationTable::TRAINING_ID, ':trainingIds'));
+        $qb->groupBy('tr.' . RegistrationTable::TRAINING_ID);
+        $qb->setParameter('trainingIds', $trainingIds, Connection::PARAM_STR_ARRAY);
+
+        $stmt = $qb->executeQuery()->fetchAllAssociative();
+        $result = [];
+        foreach ($stmt as $row)
+        {
+            $id = TypeConverter::hydrateValue($row[RegistrationTable::TRAINING_ID], RegistrationTable::REGISTRATION_FIELDS[RegistrationTable::TRAINING_ID]);
+            $registrationsCount = TypeConverter::hydrateValue($row['registrations_count'], TypeConverter::INTEGER);
+            $result[$id] = $registrationsCount;
+        }
+        return $result;
     }
 
     private function addTrainingFieldSelect(QueryBuilder $qb, string $alias = 't'): void
@@ -195,6 +217,7 @@ class TrainingQueryService implements TrainingQueryServiceInterface
         $qb->addSelect($alias . '.' . TrainingTable::COURSE_ID . ' AS ' . TrainingTable::COURSE_ID);
         $qb->addSelect($alias . '.' . TrainingTable::TRAINING_TYPE . ' AS ' . TrainingTable::TRAINING_TYPE);
         $qb->addSelect($alias . '.' . TrainingTable::IS_CANCELED . ' AS ' . TrainingTable::IS_CANCELED);
+        $qb->addSelect($alias . '.' . TrainingTable::MAX_REGISTRATIONS . ' AS ' . TrainingTable::MAX_REGISTRATIONS);
         $qb->addSelect("bt.start_date AS " . TrainingTable::BASE_TRAINING_START_DATE);
         $qb->addSelect("IF(t.trainer_id = bt.trainer_id, 0, 1) AS " . TrainingTable::IS_TRAINER_REPLACE);
     }
