@@ -1,13 +1,18 @@
 import { useAction, useAtom } from "@reatom/react"
 import { trainingActionPopupActions } from "../../viewModel/calendar/trainingActionPopup/trainingActionPopup"
-import { TrainingData } from "../../viewModel/calendar/TrainingData"
+import {TrainingData, TrainingDate} from "../../viewModel/calendar/TrainingData"
 import { directionsAtom } from "../../viewModel/direction/directions"
 import { usersAtom } from "../../viewModel/users/users"
 import { getDurationString, getTrainerName } from "../schedule/calendar/weekCalendar/cells/TrainingCalendarCell"
 import styles from './RegistrationsLayout.module.css'
+import {normalizeDate} from "../users/table/userTableDataConvert";
 
 type RegistrationsListItemProps = {
     trainingData: TrainingData
+}
+
+function getDateString(date: TrainingDate) {
+    return `${normalizeDate(date.date)}.${normalizeDate(date.month)}.${normalizeDate(date.year)}`
 }
 
 function RegistrationsListItem({trainingData}: RegistrationsListItemProps) {
@@ -29,6 +34,9 @@ function RegistrationsListItem({trainingData}: RegistrationsListItemProps) {
         <div className={styles.listItem} onClick={onUnsubscribeTraining}>
             <div className={styles.directionTitle}>
                 {direction.name}
+            </div>
+            <div className={styles.time}>
+                {getDateString(trainingData.date)}
             </div>
             <div className={styles.time}>
                 {getDurationString(trainingData.timeStart, trainingData.timeEnd)}

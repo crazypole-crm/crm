@@ -121,7 +121,7 @@ function deleteTraining(baseId: string): Promise<void> {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            baseId,
+            trainingId: baseId,
         }),
     })
         .then(response => {

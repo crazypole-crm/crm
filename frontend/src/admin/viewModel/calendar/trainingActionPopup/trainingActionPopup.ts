@@ -63,7 +63,7 @@ const submit = declareAction('trainingActionPopup.submit',
             store.dispatch(cancelTraining(id))
         }
         else if (mode === 'delete') {
-            store.dispatch(deleteTraining(baseId))
+            store.dispatch(deleteTraining(id))
         }
         else if (mode === 'unsubscribe') {
             store.dispatch(unsubscribeTraining(id))
