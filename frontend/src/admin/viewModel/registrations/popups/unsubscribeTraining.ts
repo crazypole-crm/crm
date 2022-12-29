@@ -11,8 +11,7 @@ const unsubscribeTraining = declareAsyncAction<string>(
         return CalendarApi.removeTrainingRegistrationStatus(registrationId)
             .then(() => {
                 Toasts.success('Запись на занятие отменена')
-                console.log('remove registration', registrationId)
-                store.dispatch(registrationsActions.removeRegistration([registrationId]))
+                store.dispatch(registrationsActions.removeRegistration([trainingId]))
             })
             .catch(() => {
                 Toasts.error('При отписке от занятия произошла ошибка')

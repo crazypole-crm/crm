@@ -43,8 +43,6 @@ function RegistrationsLayout() {
     const trainingsLoading = useAtom(trainingsLoadingAtom)
     const handleLoadTrainings = useAction(loadTrainingsForPeriod)
 
-    console.log('registrations', registrations)
-
     const weekDateStart = useMemo(() => calculateWeekStartDate(selectedDate, 'week'), [selectedDate])
 
     useEffect(() => {
