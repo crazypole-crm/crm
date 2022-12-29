@@ -55,4 +55,10 @@ interface ApiInterface
     public function listRegistrationsByUserId(string $userId): array;
 
     public function countTrainingRegistrations(string $trainingId): int;
+
+    /**
+     * @param string[] $trainingIds
+     * @return array<string, integer>
+     */
+    public function getTrainingRegistrationsCountMap(array $trainingIds): array;
 }

@@ -21,6 +21,7 @@ class TrainingData implements \JsonSerializable
         private bool $isCanceled,
         private bool $isTrainerChanged,
         private bool $isMoved,
+        private int $maxRegistrations
     ){}
 
     public function getBaseTrainingId(): string
@@ -76,6 +77,21 @@ class TrainingData implements \JsonSerializable
     public function isCanceled(): bool
     {
         return $this->isCanceled;
+    }
+
+    public function isMoved(): bool
+    {
+        return $this->isMoved;
+    }
+
+    public function isTrainerChanged(): bool
+    {
+        return $this->isTrainerChanged;
+    }
+
+    public function getMaxRegistrations(): int
+    {
+        return $this->maxRegistrations;
     }
 
     public function jsonSerialize()
