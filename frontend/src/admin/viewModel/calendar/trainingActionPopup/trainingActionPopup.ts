@@ -54,7 +54,7 @@ const submitButtonLoadingAtom = declareAtom('trainingActions.submitButtonLoading
 const submit = declareAction('trainingActionPopup.submit',
     (_, store) => {
         const mode = store.getState(modeAtom)
-        const {baseId, id} = store.getState(trainingDataAtom)
+        const {id} = store.getState(trainingDataAtom)
 
         if (mode === 'record') {
             store.dispatch(signUpToTraining(id))

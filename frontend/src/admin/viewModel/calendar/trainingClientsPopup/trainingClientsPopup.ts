@@ -4,6 +4,8 @@ import {CalendarApi} from "../../../../api/calendarApi";
 import {declareAsyncAction} from "../../../../core/reatom/declareAsyncAction";
 import {Toasts} from "../../../../common/notification/notifications";
 import {remapApiRegistrationDataToModel} from "../../registrations/remapping";
+import {trainingsActions, trainingsAtom} from "../trainings";
+import {verify} from "../../../../core/verify";
 
 type RegistrationData = {
     id: string,
@@ -57,9 +59,20 @@ const removeRegistrationImpl =  declareAction<string>('clientTrainingPopup.remov
 
 const removeRegistration = declareAsyncAction<string>('clientTrainingPopup.removeRegistration',
     (registrationId, store) => {
+        const trainings = store.getState(trainingsAtom)
         const registrationsDataBeforeChange = store.getState(registrationsDataAtom)
         store.dispatch(removeRegistrationImpl(registrationId))
         return CalendarApi.removeTrainingRegistrationStatus(registrationId)
+            .then(() => {
+                const registration = registrationsDataBeforeChange.find(registration => registration.id === registrationId)
+                if (registration) {
+                    const training = trainings[registration.trainingId]
+                    store.dispatch(trainingsActions.updateTraining({
+                        ...training,
+                        availableRegistrationsCount: training.availableRegistrationsCount + 1,
+                    }))
+                }
+            })
             .catch(() => {
                 Toasts.error('При удаления записи произошла ошибка')
                 store.dispatch(setRegistrationsData(registrationsDataBeforeChange))

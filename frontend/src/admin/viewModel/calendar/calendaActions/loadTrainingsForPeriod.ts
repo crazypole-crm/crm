@@ -51,8 +51,8 @@ function remapApiTrainingDataToTrainingData(trainingsData: Api_TrainingData[]): 
             hallId: trainingData.hallId,
             description: trainingData.description,
             isCanceled: trainingData.isCanceled,
-            availableRegistrationsCount: trainingData.availableRegistrationsCount || 4,
-            maxRegistrationsCount: trainingData.maxRegistrationsCount || 10,
+            availableRegistrationsCount: trainingData.availableRegistrationsCount,
+            maxRegistrationsCount: trainingData.maxRegistrationsCount,
         }
     })
 }

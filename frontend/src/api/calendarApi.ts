@@ -13,7 +13,7 @@ type Api_TrainingData = {
     courseId: string,
     type: 'group' | 'individual',
     isCanceled: boolean,
-    availableRegistrationsCount?: number,
+    availableRegistrationsCount: number,
     maxRegistrationsCount?: number,
 }
 
