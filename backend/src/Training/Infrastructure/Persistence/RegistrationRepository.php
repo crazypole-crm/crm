@@ -41,4 +41,9 @@ class RegistrationRepository implements RegistrationRepositoryInterface
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+
+    public function findRegistrationsByTrainingId(Uuid $trainingId): array
+    {
+        return $this->repo->findBy(['trainingId' => (string)$trainingId]);
+    }
 }

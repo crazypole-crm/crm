@@ -14,4 +14,10 @@ interface RegistrationRepositoryInterface
     public function findOneById(Uuid $id): ?Registration;
 
     public function countRegistrationsByTrainingId(Uuid $trainingId): int;
+
+    /**
+     * @param Uuid $trainingId
+     * @return Registration[]
+     */
+    public function findRegistrationsByTrainingId(Uuid $trainingId): array;
 }

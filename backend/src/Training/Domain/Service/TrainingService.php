@@ -230,7 +230,8 @@ class TrainingService
             throw new TrainingNotFoundException($trainingId);
         }
         $training->setTrainerId($trainerId);
-        $this->dispatcher->dispatch(new TrainingTrainerChangedEvent($trainingId, $training->getName(), $training->getStartDate()));
+        $registredUsers = $this->listRegistredUsers($trainingId);
+        $this->dispatcher->dispatch(new TrainingTrainerChangedEvent($trainingId, $training->getName(), $training->getStartDate(), $registredUsers));
     }
 
     public function changeChangeTrainingTime(Uuid $trainingId, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate): void
@@ -254,7 +255,8 @@ class TrainingService
 
         $training->setStartDate($startDate);
         $training->setEndDate($endDate);
-        $this->dispatcher->dispatch(new TrainingRescheduledEvent($trainingId, $training->getName(), $startDate, $oldStartDate));
+        $registredUsers = $this->listRegistredUsers($trainingId);
+        $this->dispatcher->dispatch(new TrainingRescheduledEvent($trainingId, $training->getName(), $startDate, $oldStartDate, $registredUsers));
     }
 
     public function changeTrainingStatus(Uuid $trainingId, bool $isCanceled): void
@@ -267,7 +269,8 @@ class TrainingService
         $training->setIsCanceled($isCanceled);
         if ($isCanceled)
         {
-            $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName(), $training->getStartDate()));
+            $registredUsers = $this->listRegistredUsers($trainingId);
+            $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName(), $training->getStartDate(), $registredUsers));
         }
     }
 
@@ -445,5 +448,13 @@ class TrainingService
                 return $training->getId();
             }, $trainings
         )));
+    }
+
+    private function listRegistredUsers(Uuid $trainingId): array
+    {
+        $registrations = $this->registrationRepository->findRegistrationsByTrainingId($trainingId);
+        return array_map(function (Registration $registration) {
+            return $registration->getUserId();
+        }, $registrations);
     }
 }
