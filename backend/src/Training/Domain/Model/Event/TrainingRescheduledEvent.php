@@ -10,7 +10,7 @@ class TrainingRescheduledEvent implements EventInterface
 {
     public const TYPE = 'training.training_rescheduled';
 
-    public function __construct(private Uuid $trainingId, private string $title, private \DateTimeImmutable $startDate, private \DateTimeImmutable $oldDateTime, private array $registredUsers)
+    public function __construct(private Uuid $trainingId, private string $title, private \DateTimeImmutable $startDate, private \DateTimeImmutable $oldDateTime, private array $userIds)
     {}
 
     /**
@@ -45,9 +45,9 @@ class TrainingRescheduledEvent implements EventInterface
         return $this->oldDateTime;
     }
 
-    public function getRegistredUsers(): array
+    public function getUserIds(): array
     {
-        return $this->registredUsers;
+        return $this->getUserIds();
     }
 
     public function getEventType(): string

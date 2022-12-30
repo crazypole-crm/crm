@@ -30,7 +30,7 @@ class TrainingCanceledEventHandler implements EventHandlerInterface
 
         $stringUserIds = array_map(function (Uuid $id) {
             return (string) $id;
-        }, $event->getRegistredUsers());
+        }, $event->getUserIds());
         $this->sender->sendMessage('Занятие отменено', "Занятие $date '$title' отменено",  $stringUserIds);
     }
 

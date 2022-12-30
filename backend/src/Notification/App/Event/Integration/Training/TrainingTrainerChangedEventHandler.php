@@ -28,7 +28,7 @@ class TrainingTrainerChangedEventHandler implements EventHandlerInterface
         $date = $event->getStartDate()->format('Y-m-d');
         $stringUserIds = array_map(function (Uuid $id) {
             return (string) $id;
-        }, $event->getRegistredUsers());
+        }, $event->getUserIds());
         $this->sender->sendMessage('Замена тренера на занятие', "Занятие $date '$title' будет вести другой тренер",  $stringUserIds);
     }
 

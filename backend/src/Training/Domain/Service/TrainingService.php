@@ -230,8 +230,9 @@ class TrainingService
             throw new TrainingNotFoundException($trainingId);
         }
         $training->setTrainerId($trainerId);
-        $registredUsers = $this->listRegistredUsers($trainingId);
-        $this->dispatcher->dispatch(new TrainingTrainerChangedEvent($trainingId, $training->getName(), $training->getStartDate(), $registredUsers));
+        $userIds = $this->listRegistredUsers($trainingId);
+        $userIds[] = $training->getTrainerId();
+        $this->dispatcher->dispatch(new TrainingTrainerChangedEvent($trainingId, $training->getName(), $training->getStartDate(), $userIds));
     }
 
     public function changeChangeTrainingTime(Uuid $trainingId, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate): void
@@ -255,8 +256,9 @@ class TrainingService
 
         $training->setStartDate($startDate);
         $training->setEndDate($endDate);
-        $registredUsers = $this->listRegistredUsers($trainingId);
-        $this->dispatcher->dispatch(new TrainingRescheduledEvent($trainingId, $training->getName(), $startDate, $oldStartDate, $registredUsers));
+        $userIds = $this->listRegistredUsers($trainingId);
+        $userIds[] = $training->getTrainerId();
+        $this->dispatcher->dispatch(new TrainingRescheduledEvent($trainingId, $training->getName(), $startDate, $oldStartDate, $userIds));
     }
 
     public function changeTrainingStatus(Uuid $trainingId, bool $isCanceled): void
@@ -269,8 +271,9 @@ class TrainingService
         $training->setIsCanceled($isCanceled);
         if ($isCanceled)
         {
-            $registredUsers = $this->listRegistredUsers($trainingId);
-            $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName(), $training->getStartDate(), $registredUsers));
+            $userIds = $this->listRegistredUsers($trainingId);
+            $userIds[] = $training->getTrainerId();
+            $this->dispatcher->dispatch(new TrainingCanceledEvent($trainingId, $training->getName(), $training->getStartDate(), $userIds));
         }
     }
 

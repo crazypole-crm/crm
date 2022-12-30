@@ -31,7 +31,7 @@ class TrainingRescheduledEventHandler implements EventHandlerInterface
         $newDateTime = $event->getStartDate()->format('Y-m-d H:i:s');
         $stringUserIds = array_map(function (Uuid $id) {
             return (string) $id;
-        }, $event->getRegistredUsers());
+        }, $event->getUserIds());
         $this->sender->sendMessage('Занятие перенесено', "Занятие '$title' перенесено с $oldDateTime на $newDateTime",  $stringUserIds);
     }
 
